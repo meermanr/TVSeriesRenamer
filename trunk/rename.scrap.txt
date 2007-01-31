@@ -1,0 +1,31 @@
+Mailing list:
+	joe@binary-pulse.co.uk
+â¬
+Look into pack and unpack as substr alternatives
+also "study". And into this thing called "autoloading".
+Also "use sigtrap" and "use diagnostics"
+q// qq// and qx//
+Also @- and @+ ($LAST_MATCH_START and $LAST_MATCH_END)
+PAGE 617 for Program Generation, second trick (goes off bottom of page)
+
+MacOS = "darwin"
+Linux = "linux"
+Cygwin = "cygwin"
+Win32 = "MSWin32"
+
+TODO:
+Consider removing / refolding FILENAME PARSER & CONSTRUCT NEW FILENAME, to instead be based around the foreach loop
+
+Generic schemes, such as $$$xâ¬â¬â¬ for 3-digit season numbers and 2-digit episode numbers
+
+Add .REG file into script - make it generate it for the user. XXX: Consider "perl.exe renamer.pl" problem..  Also add note about being able to right click the icon in the titlebar of an explorer window to get the context menu of the folder. Handy tip! "regedit.exe /s <.reg file>" to import silently. See http://support.microsoft.com/kb/310516 for details on how to create .reg that DELETE entries, for uninstall. Hmm, will need to use DOS names due to potential spaces in paths (i.e. SETUP~1)
+
+Extend interactive mode to allow manually specifying the number, for those tricky situations where numbers in the dirty file name (perhaps "AC3" etc) confuse the script, or when the script simply tries to be too clever!
+
+Add option to "make changes?" prompt to:
+    Edit the changes (i.e. enter interactive mode)
+    Change command-line settings and restart script (avoids overhead..) - Display a prompt, and then print the exisiting command-line to STDIN, this *ought* to put it in the user's edit line (do /not/ use cbreak mode)
+
+Known issues:
+    Seaches website even when it has a fresh .cache
+    chunderbunny asked me: tell RobM I think that AniDB has broken his renaming script again. I'm getting the message "No data (related to season 1) was extracted from input!"
