@@ -29,6 +29,11 @@
 #         "explorer ." > OK  -  Note the "." in that command!
 #
 #  v2.24 Updated to match changed to AniDB's page layout.
+#        BUGFIX: Fixes support for "s01 e01" in file names (space wasn't allowed before)
+#
+#  v?.?? Added --associate-with-video-folders and --unassociate-with-video-folders, {{{2
+#         a pair or windows specific switches to (un)install a registry change that
+#         added "Use TV Renamer Script" to the right-click menu of video folders
 #
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
@@ -132,6 +137,7 @@ if($ANSIcolour && $ENV{'TERM'} eq '' && $INC{'Win32/Console/ANSI.pm'} eq ''){pri
 # Internal Flags
 my $implicit_season;
 my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect input source, 2="Hard" format - no guessing allowed
+my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 # Check if current directory name ($series) is a likely sub-folder of the series. EG: "Prison Break/Season 1/"
 if(($season) = ($series =~ /^(?:Season|series)? ?(\d+)\s*$/i)){
@@ -229,6 +235,14 @@ Maniuplating technical behaviour:
  --cache            Use/create .cache files to save 15min chunks of bandwidth
  --nocache          Do no make or use .cache files, always fetch the URL
 
+Windows-specific functionality:
+ --associate-with-video-folders
+ --unassociate-with-video-folders
+
+ This will add or remove \"Use TV Renamer Script\" to the right-click menu of
+ video folders in windows. It does this by adding/removing a key in the
+ registry.
+
 Standard GNU stuff:
  --version          Display version & release date
  --help             Display this help message
@@ -314,6 +328,9 @@ if($#ARGV ne -1)
 
 			case /^--preproc=.*$/i   {/^--preproc=(.*)$/i; $preproc = $1;}
 			case /^--postproc=.*$/i  {/^--postproc=(.*)$/i; $postproc = $1;}
+
+			case /^--associate-with-video-folders$/ {$do_win32_associate = 1;}
+			case /^--unassociate-with-video-folders$/ {$do_win32_associate = -1;}
 			
 			case /^--help$/i        {print $helpMessage; exit;}
 			case /^--version$/i     {print $version; exit;}
@@ -343,6 +360,99 @@ if($ANSIcolour){
 	$ANSIrestore = "\e[u";
 	$ANSIup      = "\e[1A";
 	$ANSIdown    = "\e[1B";
+}
+#------------------------------------------------------------------------------}}}
+# (Un)Associate with video folder in Win32 {{{
+#------------------------------------------------------------------------------
+if($do_win32_associate != 0)
+{
+	my $invokation = $^X;
+	my $script_location = $0;
+	my $cd;
+	my $script_name;
+	print $ANSIcyan."Associate action invoked, no renaming will take place.\n".$ANSInormal;
+
+	if($^O eq "cygwin")
+	{
+		# Simple, just use the "cygpath --dos --absolute" command to convert to a Win32 path
+		$invokation = `cygpath --dos --absolute $invokation`;
+		chomp $invokation;
+		$script_location = `cygpath --dos --absolute $script_location`;
+		chomp $invokation;
+	}
+	elsif($^O eq "MSWin32")
+	{
+		# Deal with relative directories
+		$script_location =~ tr/\//\\/;
+		if( substr($script_location, 1, 1) ne ':' )
+		{
+			# Path is not absolute, need to mangle
+			if( $script_location =~ /\\/ )	# Has at least one backslash
+			{
+				($cd, $script_location) = split(/\\(?=[^\\]*?$)/, $script_location);	# Split on last '\'
+				chdir $cd;
+				$cd = getcwd();
+				$script_location = "$cd\\$script_location";
+			}
+			else
+			{
+				# Missing path entirely, must be in current dir then
+				$cd = getcwd();
+				$script_location = "$cd\\$script_location";
+			}
+		}
+
+		# Get short-name for path (8.3 filenames)
+		## NB: '@' before a command in a DOS script executes it without local echo,
+		## i.e. it doesn't type the command text to the screen or it accompanying prompt
+		$invokation = qx/for %I in ("$invokation") do \@echo %~sI/;
+		$script_location = `for %I in ("$script_location") do \@echo %~sI`;
+		chomp $script_location;
+		chomp $invokation;
+
+	}
+	else
+	{
+		print "It is this script's opinion that you are not using a Windows-based OS,\n";
+		print "if you think you know better, you can try anyways.\n";
+		print "Take a stand? [y/${ANSIbold}N${ANSInormal}]: ";
+
+		ReadMode "cbreak";
+		$_ = ReadKey();
+		ReadMode "normal";
+		
+		if($_ =~ /y| |\xa|\.|>/i){    # 'Y', space, enter or the '>|.' key
+			print $ANSIgreen."y\n".$ANSInormal;
+			print "\nOK then, hotshot, here are my guesses as to how you run this script:\n";
+			print "Perl:   ${^X}\n";
+			print "Script: $0\n";
+			print "Anything about that strike you as odd? [y/${ANSIbold}N${ANSInormal}]: ";
+
+			ReadMode "cbreak";
+			$_ = ReadKey();
+			ReadMode "normal";
+
+			if($_ =~ /y| |\xa|\.|>/i){    # 'Y', space, enter or the '>|.' key
+				print $ANSIgreen."y\n".$ANSInormal;
+				print "\nTough! The author hasn't implemented this option yet! :P\n";
+				print "Email the bastard at robert.meerman\@gmail.com and tell him to sort\n";
+				print "his act out, and what freaky version of Windows you think you're\n";
+				print "using.";
+				exit 1;
+			}else{
+				print $ANSIred."n\n".$ANSInormal;
+				print "\nPeachy, then let's get going!\n";
+			}
+		}else{
+			print $ANSIred."n\n".$ANSInormal;
+			print "\nProbably wise. Another time perhaps?";
+			exit 1;
+		}
+	}
+	# FIXME, ok we got the short-names for the perl executable and this script,
+	# now create a pair of registry fragments to merge into the registry!
+	print "$invokation $script_location\n";
+	exit 0;
 }
 #------------------------------------------------------------------------------}}}
 # Look for input {{{
