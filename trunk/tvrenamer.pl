@@ -29,6 +29,7 @@
 #         "explorer ." > OK  -  Note the "." in that command!
 #
 #  v2.24 Updated to match changed to AniDB's page layout.
+#        BUGFIX: Fixes support for "s01 e01" in file names (space wasn't allowed before)
 #
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
