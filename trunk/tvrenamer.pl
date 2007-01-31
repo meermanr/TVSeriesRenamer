@@ -395,12 +395,23 @@ else
 	
 	# AutoFetch mode {{{
 	###
-	# Label this point to allow re-entry is parsing fails.
+	# Label this point to allow re-entry if parsing fails.
 	#
 	AUTOFETCH:
 	if($format == Format_AutoFetch)	# {{{
 	{
 		my $search_term;
+
+		# First check if we have a fresh .cache file we can use instead
+		if( -e ".cache" && -M ".cache" < (15/60/24)){
+			open(CACHE, "< .cache");
+			$_ = <CACHE>;
+			close(CACHE);
+			($inputFile) = ($_ =~ /(^.*$)/m);	# First line contains URL
+			$format = Format_AutoDetect;
+			goto AUTOFETCH;
+		}
+
 		if( $series =~ /, The$/i )
 		{
 			$search_term = "The ".substr($series, 0, -5);
@@ -1754,7 +1765,7 @@ sub readURLfile #{{{
 #     set of sites to search.
 #   - Extended AutoFetch to search AniDB.info
 #	- Added Unicode support, *even for windows*, which was a non-trivial task as google will
-#	  assert. So now HTML Entities are represented as Unicode (EG: "&#9829;" -> "Ã¢ÂÂ¥"). Tested
+#	  assert. So now HTML Entities are represented as Unicode (EG: "&#9829;" -> "♥"). Tested
 #	  with ASCII containing HTML Entities and UTF-8 containing Kanji.
 #
-# vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4
+# vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
