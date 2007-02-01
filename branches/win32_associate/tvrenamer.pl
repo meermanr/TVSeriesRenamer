@@ -12,11 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.21 Fixed bug AutoFetch mode which caused many searches to fail with AniDB {{{2 
-#  (spaces were not being converted to %20 when sending data to the website).
-#
-#  v2.22 BUGFIX: --reversible didn't log non-Unicode name changes in Windows / Cygwin {{{2
-#
 #  v2.23 Tidied --help up a lot and revisited many comments in the script proper {{{2
 #        Added --exclude_series, which excludes the series name from the new filename
 #         and counter-part --include_series to override this (incase you set it to be
@@ -30,6 +25,8 @@
 #
 #  v2.24 Updated to match changed to AniDB's page layout.
 #        BUGFIX: Fixes support for "s01 e01" in file names (space wasn't allowed before)
+#
+#  v2.25 AniDB search facility fixed, this also broke because of the new AniDB layout
 #
 #  v?.?? Added --associate-with-video-folders and --unassociate-with-video-folders, {{{2
 #         a pair or windows specific switches to (un)install a registry change that
@@ -149,7 +146,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.24\nReleased 30 January 2007"; # {{{
+my $version = "TV Series Renamer 2.25\nReleased 01 February 2007"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -531,7 +528,7 @@ else
 			$search_term = $series;
 		}
 
-		# Detect Anime {{{
+		# Detect Anime and use AniDB{{{
 		if($search_anime || getcwd() =~ /anime/i)
 		{
 			print $ANSIcyan."Current directory detected as anime.\n".$ANSInormal;
@@ -547,7 +544,7 @@ else
 	
 			# Save snapshot for debugging
 			if($debug){
-				print "Saving (simplified) html to .search_results...\n";
+				print $ANSIcyan."Saving (simplified) html to .search_results...$ANSInormal\n";
 				open(RESULTS, '> .search_results');
 				print RESULTS $_;
 				close RESULTS;
@@ -557,10 +554,12 @@ else
 			my ($rcache, $rlink, $rseries, $rresults);
 			$rcache = $_;
 			$rresults = 0;	# Count number of results returned by AniDB
-			while(($rlink, $rseries) = /^\s+<td>\s*<a href="(animedb\.pl\?show=anime&aid=\d+)">([^<]+)<\/a>\s*<\/td>/m){
+			while(($rlink, $rseries) = /<a href="(animedb\.pl\?show=anime&amp;aid=\d+)"><i>([^<]+)<\/i><\/a>/m){
+				if($debug){print "$ANSIcyan"."Considering result: '$series' and link '$rlink'$ANSInormal\n";}
 				$rresults++;
 				if( $rseries =~ /^$series$/i ){
 					print "Found match!\n"; 
+					$rlink =~ s/&amp;/&/;
 					$inputFile = "http://anidb.info/perl-bin/$rlink";
 					$format = Format_URL_AniDB;
 					last;
@@ -590,9 +589,11 @@ else
 				}
 				else{
 					print "No results.\n";
-					print $ANSIred."Not a single result was returned by AniDB, please check www.AniDB.info\n".
+					print $ANSIred."I didn't percieve a single result from AniDB, please check www.AniDB.info\n".
 						"lists your series and try again providing a link to the series' page on\n".
-					   	"the command line.\n".$ANSInormal;
+					   	"the command line.\n".
+						"\nIt is likely that AniDB's page layout has changed, if that is the case\n".
+						"please notify my author (see end of \"$0 --help\")\n".$ANSInormal;
 					print $ANSIcyan."Search URL was: $searchURL\n".$ANSInormal;
 					exit 1;
 				}
@@ -761,7 +762,7 @@ else
 				#   clean up the cursor position. If there's no error we simply restore the cursor position and write out "[Done]".
 				#   
 				#   Nifty eh? }}}
-				my $message = "\n".$ANSIup."Fetching document... $ANSIsave$ANSIred\n";
+				my $message = "\n".$ANSIup."Fetching document ".($debug?$inputFile:'')."... $ANSIsave$ANSIred\n";
 				print $message ;
 				if($_ = get($inputFile)){
 					print $ANSIrestore.$ANSInormal."[Done]\n";
@@ -1877,5 +1878,10 @@ sub readURLfile #{{{
 #	- Added Unicode support, *even for windows*, which was a non-trivial task as google will
 #	  assert. So now HTML Entities are represented as Unicode (EG: "&#9829;" -> "♥"). Tested
 #	  with ASCII containing HTML Entities and UTF-8 containing Kanji.
+#
+#  v2.21 Fixed bug AutoFetch mode which caused many searches to fail with AniDB {{{2 
+#  (spaces were not being converted to %20 when sending data to the website).
+#
+#  v2.22 BUGFIX: --reversible didn't log non-Unicode name changes in Windows / Cygwin {{{2
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
