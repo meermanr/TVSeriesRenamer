@@ -31,6 +31,8 @@
 #  v2.24 Updated to match changed to AniDB's page layout.
 #        BUGFIX: Fixes support for "s01 e01" in file names (space wasn't allowed before)
 #
+#  v2.25 AniDB search facility fixed, this also broke because of the new AniDB layout
+#
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
@@ -422,7 +424,7 @@ else
 			$search_term = $series;
 		}
 
-		# Detect Anime {{{
+		# Detect Anime and use AniDB{{{
 		if($search_anime || getcwd() =~ /anime/i)
 		{
 			print $ANSIcyan."Current directory detected as anime.\n".$ANSInormal;
@@ -438,7 +440,7 @@ else
 	
 			# Save snapshot for debugging
 			if($debug){
-				print "Saving (simplified) html to .search_results...\n";
+				print $ANSIcyan."Saving (simplified) html to .search_results...$ANSInormal\n";
 				open(RESULTS, '> .search_results');
 				print RESULTS $_;
 				close RESULTS;
@@ -448,10 +450,12 @@ else
 			my ($rcache, $rlink, $rseries, $rresults);
 			$rcache = $_;
 			$rresults = 0;	# Count number of results returned by AniDB
-			while(($rlink, $rseries) = /^\s+<td>\s*<a href="(animedb\.pl\?show=anime&aid=\d+)">([^<]+)<\/a>\s*<\/td>/m){
+			while(($rlink, $rseries) = /<a href="(animedb\.pl\?show=anime&amp;aid=\d+)"><i>([^<]+)<\/i><\/a>/m){
+				if($debug){print "$ANSIcyan"."Considering result: '$series' and link '$rlink'$ANSInormal\n";}
 				$rresults++;
 				if( $rseries =~ /^$series$/i ){
 					print "Found match!\n"; 
+					$rlink =~ s/&amp;/&/;
 					$inputFile = "http://anidb.info/perl-bin/$rlink";
 					$format = Format_URL_AniDB;
 					last;
@@ -481,9 +485,11 @@ else
 				}
 				else{
 					print "No results.\n";
-					print $ANSIred."Not a single result was returned by AniDB, please check www.AniDB.info\n".
+					print $ANSIred."I didn't percieve a single result from AniDB, please check www.AniDB.info\n".
 						"lists your series and try again providing a link to the series' page on\n".
-					   	"the command line.\n".$ANSInormal;
+					   	"the command line.\n".
+						"\nIt is likely that AniDB's page layout has changed, if that is the case\n".
+						"please notify my author (see end of \"$0 --help\")\n".$ANSInormal;
 					print $ANSIcyan."Search URL was: $searchURL\n".$ANSInormal;
 					exit 1;
 				}
@@ -652,7 +658,7 @@ else
 				#   clean up the cursor position. If there's no error we simply restore the cursor position and write out "[Done]".
 				#   
 				#   Nifty eh? }}}
-				my $message = "\n".$ANSIup."Fetching document... $ANSIsave$ANSIred\n";
+				my $message = "\n".$ANSIup."Fetching document ".($debug?$inputFile:'')."... $ANSIsave$ANSIred\n";
 				print $message ;
 				if($_ = get($inputFile)){
 					print $ANSIrestore.$ANSInormal."[Done]\n";
