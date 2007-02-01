@@ -30,9 +30,11 @@ print "Done.\n";
 # Tag if upload was successful
 # $?'s high byte is the return code (low byte is the signal it died with, if
 # any)
-if(($? >> 8) = 0)
+$retcode = $? >> 8;
+if($retcode = 0)
 {
     print "Tagging this release...\n";
-    qx/"c:\\cygwin\\bin\\bash.exe -login -i -c '~/svn/tvrenamer/release/tag.sh'"/;
+    system("c:\\cygwin\\bin\\bash.exe -login -i -c '~/svn/tvrenamer/release/tag.sh'");
     print "Done\n";
 }
+system("pause");
