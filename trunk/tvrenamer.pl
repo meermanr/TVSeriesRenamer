@@ -12,11 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.21 Fixed bug AutoFetch mode which caused many searches to fail with AniDB {{{2 
-#  (spaces were not being converted to %20 when sending data to the website).
-#
-#  v2.22 BUGFIX: --reversible didn't log non-Unicode name changes in Windows / Cygwin {{{2
-#
 #  v2.23 Tidied --help up a lot and revisited many comments in the script proper {{{2
 #        Added --exclude_series, which excludes the series name from the new filename
 #         and counter-part --include_series to override this (incase you set it to be
@@ -1774,5 +1769,10 @@ sub readURLfile #{{{
 #	- Added Unicode support, *even for windows*, which was a non-trivial task as google will
 #	  assert. So now HTML Entities are represented as Unicode (EG: "&#9829;" -> "♥"). Tested
 #	  with ASCII containing HTML Entities and UTF-8 containing Kanji.
+#
+#  v2.21 Fixed bug AutoFetch mode which caused many searches to fail with AniDB {{{2 
+#  (spaces were not being converted to %20 when sending data to the website).
+#
+#  v2.22 BUGFIX: --reversible didn't log non-Unicode name changes in Windows / Cygwin {{{2
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
