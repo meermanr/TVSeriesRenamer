@@ -43,7 +43,7 @@ print "Enabling DOS colour...\n";
 s/^#use Win32::Console::ANSI/use Win32::Console::ANSI/m;    # Comment in DOS ANSI
 
 # Create new script file
-print "Writing modified script to tvrenamer.pl_win32...";
+print "Writing modified script to tvrenamer_win32.pl...";
 local(*FH, $/);     # Temporarily disable the record seperator (aka "enter slurp mode")
 open(FH, '> tvrenamer_win32.pl');
 print FH $_;
