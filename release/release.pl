@@ -1,5 +1,13 @@
 #!/usr/bin/perl
-# Upload renamer.pl and tvrenamer.exe
+# Upload tvrenamer.pl and tvrenamer.exe
+
+# A win32 binary created under cygwin only works under cygwin,
+# which is not what we want.
+if($^O eq "cygwin")
+{
+    print STDERR "You really ought to run this from MS-DOS!\n";
+    exit 1;
+}
 
 system('win32_release.pl');
 if(@ARGV[0] eq "beta")
@@ -17,3 +25,5 @@ else
 }
 print "Uploading...";
 system("c:\\cygwin\\bin\\scp.exe $script $binary robmeerman.co.uk:public_html/downloads");
+
+print "Done.\n\nDON'T FORGET TO TAG THIS RELEASE IN SVN!\n";
