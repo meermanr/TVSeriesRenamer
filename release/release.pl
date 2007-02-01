@@ -32,5 +32,7 @@ print "Done.\n";
 # any)
 if(($? >> 8) = 0)
 {
+    print "Tagging this release...\n";
     qx/"c:\\cygwin\\bin\\bash.exe -login -i -c '~/svn/tvrenamer/release/tag.sh'"/;
+    print "Done\n";
 }
