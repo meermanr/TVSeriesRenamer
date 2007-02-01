@@ -25,5 +25,12 @@ else
 }
 print "Uploading...";
 system("c:\\cygwin\\bin\\scp.exe $script $binary robmeerman.co.uk:public_html/downloads");
+print "Done.\n";
 
-print "Done.\n\nDON'T FORGET TO TAG THIS RELEASE IN SVN!\n";
+# Tag if upload was successful
+# $?'s high byte is the return code (low byte is the signal it died with, if
+# any)
+if(($? >> 8) = 0)
+{
+    qx/"c:\\cygwin\\bin\\bash.exe -login -i -c '~/svn/tvrenamer/release/tag.sh'"/;
+}

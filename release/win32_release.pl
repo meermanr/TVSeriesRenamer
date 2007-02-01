@@ -38,6 +38,9 @@ open(FH, '> tvrenamer.pl');	# Dump this out
 print FH $_;
 close(FH);
 
+# Fix up this file to have unix line endings
+qx/c:\\cygwin\\bin\\dos2unix.exe tvrenamer.pl/;
+
 # Win32 changes
 print "Enabling DOS colour...\n";
 s/^#use Win32::Console::ANSI/use Win32::Console::ANSI/m;    # Comment in DOS ANSI
