@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!c:\\Perl\\bin\\perl.exe
 # Win32_Release.pl
 # This is a utility script used to compile tvrenamer into a 
 # win32 .EXE file

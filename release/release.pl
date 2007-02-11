@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!c:\\Perl\\bin\\perl.exe
 # Upload tvrenamer.pl and tvrenamer.exe
 
 # A win32 binary created under cygwin only works under cygwin,
@@ -27,11 +27,12 @@ print "Uploading...";
 system("c:\\cygwin\\bin\\scp.exe $script $binary robmeerman.co.uk:public_html/downloads");
 print "Done.\n";
 
-# Tag if upload was successful
+# Tag if upload was successful (and the environment doesn't have a NOTAG
+# variable)
 # $?'s high byte is the return code (low byte is the signal it died with, if
 # any)
 $retcode = $? >> 8;
-if(0 == $retcode)
+if(0 == $retcode and @ENV{NOTAG} eq "")
 {
     print "Tagging this release...\n";
     system("c:\\cygwin\\bin\\bash.exe -login -i -c '~/svn/tvrenamer/release/tag.sh'");
