@@ -32,7 +32,7 @@ print "Done.\n";
 # $?'s high byte is the return code (low byte is the signal it died with, if
 # any)
 $retcode = $? >> 8;
-if(0 == $retcode and @ENV{NOTAG} eq "")
+if(0 == $retcode and @ENV{NOTAG} eq "" and @ARGV[0] ne "beta")
 {
     print "Tagging this release...\n";
     system("c:\\cygwin\\bin\\bash.exe -login -i -c '~/svn/tvrenamer/release/tag.sh'");
