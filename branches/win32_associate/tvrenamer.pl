@@ -29,18 +29,14 @@
 #  v2.25 AniDB search facility fixed, this also broke because of the new AniDB layout
 #
 #  v?.?? Added --associate-with-video-folders and --unassociate-with-video-folders, {{{2
-#         a pair or windows specific switches to (un)install a registry change that
-#         added "Use TV Renamer Script" to the right-click menu of video folders
+#         a pair of windows-specific switches to (un)install a registry change that
+#         adds "Use TV Renamer Script" to the right-click menu of video folders
 #
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
-#	* Rename script to tvrenamer.pl (remember to update wiki, beta & download on
-#	  site - use Texhnolyze as example)
 #   * Test Unicode support properly, and see if a workaround for Win32 source
 #     filenames can be found
-#   * Win32 folder context menu .reg needs a home, add it to the script with an
-#     -install / -uninstall switch
 #   * Migrate @before & @after arrays to a single hash (partly done)
 #   * Add dubious autodetect based on exisiting files (i.e. prepare two sets of
 #     changes, and then pick the one which causes the least active change
@@ -361,9 +357,22 @@ if($ANSIcolour){
 #------------------------------------------------------------------------------}}}
 # (Un)Associate with video folder in Win32 {{{
 #------------------------------------------------------------------------------
-if($do_win32_associate != 0)
+if($do_win32_associate == -1)
 {
-	my $invokation = $^X;
+	print $ANSIcyan."Unassociate action invoked, no renaming will take place.\n".$ANSInormal;
+	open(FH, '> tvrenamer_unassociate_win32.reg');
+	print FH "REGEDIT4\n\n";
+	print FH "[-HKEY_CLASSES_ROOT\\SystemFileAssociations\\Directory.Video\\shell\\tvrenamer]\n";
+	close(FH);
+
+	qx/regedit tvrenamer_unassociate_win32.reg/;
+	unlink("tvrenamer_unassociate_win32.reg");
+	exit 0;
+}
+
+if($do_win32_associate == 1)
+{
+	my $invokation = $^X;	# aka $EXECUTABLE_NAME, a built-in global
 	my $script_location = $0;
 	my $cd;
 	my $script_name;
@@ -381,7 +390,7 @@ if($do_win32_associate != 0)
 	{
 		# Deal with relative directories
 		$script_location =~ tr/\//\\/;
-		if( substr($script_location, 1, 1) ne ':' )
+		if( substr($script_location, 1, 1) ne ':' ) # Consider "c:\Progr..."
 		{
 			# Path is not absolute, need to mangle
 			if( $script_location =~ /\\/ )	# Has at least one backslash
@@ -401,11 +410,11 @@ if($do_win32_associate != 0)
 
 		# Get short-name for path (8.3 filenames)
 		## NB: '@' before a command in a DOS script executes it without local echo,
-		## i.e. it doesn't type the command text to the screen or it accompanying prompt
+		## i.e. it doesn't type the command text to the screen or its accompanying prompt
 		$invokation = qx/for %I in ("$invokation") do \@echo %~sI/;
-		$script_location = `for %I in ("$script_location") do \@echo %~sI`;
-		chomp $script_location;
+		$script_location = qx/for %I in ("$script_location") do \@echo %~sI/;
 		chomp $invokation;
+		chomp $script_location;
 
 	}
 	else
@@ -448,7 +457,20 @@ if($do_win32_associate != 0)
 	}
 	# FIXME, ok we got the short-names for the perl executable and this script,
 	# now create a pair of registry fragments to merge into the registry!
-	print "$invokation $script_location\n";
+	$invokation =~ s/\\/\\\\/g;
+	$script_location =~ s/\\/\\\\/g;
+	$script_location =~ s/^(.*)\n/$1/;	# Inexplicibly multiline string. Keep only first line
+	open(FH, '> tvrenamer_associate_win32.reg');
+	print FH "REGEDIT4\n\n";
+	print FH '[HKEY_CLASSES_ROOT\SystemFileAssociations\Directory.Video\shell\tvrenamer]',"\n";
+	print FH '@="Use T&V Renamer script"',"\n";
+	print FH "\n";
+	print FH '[HKEY_CLASSES_ROOT\SystemFileAssociations\Directory.Video\shell\tvrenamer\command]',"\n";
+	print FH '@="cmd /C \"cd %1 & ',$invokation,' ',$script_location,' & pause\""',"\n";
+	close(FH);
+
+	qx/regedit tvrenamer_associate_win32.reg/;
+	unlink("tvrenamer_associate_win32.reg");
 	exit 0;
 }
 #------------------------------------------------------------------------------}}}
