@@ -142,7 +142,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.26\nReleased 01 March 2007"; # {{{
+my $version = "TV Series Renamer 2.26\nReleased 02 March 2007"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -365,8 +365,11 @@ if($do_win32_associate == -1)
 	print FH "[-HKEY_CLASSES_ROOT\\SystemFileAssociations\\Directory.Video\\shell\\tvrenamer]\n";
 	close(FH);
 
-	qx/regedit tvrenamer_unassociate_win32.reg/;
+	qx/regedit -s tvrenamer_unassociate_win32.reg/;
 	unlink("tvrenamer_unassociate_win32.reg");
+	print "${ANSIcyan}Association removed.${ANSInormal}\n\n";
+	print "You will no longer see \"Use TV Renamer script\" when you right\n";
+	print "click a video folder\n";
 	exit 0;
 }
 
@@ -455,8 +458,6 @@ if($do_win32_associate == 1)
 			exit 1;
 		}
 	}
-	# FIXME, ok we got the short-names for the perl executable and this script,
-	# now create a pair of registry fragments to merge into the registry!
 	$invokation =~ s/\\/\\\\/g;
 	$script_location =~ s/\\/\\\\/g;
 	$script_location =~ s/^(.*)\n/$1/;	# Inexplicibly multiline string. Keep only first line
@@ -466,11 +467,17 @@ if($do_win32_associate == 1)
 	print FH '@="Use T&V Renamer script"',"\n";
 	print FH "\n";
 	print FH '[HKEY_CLASSES_ROOT\SystemFileAssociations\Directory.Video\shell\tvrenamer\command]',"\n";
-	print FH '@="cmd /C \"cd %1 & ',$invokation,' ',$script_location,' & pause\""',"\n";
+	if( $script_location =~ m/.EXE$/i )
+		{ print FH '@="cmd /C \"cd %1 & ',$script_location,' & pause\""',"\n"; }
+	else
+		{ print FH '@="cmd /C \"cd %1 & ',$invokation,' ',$script_location,' & pause\""',"\n"; }
 	close(FH);
 
-	qx/regedit tvrenamer_associate_win32.reg/;
+	qx/regedit -s tvrenamer_associate_win32.reg/;
 	unlink("tvrenamer_associate_win32.reg");
+	print "${ANSIcyan}Association created.${ANSInormal}\n\n";
+	print "When you right click a video folder, you will see a new option \"Use\n";
+	print "TV Renamer script\", enjoy!\n";
 	exit 0;
 }
 #------------------------------------------------------------------------------}}}
