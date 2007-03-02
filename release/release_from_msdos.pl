@@ -1,15 +1,10 @@
-#!c:\\Perl\\bin\\perl.exe
-# Upload tvrenamer.pl and tvrenamer.exe
+#!/usr/bin/perl
+# Release ../trunk/tvrenamer.pl
+# 1) Update $version string with latest version in script header and current date
+# 2) Compile windows executable from a DOS shell
+# 3) Upload
 
-# A win32 binary created under cygwin only works under cygwin,
-# which is not what we want.
-if($^O eq "cygwin")
-{
-    print STDERR "You really ought to run this from MS-DOS!\n";
-    exit 1;
-}
-
-system('win32_release.pl');
+qx{/cygdrive/c/Perl/bin/perl.exe win32_release.pl};
 if(@ARGV[0] eq "beta")
 {
     print "Renaming to betas...\n";
@@ -24,7 +19,7 @@ else
     $binary = "tvrenamer.exe";
 }
 print "Uploading...";
-system("c:\\cygwin\\bin\\scp.exe $script $binary robmeerman.co.uk:public_html/downloads");
+system("scp $script $binary robmeerman.co.uk:public_html/downloads");
 print "Done.\n";
 
 # Tag if upload was successful (and the environment doesn't have a NOTAG
@@ -35,7 +30,7 @@ $retcode = $? >> 8;
 if(0 == $retcode and @ENV{NOTAG} eq "" and @ARGV[0] ne "beta")
 {
     print "Tagging this release...\n";
-    system("c:\\cygwin\\bin\\bash.exe -login -i -c '~/svn/tvrenamer/release/tag.sh'");
+    system('./tag.sh');
     print "Done\n";
 }
-system("pause");
+system("cmd /C 'pause'");

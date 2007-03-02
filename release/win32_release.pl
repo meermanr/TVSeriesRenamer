@@ -11,6 +11,9 @@ if($^O eq "cygwin")
     exit 1;
 }
 
+# Required to compile without cygwin bindings
+$ENV{"PATH"}="c:\\Perl\\bin;".$ENV{"PATH"};
+
 # Read original into memory
 print "Reading in original tvrenamer.pl...";
 local(*FH, $/);     # Temporarily disable the record seperator (aka "enter slurp mode")
@@ -55,5 +58,5 @@ print " done\n";
 
 # Run the perl packager to make it a win32 binary
 print "Packaging script into .exe...";
-qx#pp tvrenamer_win32.pl -o tvrenamer.exe -v#;
+qx#cmd /C "c:\\Perl\\bin\\pp.bat tvrenamer_win32.pl -o tvrenamer.exe -v"#;
 print " done\n";
