@@ -18,7 +18,9 @@ Consider removing / refolding FILENAME PARSER & CONSTRUCT NEW FILENAME, to inste
 
 Generic schemes, such as $$$x€€€ for 3-digit season numbers and 2-digit episode numbers
 
-Add .REG file into script - make it generate it for the user. XXX: Consider "perl.exe renamer.pl" problem..  Also add note about being able to right click the icon in the titlebar of an explorer window to get the context menu of the folder. Handy tip! "regedit.exe /s <.reg file>" to import silently. See http://support.microsoft.com/kb/310516 for details on how to create .reg that DELETE entries, for uninstall. Hmm, will need to use DOS names due to potential spaces in paths (i.e. SETUP~1)
+Document .tvrenamerrc better and allow it to be tvrenamer.ini and creating files beginning with a dot isn't possible in windows explorer, tsk.
+
+Add ability to recurse directories, i.e. run it on "D:\Series" and have it run once per directory within, D:\Series\heroes, D:\Series\Smallville etc.
 
 Extend interactive mode to allow manually specifying the number, for those tricky situations where numbers in the dirty file name (perhaps "AC3" etc) confuse the script, or when the script simply tries to be too clever!
 
