@@ -32,6 +32,9 @@
 #         a pair of windows-specific switches to (un)install a registry change that
 #         adds "Use TV Renamer Script" to the right-click menu of video folders
 #
+#  v2.27 BUGFIX: Season numbers are treated as numbers now (were treated as strings), {{{2
+#         so season "06" becomes "6", which fixed automatic fetching from the web.
+#
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
@@ -142,7 +145,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.26\nReleased 02 March 2007"; # {{{
+my $version = "TV Series Renamer 2.27\nReleased 27 March 2007"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -523,6 +526,7 @@ else
 		print "Detected series name $ANSIbold'$series'$ANSInormal";
 	}
 	unless($season){$season = 1; $implicit_season = 1;}
+	$season = $season + 0;	# Cast to numeric (removing leading zeros)
 	print " (Season $season".($implicit_season?" $ANSIred(assumed)$ANSInormal":"").")\n";
 
 	print "Reading input in $FormatList[$format] mode from ";
