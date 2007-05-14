@@ -35,6 +35,13 @@
 #  v2.27 BUGFIX: Season numbers are treated as numbers now (were treated as strings), {{{2
 #         so season "06" becomes "6", which fixed automatic fetching from the web.
 #
+#  v2.28 BUGFIX: Windows-specific associate with Video Folders was causing some people {{{2
+#         trouble. The script would set itself as the default action when double clicking
+#         a folder - hence you couldn't open a folder anymore! This was because
+#         some copies of Windows don't have the default @="open" specified in
+#         their registry, the script now sets this when you associate.
+#        ENHANCEMENT: Subtitle files are now renamed by default, no need for "--nofilter"
+#
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
@@ -99,7 +106,7 @@ my $format       = Format_AutoFetch;
 my $site         = Site_EpGuides;	# Preferred site search for title data. NB: These are tried in the order they are listed above
 my $search_anime = undef; 			# Search TV sites
 
-my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|mp4|mpeg4)$';
+my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|mp4|mpeg4|srt|sub|ssa|smi|sami|txt)$';
 my ($series)     = (getcwd() =~ /\/([^\/]+)$/);     # Grab current dir name, discard rest of path
 my $exclude_series     = 1;	# 0=Always include series name, 1=Exclude if cwd is "Series X", 2=Always exclude
 my $autoseries   = 0;	# Do not automatically use scraped series name
@@ -145,7 +152,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.27\nReleased 27 March 2007"; # {{{
+my $version = "TV Series Renamer 2.28\nReleased 14 May 2007"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -466,6 +473,8 @@ if($do_win32_associate == 1)
 	$script_location =~ s/^(.*)\n/$1/;	# Inexplicibly multiline string. Keep only first line
 	open(FH, '> tvrenamer_associate_win32.reg');
 	print FH "REGEDIT4\n\n";
+	print FH '[HKEY_CLASSES_ROOT\SystemFileAssociations\Directory.Video\shell]',"\n";
+	print FH '@="open"',"\n";
 	print FH '[HKEY_CLASSES_ROOT\SystemFileAssociations\Directory.Video\shell\tvrenamer]',"\n";
 	print FH '@="Use T&V Renamer script"',"\n";
 	print FH "\n";
