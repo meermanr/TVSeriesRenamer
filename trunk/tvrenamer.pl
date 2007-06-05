@@ -42,6 +42,13 @@
 #         their registry, the script now sets this when you associate.
 #        ENHANCEMENT: Subtitle files are now renamed by default, no need for "--nofilter"
 #
+#  v2.29 COMPATABILITY: Updated epguide format parser to handle Battlestar
+#         Galactica, which does not have a space between the episode number and
+#         production code.
+#
+#  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit
+#		 fuzzier, allowing "24/Season.6" and the like
+#
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
@@ -143,7 +150,7 @@ my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect in
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 # Check if current directory name ($series) is a likely sub-folder of the series. EG: "Prison Break/Season 1/"
-if(($season) = ($series =~ /^(?:Season|series)? ?(\d+)\s*$/i)){
+if(($season) = ($series =~ /^(?:Season|series)?.?(\d+)\s*$/i)){
 	($series) = (getcwd() =~ /\/([^\/]+)\/[^\/]+$/);	# Grab parent dir name, discard rest of path
 	if($exclude_series == 1){$exclude_series=2;}		# See default settings
 }
@@ -152,7 +159,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.28\nReleased 14 May 2007"; # {{{
+my $version = "TV Series Renamer 2.30\nReleased 05 June 2007"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -1101,7 +1108,7 @@ else
 				foreach(@input)
 				{
 					# Most episodes
-					if( ($num, $epTitle) = ($_ =~ /\s*\d+\.\s+$season-\s*(\d+).*?\d+ \w{3} \d{2}(.*$)/) )
+					if( ($num, $epTitle) = ($_ =~ /\s*\d+\.\s+$season-(..).*? \w{3} \d{2}(.*$)/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
 						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
