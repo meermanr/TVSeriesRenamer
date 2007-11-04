@@ -42,12 +42,18 @@
 #         their registry, the script now sets this when you associate.
 #        ENHANCEMENT: Subtitle files are now renamed by default, no need for "--nofilter"
 #
-#  v2.29 COMPATABILITY: Updated epguide format parser to handle Battlestar
+#  v2.29 COMPATABILITY: Updated epguide format parser to handle Battlestar {{{2
 #         Galactica, which does not have a space between the episode number and
 #         production code.
 #
-#  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit
+#  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit {{{2
 #		 fuzzier, allowing "24/Season.6" and the like
+#
+#  v2.31 FLEXABILITY: --preproc evaluation moved earlier, to allow it to {{{2
+#		 manipulate the filename _before_ file extensions are detected.
+#        BUGFIX: Now prints "Reading preferences" message when doing so
+#		 MAINTENANCE: Updated AniDB parser in sympathy with AniDB.info's
+#		 changes. AniDB search facility also updated.
 #
 # TODO: {{{1
 #   * Update Default Settings section to explain the use of a preferences file,
@@ -159,7 +165,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.30\nReleased 05 June 2007"; # {{{
+my $version = "TV Series Renamer 2.31\nReleased 04 Nov 2007"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -275,7 +281,7 @@ if(-e $ENV{"HOME"}."/.tvrenamerrc"){$tvrenamerrc = $ENV{"HOME"}."/.tvrenamerrc";
 if(-e $ENV{"USERPROFILE"}."/.tvrenamerrc"){$tvrenamerrc = $ENV{"USERPROFILE"}."/.tvrenamerrc";}
 unless($tvrenamerrc eq '')
 {
-	if($debug){print "Reading preferences from $tvrenamerrc\n";}
+	print "Reading preferences from $tvrenamerrc\n";
 	open(RCFILE, "< $tvrenamerrc");
 	while(<RCFILE>)
 	{
@@ -603,8 +609,8 @@ else
 			my ($rcache, $rlink, $rseries, $rresults);
 			$rcache = $_;
 			$rresults = 0;	# Count number of results returned by AniDB
-			while(($rlink, $rseries) = /<a href="(animedb\.pl\?show=anime&amp;aid=\d+)"><i>([^<]+)<\/i><\/a>/m){
-				if($debug){print "$ANSIcyan"."Considering result: '$series' and link '$rlink'$ANSInormal\n";}
+			while(($rlink, $rseries) = /<a href="(animedb\.pl\?show=anime&amp;aid=\d+)">([^<]+)<\/a>/m){
+				if($debug){print "$ANSIcyan"."Considering result: '$rseries' and link '$rlink'$ANSInormal\n";}
 				$rresults++;
 				if( $rseries =~ /^$series$/i ){
 					print "Found match!\n"; 
@@ -923,26 +929,27 @@ else
 			} # End case Format_AniDB }}}
 			case Format_URL_AniDB { #{{{
 				# Remember that most attributes are stripped from the HTML before being passed to us. Sample data:
+				#	<td><a href="animedb.pl?show=ep&amp;eid=71699">1</a></td>
+				#	<td>
+				#		<div>
+				#			
+				#		</div>
+				#		<span>Speedy Lady <span>( つっぱしる女 / Tsuppashiru Onna )</span></span>
 				#
-				# <td><a href="animedb.pl?show=ep&amp;eid=XXXXX">{EPISODE NUMBER}</a></td>
-				# <td>
-				# 	<div>
-				# 		
-				# 	</div>
-				# 	<span>{EPISODE TITLE}</span>
-				# </td>
 
 				my $offset = 0;
-				my ($num, $snum, $epTitle);
+				my ($num, $snum, $epTitle, $japEpTitle);
 				
 				if($autoseries){
 					if(($series) = $_ =~ /^\s*<title>::AniDB.net:: Anime - \s*(.*?)\s*::<\/title>\s*$/ms){
 						$autoseries_successful = 1;
 					}
 				}
-				
+
 				while($offset < length($_)){
-					if(($num, $epTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]+)<\/span>[^<]*<\/td>/ms)){
+					#if(($num, $epTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]+)<\/span>[^<]*<\/td>/ms)){
+					#if(($num, $epTitle, $japEpTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div><span>([^<]*)<span>([^<]*)<\/span>[^<]*<\/span>/ms)){
+					if(($num, $epTitle, $japEpTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]*)<span>[^<]*<\/span>[^<]*<\/span>/ms)){
 						if(($snum) = ($num =~ /S(\d+)/i)){              # Detect Special
 							check_and_push($epTitle, \@sname, $snum);
 						}else{
@@ -1274,11 +1281,11 @@ foreach(@fileList){
 
 	# Note To Self: tr/a-zA-Z0-9_-//dc Will delete all characters NOT matched
 
+	if($preproc){eval $preproc;}
+
 	($fileExt) = ($_ =~ /.*\.(.*?$)/);  # Put file extension into a variable
 	($_) = ($_ =~ /(.*)\..*?$/);        # Strip file extension
 	
-	if($preproc){eval $preproc;}
-
 	s/%5b/[/g;                          # %5b -> [  (avoids bad epNumber extraction)
 	s/%5d/]/g;                          # %5b -> ]  (avoids bad epNumber extraction)
 	tr/\_/ /;                           # Replace _ with " "
