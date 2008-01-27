@@ -16,6 +16,9 @@
 #------------------------------------------------------------------------------
 # To Do:	{{{1
 #	  * Lots, it's a complete rewrite.
+#	  * Wrap all user prompts into a function for that purpose, and then allow
+#	  conditional use of cbreak mode - not everyone likes it, and not everyone
+#	  has it available!
 #------------------------------------------------------------------------------
 
 use strict;		# {{{1
@@ -81,7 +84,7 @@ else
 # Detect current context (working directory et al) {{{1
 # Read in preferences and command-line options {{{1
 # | The preferences file, .tvrenamerrc, if found contains command-line arguments,
-# | one-per-line which will be place _before_ any actual command-line args.
+# | one-per-line which will be placed _before_ any actual command-line args.
 my $tvrenamerrc = '';
 if(defined $ENV{'HOME'} && -e "$ENV{'HOME'}/.tvrenamerrc")
 {
@@ -593,5 +596,19 @@ sub associate_video_folders
 #
 #  v2.27 BUGFIX: Season numbers are treated as numbers now (were treated as strings), {{{2
 #         so season "06" becomes "6", which fixed automatic fetching from the web.
+#
+#  v2.28 BUGFIX: Windows-specific associate with Video Folders was causing some people {{{2
+#         trouble. The script would set itself as the default action when double clicking
+#         a folder - hence you couldn't open a folder anymore! This was because
+#         some copies of Windows don't have the default @="open" specified in
+#         their registry, the script now sets this when you associate.
+#        ENHANCEMENT: Subtitle files are now renamed by default, no need for "--nofilter"
+#
+#  v2.29 COMPATABILITY: Updated epguide format parser to handle Battlestar
+#         Galactica, which does not have a space between the episode number and
+#         production code.
+#
+#  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit
+#		 fuzzier, allowing "24/Season.6" and the like
 
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:

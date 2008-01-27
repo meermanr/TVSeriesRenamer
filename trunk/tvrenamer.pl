@@ -55,7 +55,12 @@
 #		 MAINTENANCE: Updated AniDB parser in sympathy with AniDB.info's
 #		 changes. AniDB search facility also updated.
 #
+#  v2.32 BUGFIX: Now prints newlines at end of messages {{{2
+#		 BUGFIX: Re-worked AniDB parser so that alternative episode titles are
+#		 optional- this was causing some pages to be percieved as blank by the
+#		 script.
 # TODO: {{{1
+#	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
 #   * Test Unicode support properly, and see if a workaround for Win32 source
@@ -165,7 +170,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.31\nReleased 04 November 2007"; # {{{
+my $version = "TV Series Renamer 2.31\nReleased 04 November 2007\n"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -351,7 +356,7 @@ if($#ARGV ne -1)
 			case /^--help$/i        {print $helpMessage; exit;}
 			case /^--version$/i     {print $version; exit;}
 			
-			case qr/^-.+/           {print "Invalid option $_!\nUse --help for list of available options"; exit 1;}
+			case qr/^-.+/           {print "Invalid option $_!\nUse --help for list of available options\n"; exit 1;}
 			else                    {$implicit_format = 1; $inputFile = $_; $format= Format_AutoDetect;}
 		}
 	}
@@ -469,7 +474,7 @@ if($do_win32_associate == 1)
 				print "\nTough! The author hasn't implemented this option yet! :P\n";
 				print "Email the bastard at robert.meerman\@gmail.com and tell him to sort\n";
 				print "his act out, and what freaky version of Windows you think you're\n";
-				print "using.";
+				print "using.\n";
 				exit 1;
 			}else{
 				print $ANSIred."n\n".$ANSInormal;
@@ -477,7 +482,7 @@ if($do_win32_associate == 1)
 			}
 		}else{
 			print $ANSIred."n\n".$ANSInormal;
-			print "\nProbably wise. Another time perhaps?";
+			print "\nProbably wise. Another time perhaps?\n";
 			exit 1;
 		}
 	}
@@ -935,7 +940,8 @@ else
 				#			
 				#		</div>
 				#		<span>Speedy Lady <span>( つっぱしる女 / Tsuppashiru Onna )</span></span>
-				#
+				#						  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				#						           Optional, may not be present
 
 				my $offset = 0;
 				my ($num, $snum, $epTitle, $japEpTitle);
@@ -949,7 +955,11 @@ else
 				while($offset < length($_)){
 					#if(($num, $epTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]+)<\/span>[^<]*<\/td>/ms)){
 					#if(($num, $epTitle, $japEpTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div><span>([^<]*)<span>([^<]*)<\/span>[^<]*<\/span>/ms)){
-					if(($num, $epTitle, $japEpTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]*)<span>[^<]*<\/span>[^<]*<\/span>/ms)){
+					if(($num, $epTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]*(?:<span>)[^<]*)<\/span>/ms)){
+
+					# Remove optional <span> if present
+					($epTitle) = $epTitle =~ /(^[^<]*)/;
+
 						if(($snum) = ($num =~ /S(\d+)/i)){              # Detect Special
 							check_and_push($epTitle, \@sname, $snum);
 						}else{
@@ -1376,7 +1386,7 @@ foreach(@fileList){
 				case 'YY'     {$epNum = $dispNum;}
 				case 'XxYY'   {$epNum = $season."x".$dispNum;}
 				case undef    {$epNum = (!$implicit_season ? $season.'x' : '').$dispNum;}
-				else          {print "\nUnknown scheme '$scheme'! Try \"$0 --help\" for list of valid schemes."; exit 1;}
+				else          {print "\nUnknown scheme '$scheme'! Try \"$0 --help\" for list of valid schemes.\n"; exit 1;}
 			}
 			if($filePrefix eq ''){$local_gap = undef;}
 			
