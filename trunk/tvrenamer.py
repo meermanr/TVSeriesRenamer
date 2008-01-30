@@ -93,8 +93,75 @@ class Season:
 		raise IndexError
 
 
-season = Season(1)
-for index, filename in enumerate(get_file_list(os.getcwd())):
-	season.add(Episode(index, filename))
+#season = Season(1)
+#for index, filename in enumerate(get_file_list(os.getcwd())):
+#	season.add(Episode(index, filename))
+#
+#print season
 
-print season
+
+# Parser class experiment. Does it make sense to define an abstract class which
+# is concretely defined multiple times by seperate blocks of code, and which is
+# then instantiated once to consume data, is it actually any neater than having
+# multiple functions defined?
+class A:
+	def talk(self):
+		print "Fuckin' A!\n"
+
+class B:
+	pass
+
+class a(A):
+	def talk(self):
+		print "aye?"
+
+class aa(A):
+	def talk(self):
+		print "Aah, interesting point!"
+
+class aaa(A):
+	def talk(self):
+		print "Aaargh! Not more 'a's!"
+
+class b(B):
+	pass
+
+class bb(B):
+	pass
+
+class bbb(B):
+	pass
+
+def classesDerivedFrom(BaseClass):
+	"""Returns a list of all objects in the root scope which are subclasses of
+	'BaseClass'
+
+	>>>class A:
+	... pass
+	...
+	>>>class a(A):
+	... pass
+	...
+	>>>class aa(A):
+	... pass
+	...
+	>>>classesDerivedFrom(A)
+	[<class __main__.a at 0xb7dda11c>, <class __main__.aa at 0xb7dda1dc>]
+	"""
+	import __main__		# Handle for root scope
+
+	foundClasses = [];
+
+	for attribute in dir(__main__):
+		try:
+			handle = eval(attribute)
+			if issubclass(handle, BaseClass) and handle is not BaseClass:
+				foundClasses += [handle]
+		except (TypeError, NameError):
+			pass
+	
+	return foundClasses
+
+# Create instances of all found classes and execute their talk() func
+instances = [x() for x in classesDerivedFrom(A)];
+[y.talk() for y in instances]
