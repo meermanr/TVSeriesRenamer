@@ -59,6 +59,10 @@
 #		 BUGFIX: Re-worked AniDB parser so that alternative episode titles are
 #		 optional- this was causing some pages to be percieved as blank by the
 #		 script.
+#		 BUGFIX: Updated AniDB parsers in sympathy with changes to AniDB.info
+#		 layout changes
+#        FEATURE: Added new scheme: XYY. This creates output suitable for the
+#        --dubious option. E.g. S01E08 -> 108
 # TODO: {{{1
 #	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
 #   * Update Default Settings section to explain the use of a preferences file,
@@ -170,7 +174,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.31\nReleased 04 November 2007\n"; # {{{
+my $version = "TV Series Renamer 2.32\nReleased 22 February 2008\n"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -201,7 +205,7 @@ Input options:
  -                  Use STDIN (don't look for URL shortcuts or input files)
   
 Formatting options:
- --scheme=X         Episode number format. One of: sXXeYY, XxYY, YY
+ --scheme=X         Episode number format. One of: sXXeYY, XxYY, XYY, YY
 
  Note: Numbers are \"padded\" with zeros to fit all numbers, so if 9 or
  less episodes are listed on your source website, you will have 1-digit
@@ -904,42 +908,43 @@ else
 				# contents are in the following format. Note that the epname and number
 				# are on seperate lines.
 				#
-				#  "(+)" [whitespace] ("S") [epNumber]
-				#  [epname] [whitespace] [tab chracter]
+				#  [epNumber] [tab] [epName] [tab]
+				#  Noting that epName may be made up of [English ( Kanji / Romanji )]
 
 				my ($num, $snum);
 
 				# Parse input data
 				foreach(@input){
 					my $epTitle;
+					my $strippedEpTitle;
 
-					# Ep number
-					if ($_ =~ /^\(\+\)\s*S?\d+.*$/){
-						$expect_epName = 1;
-						($num) = ($_ =~ /^\(\+\)\s*(S?\d+).*$/);
+					($num, $epTitle) = ($_ =~ /^\s*(S?\d+)\s+(.*?)\s+\d+m/);
+					if ( ($strippedEpTitle) = ($epTitle =~ /^(.*)\([^\/]+\/[^)]+\)/) ) {
+						$epTitle = $strippedEpTitle;
 					}
-					# Ep title
-					elsif ($expect_epName eq 1)
-					{
-						$expect_epName = 0;
-						($epTitle) = ($_ =~ /^([^\t]*?)\s+?\t.*$/);    # NB Submissive '*?'
 
-						if(($snum) = ($num =~ /S(\d+)/i)){              # Detect Special
-							check_and_push($epTitle, \@sname, $snum);
-						}else{
-							check_and_push($epTitle, \@name, $num);
-						}
+					if(($snum) = ($num =~ /S(\d+)/)){              # Detect Special
+						check_and_push($epTitle, \@sname, $snum);
+					}else{
+						check_and_push($epTitle, \@name, $num);
 					}
 				}
 			} # End case Format_AniDB }}}
 			case Format_URL_AniDB { #{{{
 				# Remember that most attributes are stripped from the HTML before being passed to us. Sample data:
-				#	<td><a href="animedb.pl?show=ep&amp;eid=71699">1</a></td>
-				#	<td>
-				#		<div>
-				#			
-				#		</div>
-				#		<span>Speedy Lady <span>( つっぱしる女 / Tsuppashiru Onna )</span></span>
+				# <tr class="g_odd" id="eid_42520">
+				#     <td class="id eid"><a href="animedb.pl?show=ep&amp;eid=42520">1</a></td>
+				#     <td class="title">
+				#         <span class="icons">
+				# 
+				#         </span>
+				#         <label>The Green Seat <span class="aka">( 緑の座 / Midori no za )</span></label>
+				#     </td>
+				#     <td class="duration">24m</td>
+				#     <td class="date airdate">23.10.2005</td>
+				# </tr>
+
+				#		<label>Speedy Lady <span>( つっぱしる女 / Tsuppashiru Onna )</span></label>
 				#						  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 				#						           Optional, may not be present
 
@@ -953,9 +958,7 @@ else
 				}
 
 				while($offset < length($_)){
-					#if(($num, $epTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]+)<\/span>[^<]*<\/td>/ms)){
-					#if(($num, $epTitle, $japEpTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div><span>([^<]*)<span>([^<]*)<\/span>[^<]*<\/span>/ms)){
-					if(($num, $epTitle) = (substr($_, $offset) =~ /<td><a[^>]*>(S?\d+)<\/a><\/td>[^<]*<td>[^<]*<div>[^<]*<\/div>[^<]*<span>([^<]*(?:<span>)[^<]*)<\/span>/ms)){
+					if ( ($num, $epTitle) = (substr($_, $offset) =~ /<tr[^>]*>\s*<td[^>]*><a[^>]*>(S?\d+)<\/a><\/td>.*?<label>([^<]*).*?<\/label>.*?<\/tr>/ms) ){
 
 					# Remove optional <span> if present
 					($epTitle) = $epTitle =~ /(^[^<]*)/;
@@ -1385,6 +1388,7 @@ foreach(@fileList){
 				case 'sXXeYY' {$epNum = "s".pad($season, 2)."e".$dispNum;}
 				case 'YY'     {$epNum = $dispNum;}
 				case 'XxYY'   {$epNum = $season."x".$dispNum;}
+				case 'XYY'    {$epNum = $season.$dispNum;}
 				case undef    {$epNum = (!$implicit_season ? $season.'x' : '').$dispNum;}
 				else          {print "\nUnknown scheme '$scheme'! Try \"$0 --help\" for list of valid schemes.\n"; exit 1;}
 			}
