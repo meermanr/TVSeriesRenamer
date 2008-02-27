@@ -3,6 +3,7 @@
 # RobM's TV Series Renamer
 
 import os, glob, logging
+import sys, traceback, inspect
 
 # TODO: Add a preferences system (using the pickle module to store and retrieve
 # complex python data structures)
@@ -61,6 +62,14 @@ class Episode:
 # changes that need to take place?
 # It comes down to an architecture decision: Is this purely reference data (as
 # in the PERL version) or is it going to be something more?
+#
+# Is it possible to detect which class is accessing your functions? If so, then
+# much of the complexity can be hidden - there would be a "global" store for
+# episode data, which each parser attempts to populate. The global store tags
+# each entry with some provenance (which parser added the entry), thus allowing
+# some intelligent behaviour: Use data that causes the least change (but more
+# than "no change").
+# ---> Yes it is, the instance's symbol can be found via self.__class__.__name__
 class Season:
 	"""Container for sets of Episode instances."""
 	number = None
@@ -108,6 +117,11 @@ class A:
 	def talk(self):
 		print "Fuckin' A!\n"
 
+	def act(self):
+		print "My name is %s, and I have this to say: " % self.__class__.__name__
+		print vars(self.__class__)
+		self.talk()
+
 class B:
 	pass
 
@@ -122,6 +136,8 @@ class aa(A):
 class aaa(A):
 	def talk(self):
 		print "Aaargh! Not more 'a's!"
+		for frame in traceback.extract_stack():
+			print frame
 
 class b(B):
 	pass
@@ -162,6 +178,10 @@ def classesDerivedFrom(BaseClass):
 	
 	return foundClasses
 
-# Create instances of all found classes and execute their talk() func
-instances = [x() for x in classesDerivedFrom(A)];
-[y.talk() for y in instances]
+class exampleClass:
+	def __init__(self):
+		# Create instances of all found classes and execute their talk() func
+		instances = [x() for x in classesDerivedFrom(A)];
+		[y.act() for y in instances]
+
+myExClass = exampleClass();
