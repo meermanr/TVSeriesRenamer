@@ -8,7 +8,9 @@ The last-accessed timestamp is not used because people often disable updating
 this field to speed up file-access (because when it is enabled every read of a
 file incurs a write-back to update the metadata)
 
-Note that this has been tested on Linux, and works through symlinks.
+Note that this has been tested on Linux and OS X, and works through symlinks.
+
+Didn't work on Windows Vista...
 """
 
 import sys, os
