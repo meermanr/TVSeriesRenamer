@@ -34,7 +34,8 @@ if argv[0] is not '':
 	print "  Modify: 0x%x" % stat_result.st_mtime
 	print "  Change: 0x%x" % stat_result.st_ctime
 
-	#if stat_result.st_mtime == stat_result.st_ctime:
+	# Accept small differences, which might just be truncation error or
+	# float->int conversion issues (depends on the underlying filesystem
 	if abs( stat_result.st_mtime - stat_result.st_ctime) < 1:
 		print "\nTherefore: First run!\n"
 
