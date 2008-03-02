@@ -30,9 +30,9 @@ from os		import stat, chmod
 if argv[0] is not '':
 	stat_result = stat( argv[0] )
 	print "Before:"
-	print "  Access: 0x%x" % stat_result.st_atime
-	print "  Modify: 0x%x" % stat_result.st_mtime
-	print "  Change: 0x%x" % stat_result.st_ctime
+	print "  Access: 0x%f" % stat_result.st_atime
+	print "  Modify: 0x%f" % stat_result.st_mtime
+	print "  Change: 0x%f" % stat_result.st_ctime
 
 	# Accept small differences, which might just be truncation error or
 	# float->int conversion issues (depends on the underlying filesystem
@@ -50,9 +50,9 @@ if argv[0] is not '':
 
 		stat_result = stat( argv[0] )
 		print "After:"
-		print "  Access: 0x%x" % stat_result.st_atime
-		print "  Modify: 0x%x" % stat_result.st_mtime
-		print "  Change: 0x%x" % stat_result.st_ctime
+		print "  Access: 0x%f" % stat_result.st_atime
+		print "  Modify: 0x%f" % stat_result.st_mtime
+		print "  Change: 0x%f" % stat_result.st_ctime
 
 	else:
 		print "\nTherefore: Not first run.\n"
