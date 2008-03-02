@@ -22,6 +22,12 @@ no change).
 
 Tested on Linux, OS X and Windows Vista.
 
+Win32 Notes:
+	* If a file is written slowly (i.e. downloaded from the internet) the
+	  creation timestamp is when writing started, and last-modified is when the
+	  last write occurred. So chances are that we won't be able to detect a
+	  first-run on Win32 accurately...
+
 TODO: Detect when the program is read-only and avoid attempting to update the
 tmestamps - just assume it is not the first run.
 """
@@ -33,9 +39,9 @@ from os		import stat, chmod
 if argv[0] is not '':
 	stat_result = stat( argv[0] )
 	print "Before:"
-	print "  Access: 0x%f" % stat_result.st_atime
-	print "  Modify: 0x%f" % stat_result.st_mtime
-	print "  Change: 0x%f" % stat_result.st_ctime
+	print "  Access: %f" % stat_result.st_atime
+	print "  Modify: %f" % stat_result.st_mtime
+	print "  Change: %f" % stat_result.st_ctime
 
 	# Accept small differences (in seconds), because some filesystems (notably
 	# NTFS and FAT32) do not set ctime == mtime upon file creation, but they
@@ -55,9 +61,9 @@ if argv[0] is not '':
 
 		stat_result = stat( argv[0] )
 		print "After:"
-		print "  Access: 0x%f" % stat_result.st_atime
-		print "  Modify: 0x%f" % stat_result.st_mtime
-		print "  Change: 0x%f" % stat_result.st_ctime
+		print "  Access: %f" % stat_result.st_atime
+		print "  Modify: %f" % stat_result.st_mtime
+		print "  Change: %f" % stat_result.st_ctime
 
 	else:
 		print "\nTherefore: Not first run.\n"
