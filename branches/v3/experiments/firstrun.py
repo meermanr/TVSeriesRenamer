@@ -48,10 +48,9 @@ if argv[0] is not '':
 		f.truncate()	# To current position: no change
 		f.close()
 
-		# Note that we assume enough time has passed so that now - st_ctime >
-		# 10. If this is not the case, we may get false positives if the user
-		# runs the program multiple times in very quick succession immedately
-		# after download
+		sleep(1)	# We must sleep to ensure that the timestamp we set above
+					# will differ from the one we're about to set
+
 		chmod( argv[0], stat_result.st_mode)	# Update permissions to current permissions: no change
 
 		stat_result = stat( argv[0] )
