@@ -21,6 +21,9 @@ we update metadata by setting the permissions to what they currenly are (again,
 no change).
 
 Tested on Linux, OS X and Windows Vista.
+
+TODO: Detect when the program is read-only and avoid attempting to update the
+tmestamps - just assume it is not the first run.
 """
 
 from time	import sleep
@@ -34,9 +37,10 @@ if argv[0] is not '':
 	print "  Modify: 0x%f" % stat_result.st_mtime
 	print "  Change: 0x%f" % stat_result.st_ctime
 
-	# Accept small differences, which might just be truncation error or
-	# float->int conversion issues (depends on the underlying filesystem
-	if abs( stat_result.st_mtime - stat_result.st_ctime) < 1:
+	# Accept small differences (in seconds), because some filesystems (notably
+	# NTFS and FAT32) do not set ctime == mtime upon file creation, but they
+	# are usually pretty close (~1 second)
+	if abs( stat_result.st_mtime - stat_result.st_ctime) < 10:
 		print "\nTherefore: First run!\n"
 
 		f = file( argv[0], "a" )
@@ -44,8 +48,10 @@ if argv[0] is not '':
 		f.truncate()	# To current position: no change
 		f.close()
 
-		sleep(1)	# Required to make sure the timestamps will be different
-
+		# Note that we assume enough time has passed so that now - st_ctime >
+		# 10. If this is not the case, we may get false positives if the user
+		# runs the program multiple times in very quick succession immedately
+		# after download
 		chmod( argv[0], stat_result.st_mode)	# Update permissions to current permissions: no change
 
 		stat_result = stat( argv[0] )
