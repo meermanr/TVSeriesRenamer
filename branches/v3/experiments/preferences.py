@@ -10,13 +10,14 @@ Aims:
 
 import os.path, logging, pickle, sys
 
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 logging.info("Script starting")
 
-default_preferences = dict()
-default_preferences["interface"] = "CLI"
-default_preferences["scheme"] = "$x€€"
-default_preferences["language"] = "en"
+default_preferences = {
+	"interface":	"CLI",
+	"scheme":		"$x€€",
+	"language":		"en",
+}
 
 class Preferences():
 	"""
@@ -34,54 +35,51 @@ class Preferences():
 
 	filename = None
 	user_preferences = dict()
+	default_preferences = dict()
+	logging = logging.getLogger()
 
-	def __init__(self, profile=""):
-		"""Loads preferences from optional profile name (if it exists), or loads defaults"""
+	def __init__(self, defaults, profile=""):
+		"""Loads preferences from optional profile name (if found), overriding
+		defaults (a dictionary which is treated as read-only)"""
+
+		# Configure logging scope
+		self.logging = logging.getLogger(self.__class__.__name__)
+
+		# Copy default settings
+		self.default_preferences = defaults
+
+		# Construct default filename
+		programname = os.path.basename( sys.argv[0] )
+		programname = os.path.splitext( programname )[0]
+
+		homedir = os.path.expanduser("~")
 
 		profile = profile if profile is "" else ".%s" % profile
-		programname = sys.argv[0]
-		print programname
-		homedir = os.path.expanduser("~")
-		filename = ".tvrenamerrc%s" % profile
+
+		filename = ".%src%s" % (programname, profile)
 		self.filename = os.path.join(homedir, filename)
 
-		try:
-			f = open(self.filename, "rU")
-			logging.debug( "Preferences file %s exists" % self.filename )
-
-			try:
-				self.user_preferences = pickle.load(f)
-			except EOFError, inst:
-				logging.warning( "Error loading preferences from %s" % self.filename )
-				raise Exception
-
-			f.close()
-
-		except (IOError, Exception), inst:
-			# Pass exception upwards if we can't handle it
-			if type(inst) is IOError:
-				if inst.errno != 2:	# "File or Directory not found"
-					raise
-				else:
-					logging.debug( "Prefrences file %s does not exist." % self.filename )
-
-			logging.info( "No preferences loaded" )
+		# Attempt to load from default file
+		self.load()
 
 	def __setitem__(self, key, value):
 		"""x.__setitem__(i, y) <==> x[i]=y
 		
 		Creates a user-preference, overriding the default"""
+
 		try:
-			default_preferences[key]	# Check key exists in defaults
+			self.default_preferences[key]	# Check key exists in defaults
 			self.user_preferences[key] = value
 		except KeyError:
-			logging.warning("Attempted to set a user-preferences for which there is not corresponding default value")
+			self.logging.error("Attempted to set a user-preference for which "
+					"there is no corresponding default value")
 			raise
 
 	def __delitem__(self, key):
 		"""x.__delitem__(y) <==> del x[y]
 		
 		Removes a user-preferences, restoring the default"""
+
 		try:
 			del self.user_preferences[key]
 		except KeyError:
@@ -94,22 +92,70 @@ class Preferences():
 		try:
 			return self.user_preferences[key]
 		except KeyError:
-			return default_preferences[key]
+			return self.default_preferences[key]
 
-default = Preferences();
+	def save(self, filename=None):
+		"""Saves user-preferences to disk.
+		
+		When 'filename' is not given the default is used, as described in this
+		class's main blurb"""
+
+		filename = self.filename if (filename is None) else filename
+		self.logging.info( "Saving preferences to %s" % filename )
+		
+		f = open(filename, "w")
+		f.writelines("# This file contains pickled Python data-structures and is not intended to be manually edited\n")
+		pickle.dump(self.user_preferences, f)
+		f.close()
+
+	def load(self, filename=None):
+		"""Loads user-preferences from disk.
+		
+		When 'filename' is not given the default is used, as described in this
+		class's main blurb"""
+
+		filename = self.filename if (filename is None) else filename
+		self.logging.info( "Loading preferences from %s" % filename )
+
+		try:
+			f = open(self.filename, "rU")
+
+			try:
+				f.readline()	# Skip over comment header
+				self.user_preferences = pickle.load(f)
+			except EOFError, inst:
+				self.logging.warning( "Error loading preferences from %s" % self.filename )
+				raise Exception
+
+			f.close()
+
+		except (IOError, Exception), inst:
+			# Pass exception upwards if we can't handle it
+			if type(inst) is IOError:
+				if inst.errno != 2:	# "File or Directory not found"
+					raise
+				else:
+					self.logging.debug( "File does not exist: %s" % self.filename )
+
+			self.logging.info( "Preferences could not be loaded" )
+
+
+pref = Preferences();
 print "Just loaded:"
-print "  active interface: ", default["interface"]
-print "  active scheme: ", default["scheme"]
-print "  active language: ", default["language"]
+print "  active interface: ", pref["interface"]
+print "  active scheme: ", pref["scheme"]
+print "  active language: ", pref["language"]
 
-default["scheme"] = "S$$ E€€"
+pref["scheme"] = "S$$ E€€"
 print "Updated scheme:"
-print "  active interface: ", default["interface"]
-print "  active scheme: ", default["scheme"]
-print "  active language: ", default["language"]
+print "  active interface: ", pref["interface"]
+print "  active scheme: ", pref["scheme"]
+print "  active language: ", pref["language"]
 
-del default["interface"]
+del pref["interface"]
 print "Deleted interface:"
-print "  active interface: ", default["interface"]
-print "  active scheme: ", default["scheme"]
-print "  active language: ", default["language"]
+print "  active interface: ", pref["interface"]
+print "  active scheme: ", pref["scheme"]
+print "  active language: ", pref["language"]
+
+pref.save()
