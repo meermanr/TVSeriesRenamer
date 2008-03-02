@@ -1,23 +1,10 @@
 #!/usr/bin/python
 # vim: set fileencoding=UTF-8:	(Note: this line also used by Python interpreter)
-"""
-A proof-of-concept script for managing preferences.
-
-Aims:
-	* Default values stored seperately from active preferences
-	* Active preferences can be stored and retrieved from file by storing the differences from default
-"""
 
 import os.path, logging, pickle, sys
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 logging.info("Script starting")
-
-default_preferences = {
-	"interface":	"CLI",
-	"scheme":		"$x€€",
-	"language":		"en",
-}
 
 class Preferences():
 	"""
@@ -33,10 +20,10 @@ class Preferences():
 	would be at ~/.testscriptrc.alternative
 	"""
 
-	filename = None
-	user_preferences = dict()
-	default_preferences = dict()
-	logging = logging.getLogger()
+	filename			= None
+	user_preferences	= dict()
+	default_preferences	= dict()
+	logging				= logging.getLogger()
 
 	def __init__(self, defaults, profile=""):
 		"""Loads preferences from optional profile name (if found), overriding
@@ -67,18 +54,20 @@ class Preferences():
 		
 		Creates a user-preference, overriding the default"""
 
+		# Check key exists in defaults
 		try:
-			self.default_preferences[key]	# Check key exists in defaults
-			self.user_preferences[key] = value
+			self.default_preferences[key]
 		except KeyError:
 			self.logging.error("Attempted to set a user-preference for which "
 					"there is no corresponding default value")
 			raise
 
+		self.user_preferences[key] = value
+
 	def __delitem__(self, key):
 		"""x.__delitem__(y) <==> del x[y]
 		
-		Removes a user-preferences, restoring the default"""
+		Removes a user-preference, restoring the default"""
 
 		try:
 			del self.user_preferences[key]
@@ -88,7 +77,11 @@ class Preferences():
 	def __getitem__(self, key):
 		"""x.__getitem__(y) <==> x[y]
 		
-		Retrieves a user-preferences if it exists, default otherwise"""
+		Retrieves a user-preference if it exists, default otherwise"""
+
+		if type(key) is int:
+			return self.default_preferences.keys()[key]
+
 		try:
 			return self.user_preferences[key]
 		except KeyError:
@@ -139,23 +132,52 @@ class Preferences():
 
 			self.logging.info( "Preferences could not be loaded" )
 
+	def keys(self):
+		"""P.keys() -> list of P's keys"""
 
-pref = Preferences();
-print "Just loaded:"
-print "  active interface: ", pref["interface"]
-print "  active scheme: ", pref["scheme"]
-print "  active language: ", pref["language"]
+		# Note: This works because user_preferences is a sub-set of default_preferences
+		return self.default_preferences.keys()
 
-pref["scheme"] = "S$$ E€€"
-print "Updated scheme:"
-print "  active interface: ", pref["interface"]
-print "  active scheme: ", pref["scheme"]
-print "  active language: ", pref["language"]
 
-del pref["interface"]
-print "Deleted interface:"
-print "  active interface: ", pref["interface"]
-print "  active scheme: ", pref["scheme"]
-print "  active language: ", pref["language"]
+##
+# Example use
 
-pref.save()
+# Create a dictionary of defaults
+default_preferences = {
+		"name":				"User",
+		"location":			"Chair",
+		"mood":				"Indifferent",
+		"random number":	42,
+}
+
+# Create a preferences object, using the default profile
+# This will attempt to load preferences from the user's home directory, for any
+# entry not found the default value will be used
+p = Preferences(default_preferences);
+
+# Print out current preferences
+print "Prefernces after load:"
+for key in p:
+	print "  ", key, ":\t", p[key]
+print ""
+
+import random
+
+# Set some user-preferences
+p["name"]			= "Rob Meerman"
+p["location"]		= "Edge of chair"
+p["mood"]			= "Expectant"
+del p["random number"]
+
+print "Preferences after update:"
+for key in p:
+	print "  ", key, ": ", p[key]
+print ""
+
+# Save current preferences to file. Rerun this script to see them loaded!
+print "Setting random number entry and saving..."
+p["random number"]	= random.random()
+p.save()
+
+print ""
+print "Now run this script again to see the preferences get loaded"
