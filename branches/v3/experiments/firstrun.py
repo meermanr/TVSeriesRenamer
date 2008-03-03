@@ -30,6 +30,13 @@ Win32 Notes:
 
 TODO: Detect when the program is read-only and avoid attempting to update the
 tmestamps - just assume it is not the first run.
+
+TODO: It would appear that this is not going to work for the EXE version
+because Windows doesn't allow you to modify the EXE while it is running (at
+least, the EXE cannot modify itself according to my testing) - consider making
+this code applicable only for POSIX and just don't care about Win? How about
+using last-accessed vs created for Win32, and last-modified vs last-changed in
+POSIX?
 """
 
 from time	import sleep
@@ -37,6 +44,8 @@ from sys	import argv
 from os		import stat, chmod
 
 if argv[0] is not '':
+	print "argv[0] is '", argv[0], "'"
+
 	stat_result = stat( argv[0] )
 	print "Before:"
 	print "  Access: %f" % stat_result.st_atime
