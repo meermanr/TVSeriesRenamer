@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # vim: set fileencoding=UTF-8:	(Note: this line also used by Python interpreter)
 
-import os.path, logging, pickle, sys
+import os.path, logging, pickle, sys, encodings.string_escape
+import encodings.string_escape	# A dependancy of pickle which is not detected by py2exe or cx_freeze
 
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 logging.info("Script starting")
 
 class Preferences():
@@ -125,12 +126,11 @@ class Preferences():
 		except (IOError, Exception), inst:
 			# Pass exception upwards if we can't handle it
 			if type(inst) is IOError:
-				if inst.errno != 2:	# "File or Directory not found"
-					raise
-				else:
+				if inst.errno == 2:	# "File or Directory not found"
 					self.logging.debug( "File does not exist: %s" % self.filename )
+			else:
+				self.logging.warning( "Unable to load preferences from %s: (%s) %s" % (self.filename, type(inst).__name__, inst.__str__() ) )
 
-			self.logging.info( "Preferences could not be loaded" )
 
 	def keys(self):
 		"""P.keys() -> list of P's keys"""
