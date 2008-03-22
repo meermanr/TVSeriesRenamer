@@ -60,3 +60,6 @@ print " done\n";
 print "Packaging script into .exe...";
 qx#cmd /C "c:\\Perl\\bin\\pp.bat tvrenamer_win32.pl -o tvrenamer.exe -v"#;
 print " done\n";
+print "Packaging script into 64-bit edition .exe...";
+qx#cmd /C "c:\\Perl\\bin\\pp.bat tvrenamer.pl -o tvrenamer.noansi.exe -v"#;
+print " done\n";

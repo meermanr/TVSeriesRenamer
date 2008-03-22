@@ -10,16 +10,19 @@ if(@ARGV[0] eq "beta")
     print "Renaming to betas...\n";
     rename("tvrenamer.pl", "tvrenamer.beta.pl");
     rename("tvrenamer.exe", "tvrenamer.beta.exe");
+    rename("tvrenamer.noansi.exe", "tvrenamer.noansi.beta.exe");
     $script = "tvrenamer.beta.pl";
     $binary = "tvrenamer.beta.exe";
+    $64bit_binary = "tvrenamer.noansi.beta.exe";
 }
 else
 {
     $script = "tvrenamer.pl";
     $binary = "tvrenamer.exe";
+    $64bit_binary = "tvrenamer.noansi.exe";
 }
 print "Uploading...";
-system("scp $script $binary robmeerman.co.uk:public_html/downloads");
+system("scp $script $binary $64bit_binary robmeerman.co.uk:public_html/downloads");
 print "Done.\n";
 
 # Tag if upload was successful (and the environment doesn't have a NOTAG
