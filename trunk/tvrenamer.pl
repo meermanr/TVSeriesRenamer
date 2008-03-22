@@ -12,43 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.23 Tidied --help up a lot and revisited many comments in the script proper {{{2
-#        Added --exclude_series, which excludes the series name from the new filename
-#         and counter-part --include_series to override this (incase you set it to be
-#         default)
-#        Changed default behaviour, series name is dropped when current dir is called
-#         "series 1" or similar
-#        Added support for a preferences file. Place command-line arguments, one per
-#         line, in a file called ".tvrenamerrc" in your home directory to use this.
-#         Windows users: Your home directory is what you get when you go Start > Run
-#         "explorer ." > OK  -  Note the "." in that command!
-#
-#  v2.24 Updated to match changed to AniDB's page layout. {{{2
-#        BUGFIX: Fixes support for "s01 e01" in file names (space wasn't allowed before)
-#
-#  v2.25 AniDB search facility fixed, this also broke because of the new AniDB layout {{{2
-#
-#  v2.26 Added --associate-with-video-folders and --unassociate-with-video-folders, {{{2
-#         a pair of windows-specific switches to (un)install a registry change that
-#         adds "Use TV Renamer Script" to the right-click menu of video folders
-#
-#  v2.27 BUGFIX: Season numbers are treated as numbers now (were treated as strings), {{{2
-#         so season "06" becomes "6", which fixed automatic fetching from the web.
-#
-#  v2.28 BUGFIX: Windows-specific associate with Video Folders was causing some people {{{2
-#         trouble. The script would set itself as the default action when double clicking
-#         a folder - hence you couldn't open a folder anymore! This was because
-#         some copies of Windows don't have the default @="open" specified in
-#         their registry, the script now sets this when you associate.
-#        ENHANCEMENT: Subtitle files are now renamed by default, no need for "--nofilter"
-#
-#  v2.29 COMPATABILITY: Updated epguide format parser to handle Battlestar {{{2
-#         Galactica, which does not have a space between the episode number and
-#         production code.
-#
-#  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit {{{2
-#		 fuzzier, allowing "24/Season.6" and the like
-#
 #  v2.31 FLEXABILITY: --preproc evaluation moved earlier, to allow it to {{{2
 #		 manipulate the filename _before_ file extensions are detected.
 #        BUGFIX: Now prints "Reading preferences" message when doing so
@@ -63,7 +26,12 @@
 #		 layout changes
 #        FEATURE: Added new scheme: XYY. This creates output suitable for the
 #        --dubious option. E.g. S01E08 -> 108
+#
+#  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
+#        alternative to the existing sXXeYY
+#
 # TODO: {{{1
+#  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
 #	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
@@ -205,7 +173,8 @@ Input options:
  -                  Use STDIN (don't look for URL shortcuts or input files)
   
 Formatting options:
- --scheme=X         Episode number format. One of: sXXeYY, XxYY, XYY, YY
+ --scheme=X         Episode number format. One of: SXXEYY, sXXeYY, XxYY, XYY,
+                    YY
 
  Note: Numbers are \"padded\" with zeros to fit all numbers, so if 9 or
  less episodes are listed on your source website, you will have 1-digit
@@ -1385,6 +1354,7 @@ foreach(@fileList){
 			my $epNum;
 			my $local_gap = $gap;
 			switch($scheme){
+				case 'SXXEYY' {$epNum = "S".pad($season, 2)."E".$dispNum;}
 				case 'sXXeYY' {$epNum = "s".pad($season, 2)."e".$dispNum;}
 				case 'YY'     {$epNum = $dispNum;}
 				case 'XxYY'   {$epNum = $season."x".$dispNum;}
@@ -1953,5 +1923,42 @@ sub readURLfile #{{{
 #  (spaces were not being converted to %20 when sending data to the website).
 #
 #  v2.22 BUGFIX: --reversible didn't log non-Unicode name changes in Windows / Cygwin {{{2
+#
+#  v2.23 Tidied --help up a lot and revisited many comments in the script proper {{{2
+#        Added --exclude_series, which excludes the series name from the new filename
+#         and counter-part --include_series to override this (incase you set it to be
+#         default)
+#        Changed default behaviour, series name is dropped when current dir is called
+#         "series 1" or similar
+#        Added support for a preferences file. Place command-line arguments, one per
+#         line, in a file called ".tvrenamerrc" in your home directory to use this.
+#         Windows users: Your home directory is what you get when you go Start > Run
+#         "explorer ." > OK  -  Note the "." in that command!
+#
+#  v2.24 Updated to match changed to AniDB's page layout. {{{2
+#        BUGFIX: Fixes support for "s01 e01" in file names (space wasn't allowed before)
+#
+#  v2.25 AniDB search facility fixed, this also broke because of the new AniDB layout {{{2
+#
+#  v2.26 Added --associate-with-video-folders and --unassociate-with-video-folders, {{{2
+#         a pair of windows-specific switches to (un)install a registry change that
+#         adds "Use TV Renamer Script" to the right-click menu of video folders
+#
+#  v2.27 BUGFIX: Season numbers are treated as numbers now (were treated as strings), {{{2
+#         so season "06" becomes "6", which fixed automatic fetching from the web.
+#
+#  v2.28 BUGFIX: Windows-specific associate with Video Folders was causing some people {{{2
+#         trouble. The script would set itself as the default action when double clicking
+#         a folder - hence you couldn't open a folder anymore! This was because
+#         some copies of Windows don't have the default @="open" specified in
+#         their registry, the script now sets this when you associate.
+#        ENHANCEMENT: Subtitle files are now renamed by default, no need for "--nofilter"
+#
+#  v2.29 COMPATABILITY: Updated epguide format parser to handle Battlestar {{{2
+#         Galactica, which does not have a space between the episode number and
+#         production code.
+#
+#  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit {{{2
+#		 fuzzier, allowing "24/Season.6" and the like
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
