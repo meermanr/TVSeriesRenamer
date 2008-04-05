@@ -27,7 +27,7 @@ print "Updating version string to match most recent changelog entry...\n";
 $version = qx!c:\\cygwin\\bin\\bash.exe -login -i -c "head -n300 ~/svn/tvrenamer/trunk/tvrenamer.pl | egrep '^# +v[0-9]' |sed -e 's/^#\\s\\+v//' | cut -d ' ' -f1 | tail -n1"!;
 $version =~ s/\n//mg;	# Can't use chomp due to $/ override (above)
 print "Version detected to be $version\n";
-s/(^my \$version = "\D+)\d+\.\d+/$1$version/m;
+s/(^my \$version = "\D+)\d+\.\d+/$1$version\n/m;
 
 # Update release DATE
 print "Updating timestamp in version info...\n";
