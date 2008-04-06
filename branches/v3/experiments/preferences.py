@@ -1,40 +1,104 @@
 #!/usr/bin/python
 # vim: set fileencoding=UTF-8:	(Note: this line also used by Python interpreter)
 
-import os.path, logging, pickle, sys, encodings.string_escape
-import encodings.string_escape	# A dependancy of pickle which is not detected by py2exe or cx_freeze
+import logging
 
-logging.basicConfig(level=logging.DEBUG)
-logging.info("Script starting")
+logging.basicConfig(level=logging.DEBUG)	# Optional, defaults to warning
 
 class Preferences():
 	"""
-	A system for non-voltatile storage and retrieval of Python structures.
+	Given a base dictionary, this class transparently maintains an overlay
+	dictionary. When you attempt to read a value from the dictionary, the value
+	in the overlay is returned if present, otherwise the value is base is
+	returned. When setting a value only the overlay is updated. Similarly,
+	deleting an element only removes it from the overlay, so that a subsequent
+	read will give you the value present in base.
+	
+	This class is intended to be used for layering user preferences to allow
+	multiple "profiles" (saved overlays) to be combined. Each instance of this
+	class will attempt to read in its overlay from a file on disk, whose name
+	is derived from the current script's name and the (optional) profile name
+	provided during instance creation.
 
-	Intended to be used for managing user preferences via named profiles, with
-	the default profile name being an empty string.
+	Assuming a script called "testscript" and profiles named "first" and
+	"second", the following files are used to save/load overlays:
 
-	Preference files are stored in the user's home directory, and are named
-	after the current script + "rc" + optional profile name. For instance, if a
-	script is called testscript.py, the default profile will be
-	stored/retrieved from ~/.testscriptrc, and a profile named "alternative"
-	would be at ~/.testscriptrc.alternative
+		~/testscriptrc			<-- Loaded with Preferences(base)
+		~/testscriptrc.first	<-- Loaded with Preferences(base, "first")
+		~/testscriptrc.second	<-- Loaded with Preferences(base, "second")
+
+	For example, consider the following usage:
+
+		base = {
+			"pref1" = "base",
+			"pref2" = "base",
+			"pref3" = "base"
+			}
+		
+		p = Preferences(base)
+
+	At this point, p contains:
+
+		p["pref1"] == "base"
+		p["pref2"] == "base"
+		p["pref3"] == "base"
+
+	We can set our preferences like so:
+
+		p["pref1"] = "user_choice_1"
+		p["pref2"] = "user_choice_2"
+	
+	Which affects our values like so:
+
+		p["pref1"] == "user_choice_1"
+		p["pref2"] == "user_choice_2"
+		p["pref3"] == "base"
+
+	If we then delete an element, we effectively restore the base value:
+
+		del( p["pref1"] )
+
+	Which gives us:
+
+		p["pref1"] == "base"
+		p["pref2"] == "user_choice_2"
+		p["pref3"] == "base"
+	
+	More advanced usage would involve multiple layers of Preferences(), such as:
+
+		base = {}
+		os_pref = Preferences(base, os.name)
+		user_pref = Preferences(os_pref, "user")
+	
+	Where anything defined in os_pref overrides the definition in base, and
+	anything defined in user_pref overrides that of os_pref. The power in this
+	setup is that you can change something in the middle layer, os_pref, and it
+	will only affect users who have not specified their own choice for that
+	item.
+
 	"""
 
-	filename			= None
-	user_preferences	= dict()
-	default_preferences	= dict()
-	logging				= logging.getLogger()
+	filename		= None
+	local_overlay	= dict()
+	base_values		= dict()
+	logging			= logging.getLogger()	# NB: "import logging" must have
+											# been done in global scope
 
 	def __init__(self, defaults, profile=""):
-		"""Loads preferences from optional profile name (if found), overriding
-		defaults (a dictionary which is treated as read-only)"""
+		"""
+		Loads preferences from optional profile name (if found), overriding
+		defaults (a dictionary which is treated as read-only)
+		"""
+		import os.path, sys
 
 		# Configure logging scope
-		self.logging = logging.getLogger(self.__class__.__name__)
+		self.logging = logging.getLogger("%s%s" % (self.__class__.__name__, profile) )
 
 		# Copy default settings
-		self.default_preferences = defaults
+		# TODO: This should not make a copy, but store some sort of reference,
+		# so that any attempt to read from the base values will cause a look up
+		# in the underlying Preferences object that was passed in...
+		self.base_values = defaults
 
 		# Construct default filename
 		programname = os.path.basename( sys.argv[0] )
@@ -51,77 +115,100 @@ class Preferences():
 		self.load()
 
 	def __setitem__(self, key, value):
-		"""x.__setitem__(i, y) <==> x[i]=y
+		"""
+		x.__setitem__(i, y) <==> x[i]=y
 		
-		Creates a user-preference, overriding the default"""
+		Creates a user-preference, overriding the default
+		"""
 
 		# Check key exists in defaults
 		try:
-			self.default_preferences[key]
+			self.base_values[key]
 		except KeyError:
 			self.logging.error("Attempted to set a user-preference for which "
 					"there is no corresponding default value")
 			raise
 
-		self.user_preferences[key] = value
+		self.logging.debug( "Setting %s" % key )
+		self.local_overlay[key] = value
 
 	def __delitem__(self, key):
-		"""x.__delitem__(y) <==> del x[y]
+		"""
+		x.__delitem__(y) <==> del x[y]
 		
-		Removes a user-preference, restoring the default"""
+		Removes a user-preference, restoring the default
+		"""
 
 		try:
-			del self.user_preferences[key]
+			del self.local_overlay[key]
 		except KeyError:
 			pass
 
 	def __getitem__(self, key):
-		"""x.__getitem__(y) <==> x[y]
+		"""
+		x.__getitem__(y) <==> x[y]
 		
-		Retrieves a user-preference if it exists, default otherwise"""
+		Retrieves a user-preference if it exists, default otherwise
+		"""
 
+		# Lookup the name of the supplied index
+		# (Implementing this allows convenient interation over all preferences)
 		if type(key) is int:
-			return self.default_preferences.keys()[key]
+			key = self.keys()[key]
 
 		try:
-			return self.user_preferences[key]
+			self.logging.debug("Checking for %s" % key)
+			return self.local_overlay[key]
 		except KeyError:
-			return self.default_preferences[key]
+			self.logging.debug("Falling back for %s" % key)
+			return self.base_values[key]
 
 	def save(self, filename=None):
-		"""Saves user-preferences to disk.
+		"""
+		Saves user-preferences to disk.
 		
 		When 'filename' is not given the default is used, as described in this
-		class's main blurb"""
+		class's main blurb
+		"""
+		# NB: encodings is a dependancy of pickle that is otherwise uncaught by
+		# py2exe and cx_freeze
+		import pickle, encodings.string_escape
 
 		filename = self.filename if (filename is None) else filename
 		self.logging.info( "Saving preferences to %s" % filename )
 		
 		f = open(filename, "w")
-		f.writelines("# This file contains pickled Python data-structures and is not intended to be manually edited\n")
-		pickle.dump(self.user_preferences, f)
+		f.writelines("# This file contains pickled Python data-structures and "
+				"is not intended to be manually edited\n")
+		pickle.dump(self.local_overlay, f)
 		f.close()
 
 	def load(self, filename=None):
-		"""Loads user-preferences from disk.
+		"""
+		Loads user-preferences from disk.
 		
 		When 'filename' is not given the default is used, as described in this
-		class's main blurb"""
+		class's main blurb
+		"""
+		# NB: encodings is a dependancy of pickle that is otherwise uncaught by
+		# py2exe and cx_freeze
+		import pickle, encodings.string_escape
 
 		filename = self.filename if (filename is None) else filename
-		self.logging.info( "Loading preferences from %s" % filename )
+		self.logging.debug( "Attempting to load preferences from %s" % filename )
 
 		try:
 			f = open(self.filename, "rU")
 
 			try:
 				f.readline()	# Skip over comment header
-				self.user_preferences = pickle.load(f)
+				self.local_overlay = pickle.load(f)
 			except EOFError, inst:
 				self.logging.warning( "Error loading preferences from %s" % self.filename )
 				raise Exception
 
 			f.close()
+			self.logging.info( "Loaded preferences from %s" % filename )
 
 		except (IOError, Exception), inst:
 			# Pass exception upwards if we can't handle it
@@ -129,14 +216,24 @@ class Preferences():
 				if inst.errno == 2:	# "File or Directory not found"
 					self.logging.debug( "File does not exist: %s" % self.filename )
 			else:
-				self.logging.warning( "Unable to load preferences from %s: (%s) %s" % (self.filename, type(inst).__name__, inst.__str__() ) )
+				self.logging.warning( "Unable to load preferences from %s: (%s) %s" 
+						% (self.filename, type(inst).__name__, inst.__str__() ) )
 
 
 	def keys(self):
-		"""P.keys() -> list of P's keys"""
+		"""
+		P.keys() -> list of P's keys
+		"""
 
-		# Note: This works because user_preferences is a sub-set of default_preferences
-		return self.default_preferences.keys()
+		return self.base_values.keys()
+
+#	def __iter__(self):
+#		"""
+#		x.__iter__() <==> iter(x)
+#		"""
+#	
+#		# Should return an iterator object, which also implement this method
+#		# (returning itself), and should also be exposed as iterkeys()
 
 
 ##
@@ -144,40 +241,41 @@ class Preferences():
 
 # Create a dictionary of defaults
 default_preferences = {
-		"name":				"User",
-		"location":			"Chair",
-		"mood":				"Indifferent",
-		"random number":	42,
+		"pref0":	"base",
+		"pref1":	"base",
+		"pref2":	"base",
+		"pref3":	"base",
+		"pref4":	"base"
 }
 
-# Create a preferences object, using the default profile
-# This will attempt to load preferences from the user's home directory, for any
-# entry not found the default value will be used
-p = Preferences(default_preferences);
+# Create an instance, using default_preferences as the base dictionary
+p1 = Preferences(default_preferences)
 
-# Print out current preferences
-print "Prefernces after load:"
-for key in p:
-	print "  ", key, ":\t", p[key]
-print ""
+# Create more layers by passing an existing Preferences object as the base dictionary
+p2 = Preferences(p1, "2")
+p3 = Preferences(p2, "3")
+p4 = Preferences(p3, "4")
 
-import random
+# Modify each layer seperately
+#p1["pref1"] = "p1"
+#p1["pref2"] = "p1"
+#p1["pref3"] = "p1"
+#p1["pref4"] = "p1"
 
-# Set some user-preferences
-p["name"]			= "Rob Meerman"
-p["location"]		= "Edge of chair"
-p["mood"]			= "Expectant"
-del p["random number"]
+#p2["pref2"] = "p2"
+#p2["pref3"] = "p2"
+#p2["pref4"] = "p2"
 
-print "Preferences after update:"
-for key in p:
-	print "  ", key, ": ", p[key]
-print ""
+#p3["pref3"] = "p3"
+#p3["pref4"] = "p3"
 
-# Save current preferences to file. Rerun this script to see them loaded!
-print "Setting random number entry and saving..."
-p["random number"]	= random.random()
-p.save()
+p4["pref4"] = "p4"
 
-print ""
-print "Now run this script again to see the preferences get loaded"
+# TODO: Find out why all four of these layers are identical...
+
+print "defaults: ", [default_preferences[x] for x in default_preferences]
+print "p1: ", [x for x in p1]
+print "p2: ", [x for x in p2]
+print "p3: ", [x for x in p3]
+print "p4: ", [x for x in p4]
+
