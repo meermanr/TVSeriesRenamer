@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # vim: set fileencoding=UTF-8:	(Note: this line also used by Python interpreter)
 
-import logging
-
-logging.basicConfig(level=logging.DEBUG)	# Optional, defaults to warning
+# Uncomment the following two lines to affect the logging level globally
+# (including within Preferences)
+#import logging
+#logging.basicConfig(level=logging.DEBUG)	# Optional, defaults to warning
 
 class Preferences():
 	"""
@@ -78,27 +79,39 @@ class Preferences():
 
 	"""
 
+
+	"""
+	Do NOT init variables here, because if you do you may get strange
+	behaviour...
+
+	Suppose you had
+
+		local_overlay = dict()
+
+	then each instance created from this class will have the name
+	"local_overlay" bound to _exactly_ the same object in memory (as can be
+	verified with the "is" keyword). This means that when you modify it in any
+	instance, all other instances will also be affected. This is almost
+	certainly undesirable.
+	"""
+
 	filename		= None
-	local_overlay	= dict()
-	base_values		= dict()
-	logging			= logging.getLogger()	# NB: "import logging" must have
-											# been done in global scope
+	local_overlay	= None
+	base_values		= None
+	logging			= None
 
 	def __init__(self, defaults, profile=""):
 		"""
 		Loads preferences from optional profile name (if found), overriding
 		defaults (a dictionary which is treated as read-only)
 		"""
-		import os.path, sys
+		import os.path, sys, logging
 
-		# Configure logging scope
+		# Init instance data
+		# Construct the logging scope-name from the class name and active profile
 		self.logging = logging.getLogger("%s%s" % (self.__class__.__name__, profile) )
-
-		# Copy default settings
-		# TODO: This should not make a copy, but store some sort of reference,
-		# so that any attempt to read from the base values will cause a look up
-		# in the underlying Preferences object that was passed in...
 		self.base_values = defaults
+		self.local_overlay = dict()
 
 		# Construct default filename
 		programname = os.path.basename( sys.argv[0] )
@@ -157,10 +170,8 @@ class Preferences():
 			key = self.keys()[key]
 
 		try:
-			self.logging.debug("Checking for %s" % key)
 			return self.local_overlay[key]
 		except KeyError:
-			self.logging.debug("Falling back for %s" % key)
 			return self.base_values[key]
 
 	def save(self, filename=None):
@@ -227,6 +238,7 @@ class Preferences():
 
 		return self.base_values.keys()
 
+# TODO: Implement an iterator
 #	def __iter__(self):
 #		"""
 #		x.__iter__() <==> iter(x)
@@ -241,11 +253,11 @@ class Preferences():
 
 # Create a dictionary of defaults
 default_preferences = {
-		"pref0":	"base",
-		"pref1":	"base",
-		"pref2":	"base",
-		"pref3":	"base",
-		"pref4":	"base"
+		"pref0":	"zero ",
+		"pref1":	"zero ",
+		"pref2":	"zero ",
+		"pref3":	"zero ",
+		"pref4":	"zero "
 }
 
 # Create an instance, using default_preferences as the base dictionary
@@ -257,25 +269,23 @@ p3 = Preferences(p2, "3")
 p4 = Preferences(p3, "4")
 
 # Modify each layer seperately
-#p1["pref1"] = "p1"
-#p1["pref2"] = "p1"
-#p1["pref3"] = "p1"
-#p1["pref4"] = "p1"
+p1["pref1"] = "one  "
+p1["pref2"] = "one  "
+p1["pref3"] = "one  "
+p1["pref4"] = "one  "
 
-#p2["pref2"] = "p2"
-#p2["pref3"] = "p2"
-#p2["pref4"] = "p2"
+p2["pref2"] = "two  "
+p2["pref3"] = "two  "
+p2["pref4"] = "two  "
 
-#p3["pref3"] = "p3"
-#p3["pref4"] = "p3"
+p3["pref3"] = "three"
+p3["pref4"] = "three"
 
-p4["pref4"] = "p4"
-
-# TODO: Find out why all four of these layers are identical...
+p4["pref4"] = "four "
 
 print "defaults: ", [default_preferences[x] for x in default_preferences]
-print "p1: ", [x for x in p1]
-print "p2: ", [x for x in p2]
-print "p3: ", [x for x in p3]
-print "p4: ", [x for x in p4]
+print "p1      : ", [x for x in p1]
+print "p2      : ", [x for x in p2]
+print "p3      : ", [x for x in p3]
+print "p4      : ", [x for x in p4]
 
