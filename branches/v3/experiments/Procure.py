@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+import logging
+logging.addLevelName(logging.DEBUG,	"[36mDEBUG[0m")
+logging.addLevelName(logging.WARN,	"[33mWARN[0m")
+logging.addLevelName(logging.ERROR,	"[31mERROR[0m")
+logging.addLevelName(logging.INFO,	"[32mINFO[0m")
+
 class Procure():
 	"""
 	A class for procuring series and season data from various sources, such as
@@ -14,7 +20,7 @@ class Procure():
 	logging = None
 	instances = []
 	
-	def __init__(self, series):
+	def __init__(self, series_name):
 		"""
 		Find all classes dervied (indirectly) from ProcureSource and
 		instantiate them
@@ -48,7 +54,7 @@ class Procure():
 
 		self.logging.info("Found %d sources" % len(class_list))
 		self.logging.debug([c.__name__ for c in class_list])
-		self.instances = [x(series) for x in class_list]
+		self.instances = [x(series_name) for x in class_list]
 
 		self.logging.info("Querying sources")
 		[x.start() for x in self.instances]
@@ -76,16 +82,22 @@ class ProcureSource(Thread):
 	Only classes D, E and F would be instantiated. A, B and C would not be.
 	"""
 
-	logging	= None
-	series	= None
+	logging			= None
+	series_name		= None
+	episode_data	= []
 
-	def __init__(self, series):
+	def __init__(self, series_name):
 		import thread, logging
 
 		Thread.__init__(self)
 
 		self.logging = logging.getLogger(self.__class__.__name__ )
-		self.series = series
+		logging.addLevelName(logging.DEBUG, "[36mDEBUG[0m")
+		logging.addLevelName(logging.WARN, "[33mWARN[0m")
+		logging.addLevelName(logging.ERROR, "[31mERROR[0m")
+		logging.addLevelName(logging.INFO, "[32mINFO[0m")
+
+		self.series_name = series_name
 
 
 	def run(self):
@@ -97,17 +109,84 @@ class ProcureSource(Thread):
 		"""
 
 		import time
-		self.logging.debug("Pretending to search for %s" % self.series)
+		self.logging.debug("Pretending to search for %s" % self.series_name)
 		time.sleep(1)
+
+class ProcureSourceFile(ProcureSource):
+	pass
 
 class ProcureSourceSTDIN(ProcureSource):
 	pass
 
 class ProcureSourceWebsite(ProcureSource):
-	pass
+	"""
+	Website data source template class.
+	"""
+
+	data = ""
+	lasturl = ""
+
+	def run(self):
+		import urllib2
+		try:
+			self.search()
+			self.parse()
+		except urllib2.HTTPError:
+			self.logging.error("Aborting due to errors")
+
+		if len(self.episode_data) > 0:
+			self.logging.info("Got data on %d episodes" % len(self.episode_data) )
+
+	def downloadURL(self, URL):
+		import urllib, urllib2
+
+		URL = URL[0:8] + urllib.quote(URL[8:])
+
+		try:
+			f = urllib2.urlopen(URL)
+			self.data = f.read()
+			self.lasturl = URL
+		except urllib2.HTTPError, inst:
+			self.logging.error("%d %s while trying to retrieve %s" % (inst.code, inst.msg, inst.filename) )
+			for key in inst.headers:
+				self.logging.debug("%s: %s" % (key, inst.headers[key]) )
+			raise
+
+	def search(self):
+		"""
+		Obtain an URL which points at the series data we are looking for
+		"""
+		self.logging.debug("Pretending to query a website")
+
+	def parse(self):
+		"""
+		Parse the data downloaded from the URL obtained via self.search()
+		"""
+		self.logging.debug("Pretending to parse the response")
 
 class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
-	pass
+	def search(self):
+		import re
+		short_name = re.sub("(?:The\s+)?(.*?)(?:, The)?", "\\1", self.series_name)
+		short_name = re.sub("\s+", "", short_name)
+		self.downloadURL("http://epguides.com/%s" % short_name)
+
+	def parse(self):
+		import re
+
+		# Groupings:
+		#  1: Episode number
+		#  2: Episode title
+		patterns = dict()
+		patterns["normal"]	= re.compile("^\s*\d+\.\s+(\d+)-\s*(\d+)(?:\s+\S+){4}\s+<[^>]+>(.*)<[^>]+>$")
+		patterns["pilot"]	= re.compile("^\s+(P)- (1)\s+<[^>]+>(.*)<[^>]+>$")
+
+		for l in self.data.splitlines():
+			for p in patterns:
+				m = re.match(patterns[p], l)
+				if m:
+					self.episode_data.append( m.groups() )
+
 
 class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 	pass
@@ -124,3 +203,4 @@ if __name__ == "__main__":
 
 	# Some test-cases
 	procure = Procure("Smallville")
+
