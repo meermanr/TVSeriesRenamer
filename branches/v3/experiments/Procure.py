@@ -14,10 +14,12 @@ class Procure():
 	logging = None
 	instances = []
 	
-	def __init__(self):
+	def __init__(self, series):
 		"""
 		Find all classes dervied (indirectly) from ProcureSource and
 		instantiate them
+
+		input series: (String) Title of series to procure data about
 		"""
 		import logging
 
@@ -46,7 +48,7 @@ class Procure():
 
 		self.logging.info("Found %d sources" % len(class_list))
 		self.logging.debug([c.__name__ for c in class_list])
-		self.instances = [x() for x in class_list]
+		self.instances = [x(series) for x in class_list]
 
 		self.logging.info("Querying sources")
 		[x.start() for x in self.instances]
@@ -74,16 +76,17 @@ class ProcureSource(Thread):
 	Only classes D, E and F would be instantiated. A, B and C would not be.
 	"""
 
-	logging			= None
+	logging	= None
+	series	= None
 
-	def __init__(self):
+	def __init__(self, series):
 		import thread, logging
 
 		Thread.__init__(self)
 
 		self.logging = logging.getLogger(self.__class__.__name__ )
+		self.series = series
 
-		self.logging.debug("__init__()")
 
 	def run(self):
 		"""
@@ -94,7 +97,7 @@ class ProcureSource(Thread):
 		"""
 
 		import time
-		self.logging.debug("Pretending to work for a while")
+		self.logging.debug("Pretending to search for %s" % self.series)
 		time.sleep(1)
 
 class ProcureSourceSTDIN(ProcureSource):
@@ -112,12 +115,12 @@ class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 
 if __name__ == "__main__":
 	import glob
-	from Procure_plugins.Procure_plugin import *
-	"""
 	for plugin in glob.glob("Procure_plugins/*.py"):
+		if plugin[-12:] == "/__init__.py": continue
+		plugin = plugin[0:-3]	# Strip ".py"
+		plugin = plugin.replace("/", ".")
 		print "Importing", plugin
-		eval("from %s import *" % plugin[0:-3])
-		"""
+		exec("from %s import *" % plugin)
 
 	# Some test-cases
-	procure = Procure()
+	procure = Procure("Smallville")
