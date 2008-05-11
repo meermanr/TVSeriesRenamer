@@ -109,6 +109,15 @@ class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 	pass
 
+
 if __name__ == "__main__":
+	import glob
+	from Procure_plugins.Procure_plugin import *
+	"""
+	for plugin in glob.glob("Procure_plugins/*.py"):
+		print "Importing", plugin
+		eval("from %s import *" % plugin[0:-3])
+		"""
+
 	# Some test-cases
 	procure = Procure()
