@@ -137,10 +137,11 @@ class ProcureSourceWebsite(ProcureSource):
 		if len(self.episode_data) > 0:
 			self.logging.info("Got data on %d episodes" % len(self.episode_data) )
 
-	def downloadURL(self, URL):
+	def downloadURL(self, URL, already_quoted=False):
 		import urllib, urllib2
 
-		URL = URL[0:8] + urllib.quote(URL[8:])
+		if not already_quoted:
+			URL = URL[0:8] + urllib.quote(URL[8:])
 
 		try:
 			f = urllib2.urlopen(URL)
@@ -189,7 +190,28 @@ class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 
 
 class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
-	pass
+	def search(self):
+		import urllib
+
+		search_url = "http://anidb.net/perl-bin/animedb.pl?show=animelist&adb.search=%s&do.search=search" % urllib.quote_plus(self.series_name)
+		self.logging.debug("Search URL: %s" % search_url)
+		self.downloadURL(search_url, already_quoted=True)
+
+		# TODO: Open a "bug" report with AniDB.info - their HTTP headers should
+		# report that the content type is compressed - NOT text/html. It's not.
+
+		import gzip, StringIO
+		# gzip works on file-like objects, so we'll wrap our memory buffer in
+		# StringIO
+		f = StringIO.StringIO(self.data)
+		g = gzip.GzipFile(fileobj=f)
+
+		self.data = g.read()
+
+		g.close()
+		f.close()
+
+		print self.data
 
 
 if __name__ == "__main__":
