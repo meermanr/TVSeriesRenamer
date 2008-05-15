@@ -111,13 +111,13 @@ class ProcureSource(Thread):
 		import time
 		self.logging.debug("Pretending to search for %s" % self.series_name)
 		time.sleep(1)
-
+"""
 class ProcureSourceFile(ProcureSource):
 	pass
 
 class ProcureSourceSTDIN(ProcureSource):
 	pass
-
+"""
 class ProcureSourceWebsite(ProcureSource):
 	"""
 	Website data source template class.
@@ -133,6 +133,11 @@ class ProcureSourceWebsite(ProcureSource):
 			self.parse()
 		except urllib2.HTTPError:
 			self.logging.error("Aborting due to errors")
+		except Exception, inst:
+			if inst.args[0] == "Giving up":
+				pass
+			else:
+				raise
 
 		if len(self.episode_data) > 0:
 			self.logging.info("Got data on %d episodes" % len(self.episode_data) )
@@ -144,6 +149,7 @@ class ProcureSourceWebsite(ProcureSource):
 			URL = URL[0:8] + urllib.quote(URL[8:])
 
 		try:
+			self.logging.debug("Fetching '%s'" % URL)
 			f = urllib2.urlopen(URL)
 			self.data = f.read()
 			self.lasturl = URL
@@ -152,6 +158,23 @@ class ProcureSourceWebsite(ProcureSource):
 			for key in inst.headers:
 				self.logging.debug("%s: %s" % (key, inst.headers[key]) )
 			raise
+
+	def decompress_gzipped_response(self):
+		import gzip, StringIO
+
+		# gzip works on file-like objects, so we'll wrap our memory buffer in
+		# StringIO
+		f = StringIO.StringIO(self.data)
+		g = gzip.GzipFile(fileobj=f)
+
+		self.data = g.read()
+
+		g.close()
+		f.close()
+
+		self.logging.debug("Decompressed response. %d bytes" % len(self.data) )
+		self.logging.debug(self.data.splitlines()[0])
+
 
 	def search(self):
 		"""
@@ -164,7 +187,7 @@ class ProcureSourceWebsite(ProcureSource):
 		Parse the data downloaded from the URL obtained via self.search()
 		"""
 		self.logging.debug("Pretending to parse the response")
-
+"""
 class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 	def search(self):
 		import re
@@ -188,41 +211,93 @@ class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 				if m:
 					self.episode_data.append( m.groups() )
 
-
+"""
 class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
+
+	root_url = "http://anidb.net/perl-bin/"
+	page_list = []	# List of URLs-worth-investigating from search results
+
 	def search(self):
 		import urllib
 
-		search_url = "http://anidb.net/perl-bin/animedb.pl?show=animelist&adb.search=%s&do.search=search" % urllib.quote_plus(self.series_name)
-		self.logging.debug("Search URL: %s" % search_url)
-		self.downloadURL(search_url, already_quoted=True)
+		if self.page_list:
+			self.logging.error("Not implemented yet. Would have investigated next search result, or raised an exception if no uninvestigated results exist")
+			pass
+		else:
+			search_url = self.root_url + "animedb.pl?show=animelist&adb.search=%s&do.search=search" % urllib.quote_plus(self.series_name)
+			self.logging.debug("Search URL: %s" % search_url)
+			self.downloadURL(search_url, already_quoted=True)
+			# TODO: Open a "bug" report with AniDB.info - their HTTP headers should
+			# report that the content type is compressed - NOT text/html. It's not.
+			self.decompress_gzipped_response()
 
-		# TODO: Open a "bug" report with AniDB.info - their HTTP headers should
-		# report that the content type is compressed - NOT text/html. It's not.
+			import re
+			# List of patterns, increasing in fuzziness
+			patterns = []
+			patterns.append('<a href="(.*?)">%s</a>' % self.series_name)
 
-		import gzip, StringIO
-		# gzip works on file-like objects, so we'll wrap our memory buffer in
-		# StringIO
-		f = StringIO.StringIO(self.data)
-		g = gzip.GzipFile(fileobj=f)
+			# Compile patterns
+			patterns = [re.compile(p, re.MULTILINE) for p in patterns]
 
-		self.data = g.read()
+			# Collect results of applying all patterns
+			for p in patterns:
+				self.page_list.extend( re.findall(p, self.data) )
 
-		g.close()
-		f.close()
+			# Remove duplicates (more common than you'd think)
+			# The awesome one-liner works by creating a second list which is offset
+			# by one (achieved by prepending a None element) so that zip()
+			# effectively produces pairs of neighbours (n, n+1). We then filter out
+			# all the cases where n == n+1
+			self.page_list = sorted(self.page_list)
+			self.page_list = [ x[0] for x in zip(self.page_list, [None]+self.page_list) if x[0] != x[1] ]
 
-		print self.data
+			# Clean-up: &amp; -> &
+			self.page_list = [ re.sub("&amp;", "&", p) for p in self.page_list ]
+
+			# Use results
+			if self.page_list:
+				if len(self.page_list) > 1:
+					self.logging.info("Found %d matches!" % len(self.page_list) )
+					self.logging.warn("Only first match will be used, fallback not yet implemented")
+				else:
+					self.logging.info("Found match!")
+
+				self.downloadURL("%s%s" % (self.root_url, self.page_list[0]), already_quoted=True)
+				self.decompress_gzipped_response()
+
+			else:
+				self.logging.debug("No match found in search results. Giving up.")
+				raise Exception("Giving up")
+
+	def parse(self):
+		import re
+
+		patterns = []
+		patterns.append('<td class=".*?eid"><a href=".*?;eid=\d+">(\d+)</a></td>\s*<td[^>]*>.*?<label>(.*?)<span>.*?</span></label>\s*</td>')
+
+		# Compile patterns
+		patterns = [re.compile(p, re.MULTILINE | re.DOTALL) for p in patterns]
+
+		# Collect results of applying all patterns
+		for p in patterns:
+			self.episode_data.extend( re.findall(p, self.data) )
+
+		self.logging.info("Retrieved data on %d episodes" % len(self.episode_data) )
+		print self.episode_data[0]
+
 
 
 if __name__ == "__main__":
 	import glob
+	"""
 	for plugin in glob.glob("Procure_plugins/*.py"):
 		if plugin[-12:] == "/__init__.py": continue
 		plugin = plugin[0:-3]	# Strip ".py"
 		plugin = plugin.replace("/", ".")
 		print "Importing", plugin
 		exec("from %s import *" % plugin)
+	"""
 
 	# Some test-cases
-	procure = Procure("Smallville")
+	procure = Procure("One Piece")
 
