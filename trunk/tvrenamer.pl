@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -C
 # This script is designed to rename anime/TV series which are arranged {{{1
 # in folders (so all files in current directory can be assumed to belong to one
 # series).
@@ -29,6 +29,24 @@
 #
 #  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
 #        alternative to the existing sXXeYY
+#
+#  v2.34 BUGFIX: Series names which contained punctuation would confuse (or
+#        crash!) the script if they happened to resemble a regular expression.
+#        This also prevented it from being able to differentiate between
+#        numbers in the series title and a file's episode number.
+#        BUGFIX: Empty lines in config files no longer upset the script
+#        BUGFIX: TV.com search fixed - the site's HTML layout changed a bit too
+#        much
+#		 BUGFIX: Shortcut finding is now case-insensitive, so fixed for MacOS/Linux/BSD
+#        FEATURE: Now understands double-episode filenames of the form
+#        s01.e08-e09 (note the second "e")
+#        BUGFIX: EpGuides.com parser improved - entries do not have to have
+#        been aired to be parsed correctly - thanks to Tony White for his patch!
+#        BUGFIX: "Specials" name extraction didn't check if the "s" in front of
+#        the episode number was "alone". If it was part of a word, strange
+#        things happened.
+#        BUGFIX: Filename extensions defined in the file filter (see --help) is
+#        no-longer case-sensitive
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -257,6 +275,7 @@ Standard GNU stuff:
 my $tvrenamerrc = '';
 if(-e $ENV{"HOME"}."/.tvrenamerrc"){$tvrenamerrc = $ENV{"HOME"}."/.tvrenamerrc";}
 if(-e $ENV{"USERPROFILE"}."/.tvrenamerrc"){$tvrenamerrc = $ENV{"USERPROFILE"}."/.tvrenamerrc";}
+if(-e $ENV{"USERPROFILE"}."/_tvrenamerrc"){$tvrenamerrc = $ENV{"USERPROFILE"}."/_tvrenamerrc";}
 unless($tvrenamerrc eq '')
 {
 	print "Reading preferences from $tvrenamerrc\n";
@@ -271,6 +290,7 @@ if($#ARGV ne -1)
 {
 	foreach(@ARGV){
 		switch ($_) {
+			case /^$/                {}	# Skip empty strings, often from .tvrenamerrc files
 			case /^--autofetch$/i    {$implicit_format = 0; $format = Format_AutoFetch;}
 			case /^--autodetect$/i   {$implicit_format = 0; $format = Format_AutoDetect;}
 			case /^--anidb$/i        {$implicit_format = 0; $format = Format_AniDB;}
@@ -334,6 +354,14 @@ if($#ARGV ne -1)
 		}
 	}
 }
+
+# Sanitize series name, incase it happens to be a valid regular expression (for
+# instance if brackets are present)
+# This is used whenever pattern matching on the series is done
+my $escaped_series;
+$escaped_series = $series;
+$escaped_series =~ s/([({\[^$*+?\]})])/\\$1/g;
+
 #------------------------------------------------------------------------------}}}
 # Setup ANSI sequences {{{
 my ($ANSInormal, $ANSIbold, $ANSIblack, $ANSIred, $ANSIgreen, $ANSIyellow, $ANSIblue,
@@ -508,14 +536,14 @@ else
 	if ( $implicit_format ){
 		if ( !defined $inputFile )
 		{
-			if ( -e 'AniDB.txt')				{$site = NumSites-1; $format = Format_AniDB;		$inputFile = 'AniDB.txt';		}
-			if ( -e 'TVtorrents.txt')			{$site = NumSites-1; $format = Format_TVtorrents;	$inputFile = 'TVtorrents.txt';	}
-			if ( -e 'TVtome.txt')				{$site = NumSites-1; $format = Format_TVtome;		$inputFile = 'TVtome.txt';		}
-			if ( -e 'TV.txt')					{$site = NumSites-1; $format = Format_TV;			$inputFile = 'TV.txt';			}
-			if ( -e 'TV2.txt')					{$site = NumSites-1; $format = Format_TV2;			$inputFile = 'TV2.txt';			}
-			if ( -e 'EpGuides.txt')				{$site = NumSites-1; $format = Format_EpGuides;		$inputFile = 'EpGuides.txt';	}
-			if ( ($_ = bsd_glob('*.url')))		{$site = NumSites-1; $format = Format_AutoDetect;	$inputFile = readURLfile($_);	}
-			if ( ($_ = bsd_glob('*.desktop')))	{$site = NumSites-1; $format = Format_AutoDetect;	$inputFile = readURLfile($_);	}
+			if ( -e 'AniDB.txt')								{$site = NumSites-1; $format = Format_AniDB;		$inputFile = 'AniDB.txt';		}
+			if ( -e 'TVtorrents.txt')							{$site = NumSites-1; $format = Format_TVtorrents;	$inputFile = 'TVtorrents.txt';	}
+			if ( -e 'TVtome.txt')								{$site = NumSites-1; $format = Format_TVtome;		$inputFile = 'TVtome.txt';		}
+			if ( -e 'TV.txt')									{$site = NumSites-1; $format = Format_TV;			$inputFile = 'TV.txt';			}
+			if ( -e 'TV2.txt')									{$site = NumSites-1; $format = Format_TV2;			$inputFile = 'TV2.txt';			}
+			if ( -e 'EpGuides.txt')								{$site = NumSites-1; $format = Format_EpGuides;		$inputFile = 'EpGuides.txt';	}
+			if ( ($_ = bsd_glob('*.url', GLOB_NOCASE )))		{$site = NumSites-1; $format = Format_AutoDetect;	$inputFile = readURLfile($_);	}
+			if ( ($_ = bsd_glob('*.desktop', GLOB_NOCASE )))	{$site = NumSites-1; $format = Format_AutoDetect;	$inputFile = readURLfile($_);	}
 		}
 		if ($inputFile eq '-'){$site = NumSites-1; $format=Format_AutoDetect; $inputFile = undef;}
 	}
@@ -683,14 +711,15 @@ else
 				}
 				die ($ANSIred."Unable to perform search on TV.com! (Fetched $len bytes of data) Please try the following in a browser:\n  $url\n".$ANSInormal) unless length($page) > 0;
 
-				#EG: <a href="http://www.tv.com/scrubs/show/3613/summary.html&q=Scrubs" class="f-18 f-bold">Scrubs</a>
-				($link) = ($page =~ /<a href="([^"]+)" class="[^"]*">.*?$series.*?<\/a>/i);
+				#EG: <span class="f-18">Show: <a class="f-bold f-C30" href="http://www.tv.com/human-weapon/show/74629/summary.html?q=Human Weapon&tag=search_results;title;1">Human Weapon</a></span>
+				($link) = ($page =~ m@<a class="[^"]+" href="(http://www.tv.com/[^/]+/show/\d+/summary.html[^"]+)">$escaped_series</a>@i);
 				die("I did the search but I couldn't find \"$series\" in the response!") unless defined $link;
 
 				# Peform adaptation. Eg:
 				# /-  http://www.tv.com/24/show/3866/summary.html&q=24
 				# \-> http://www.tv.com/24/show/3866/episode_listings.html&season=0
 				print $ANSIgreen."Found match!\n".$ANSInormal;
+				if($debug){print $ANSIcyan."Hit link is: $link\n".$ANSInormal;}
 				($inputFile) = ($link =~ /^(.*?)summary.html/);
 				$inputFile .= "episode_listings.html&season=$season";
 
@@ -1096,8 +1125,15 @@ else
 				
 				foreach(@input)
 				{
-					# Most episodes
-					if( ($num, $epTitle) = ($_ =~ /\s*\d+\.\s+$season-(..).*? \w{3} \d{2}(.*$)/) )
+					# Most episodes (new parser, v2.34)
+					if( ($num, $epTitle) = ($_ =~ /\s+$season-(..)(.*)$/) )
+					{
+						# Cleanup whitespace (and tags if using online version)
+						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						check_and_push($epTitle, \@name, $num);
+					}
+					# Most episodes (old parser, v2.33 and earlier)
+					elsif( ($num, $epTitle) = ($_ =~ /\s*\d+\.\s+$season-(..).*? \w{3} \d{2}(.*$)/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
 						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
@@ -1237,7 +1273,7 @@ while ($file = readdir(DIR))
 {
 	if(! -d $file)         # Ensure not a directory
 	{
-		if(! defined $filterFiles || ($file =~ $filterFiles) ){ push(@fileList, $file); }
+		if(! defined $filterFiles || ($file =~ /$filterFiles/i) ){ push(@fileList, $file); }
 	}
 }
 closedir(DIR);
@@ -1277,7 +1313,7 @@ foreach(@fileList){
 
 	($group) = ($_ =~ /\[([^\]]*)\]/);  # Yank contents of matching '[]' as the release group
 	s/^(.*)\[$group\](.*)$/$1$2/;       # Strip group (ifdef)
-	s/^\s*$series(.*)$/$1/i;            # Strip series name (ifdef), overcomes numbers-in-series troubles
+	s/^\s*$escaped_series(.*)$/$1/i;    # Strip series name (ifdef), overcomes numbers-in-series troubles
 
 	if($cleanup){
 		# Skip episode-matching stage
@@ -1292,7 +1328,7 @@ foreach(@fileList){
 		# and take care to detect which we need
 
 		# Remove everything except Season & Episode numbers (note submissive '*?')
-		s/^.*?(season\D?\d+|S?\d+)(x\d+|\D?e\d+|\D?episode\D?\d+)?([-&]\d+)?.*$/$1$2$3/i;
+		s/^.*?(season\D?\d+|(?:[^a-z]S)?\d+)(x\d+|\D?e\d+|\D?episode\D?\d+)?([-&]e?\d+)?.*$/$1$2$3/i;
 		#FIXME: unused?: ($filePrefix) = ($1 =~ /^\s*([^\s].*[^\s])\s*$/);   # Put trimmed prefix into a variable
 		
 		# This next block will extract the episode number from the filename (if possible)
@@ -1305,14 +1341,15 @@ foreach(@fileList){
 			print "\nDubious extraction of episode number $fileNum from \"$before\""; $dubious_count++;
 		}
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){} # Match "Season 01 Episode 08-09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^s(\d+)\D?e(\d+)[-&](\d+)/i) ){} # Match "s01.e08-09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^(\d+)x(\d+)[-&](\d+)/i) ){}     # Match "1x08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /^S(\d+)[-&](\d+)$/i)){$titles=\@sname;}       # Match "S08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /^(\d+)[-&](\d+)$/i) ){}                       # Match "08-09"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){} # Match "s01.e08-e09"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^s(\d+)\D?e(\d+)[-&](\d+)/i) ){}  # Match "s01.e08-09"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^(\d+)x(\d+)[-&](\d+)/i) ){}      # Match "1x08-09"
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /^S(\d+)[-&](\d+)$/i)){$titles=\@sname;}        # Match "S08-09"
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /^(\d+)[-&](\d+)$/i) ){}                        # Match "08-09"
 		elsif( ($fileNum) = ($_ =~ /^season\D?\d+.?episode\D?(\d+)/i) ){} # Match "Season 01 Episode 08"
 		elsif( ($fileSeason, $fileNum) = ($_ =~ /^s(\d+)\D?e(\d+)/i) ){}  # Match "s01e08"
 		elsif( ($fileSeason, $fileNum) = ($_ =~ /^(\d+)x(\d+)/i) ){}      # Match "1x08"
-		elsif( ($fileNum) = ($_ =~ /^S(\d+)$/i)){$titles=\@sname;}        # Match "S08"
+		elsif( ($fileNum) = ($_ =~ /^.S(\d+)$/i)){$titles=\@sname;}       # Match "S08" (NB: Filtering above includes an extra char before the S)
 		elsif( ($fileNum) = ($_ =~ /^(\d+)$/i) ){}                        # Match "08"
 		else{                                                             # Finding episode number failed
 			print "\nCan't extract episode number from snippet '$_'\tof filename: \"$before\", ignoring.";
