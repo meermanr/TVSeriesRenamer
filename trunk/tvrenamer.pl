@@ -14,7 +14,7 @@
 #
 #  v2.31 FLEXABILITY: --preproc evaluation moved earlier, to allow it to {{{2
 #		 manipulate the filename _before_ file extensions are detected.
-#        BUGFIX: Now prints "Reading preferences" message when doing so
+#		 BUGFIX: Now prints "Reading preferences" message when doing so
 #		 MAINTENANCE: Updated AniDB parser in sympathy with AniDB.info's
 #		 changes. AniDB search facility also updated.
 #
@@ -24,29 +24,30 @@
 #		 script.
 #		 BUGFIX: Updated AniDB parsers in sympathy with changes to AniDB.info
 #		 layout changes
-#        FEATURE: Added new scheme: XYY. This creates output suitable for the
-#        --dubious option. E.g. S01E08 -> 108
+#		 FEATURE: Added new scheme: XYY. This creates output suitable for the
+#		 --dubious option. E.g. S01E08 -> 108
 #
 #  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
-#        alternative to the existing sXXeYY
+#		 alternative to the existing sXXeYY
 #
 #  v2.34 BUGFIX: Series names which contained punctuation would confuse (or
-#        crash!) the script if they happened to resemble a regular expression.
-#        This also prevented it from being able to differentiate between
-#        numbers in the series title and a file's episode number.
-#        BUGFIX: Empty lines in config files no longer upset the script
-#        BUGFIX: TV.com search fixed - the site's HTML layout changed a bit too
-#        much
-#		 BUGFIX: Shortcut finding is now case-insensitive, so fixed for MacOS/Linux/BSD
-#        FEATURE: Now understands double-episode filenames of the form
-#        s01.e08-e09 (note the second "e")
-#        BUGFIX: EpGuides.com parser improved - entries do not have to have
-#        been aired to be parsed correctly - thanks to Tony White for his patch!
-#        BUGFIX: "Specials" name extraction didn't check if the "s" in front of
-#        the episode number was "alone". If it was part of a word, strange
-#        things happened.
-#        BUGFIX: Filename extensions defined in the file filter (see --help) is
-#        no-longer case-sensitive
+#		  crash!) the script if they happened to resemble a regular expression.
+#		  This also prevented it from being able to differentiate between
+#		  numbers in the series title and a file's episode number.
+#		  BUGFIX: Empty lines in config files no longer upset the script
+#		  BUGFIX: TV.com search fixed - the site's HTML layout changed a bit too
+#		  much
+#		  BUGFIX: Shortcut finding is now case-insensitive, so fixed for
+#		  MacOS/Linux/BSD
+#		  FEATURE: Now understands double-episode filenames of the form
+#		  s01.e08-e09 (note the second "e")
+#		  BUGFIX: EpGuides.com parser improved - entries do not have to have
+#		  been aired to be parsed correctly - thanks to Tony White for his patch!
+#		  BUGFIX: "Specials" name extraction didn't check if the "s" in front of
+#		  the episode number was "alone". If it was part of a word, strange
+#		  things happened.
+#		  BUGFIX: Filename extensions defined in the file filter (see --help) is
+#		  no-longer case-sensitive
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
