@@ -27,13 +27,13 @@ print "Updating version string to match most recent changelog entry...\n";
 $version = qx!c:\\cygwin\\bin\\bash.exe -login -i -c "head -n300 ~/svn/tvrenamer/trunk/tvrenamer.pl | egrep '^# +v[0-9]' |sed -e 's/^#\\s\\+v//' | cut -d ' ' -f1 | tail -n1"!;
 $version =~ s/\n//mg;	# Can't use chomp due to $/ override (above)
 print "Version detected to be $version\n";
-s/(^my \$version = "\D+)\d+\.\d+/$1$version\n/m;
+s/(^my \$version = "\D+)\d+\.\d+/$1$version/m;
 
 # Update release DATE
 print "Updating timestamp in version info...\n";
 $datestamp = qx/c:\\cygwin\\bin\\date.exe +"%d %B %Y"/;
 $datestamp =~ s/\n//mg;	# Can't use chomp due to $/ override (above)
-s/(^my \$version = ".*?Released )[^"]*/$1$datestamp/m;
+s/(my \$version = ".*?Released )[^"]*/$1$datestamp\n/;
 
 # Write updated script to file
 print "Saving these changes to tvrenamer.pl...\n";
