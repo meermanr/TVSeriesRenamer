@@ -33,7 +33,7 @@ s/(^my \$version = "\D+)\d+\.\d+/$1$version/m;
 print "Updating timestamp in version info...\n";
 $datestamp = qx/c:\\cygwin\\bin\\date.exe +"%d %B %Y"/;
 $datestamp =~ s/\n//mg;	# Can't use chomp due to $/ override (above)
-s/(my \$version = ".*?Released )[^"]*/$1$datestamp\n/;
+s/(my \$version = ".*?Released )[^"]*/$1$datestamp\\n/;
 
 # Write updated script to file
 print "Saving these changes to tvrenamer.pl...\n";
