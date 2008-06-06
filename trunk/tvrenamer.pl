@@ -12,21 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.31 FLEXABILITY: --preproc evaluation moved earlier, to allow it to {{{2
-#		 manipulate the filename _before_ file extensions are detected.
-#		 BUGFIX: Now prints "Reading preferences" message when doing so
-#		 MAINTENANCE: Updated AniDB parser in sympathy with AniDB.info's
-#		 changes. AniDB search facility also updated.
-#
-#  v2.32 BUGFIX: Now prints newlines at end of messages {{{2
-#		 BUGFIX: Re-worked AniDB parser so that alternative episode titles are
-#		 optional- this was causing some pages to be percieved as blank by the
-#		 script.
-#		 BUGFIX: Updated AniDB parsers in sympathy with changes to AniDB.info
-#		 layout changes
-#		 FEATURE: Added new scheme: XYY. This creates output suitable for the
-#		 --dubious option. E.g. S01E08 -> 108
-#
 #  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
 #		 alternative to the existing sXXeYY
 #
@@ -48,6 +33,11 @@
 #		  things happened.
 #		  BUGFIX: Filename extensions defined in the file filter (see --help) is
 #		  no-longer case-sensitive
+#
+#  v2.35 BUGFIX: SXXEYY parsing had a couple of new bugs from v2.34 - either a
+#        leading space was included with the SXXEYY snippet, or the "S" was
+#        excluded.  Removed the complex (and now unnecessary) file-name
+#        pre-filter that was cauing the problem.
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -1329,8 +1319,13 @@ foreach(@fileList){
 		# hence we use $titles to reference our current name list (either @name or @sname)
 		# and take care to detect which we need
 
+		# XXX 2008-06-06: Commented out this pre-filter as I don't think I need
+		# it any more. It used to be done to make sure that numbers in the
+		# series name didn't interfere with the detection, but this is now done
+		# at the top of this block.
+		#
 		# Remove everything except Season & Episode numbers (note submissive '*?')
-		s/^.*?(season\D?\d+|(?:[^a-z]S)?\d+)(x\d+|\D?e\d+|\D?episode\D?\d+)?([-&]e?\d+)?.*$/$1$2$3/i;
+		#s/^.*?(season\D?\d+|(?:(?<![^a-z])S)?\d+)(x\d+|\D?e\d+|\D?episode\D?\d+)?([-&]e?\d+)?.*$/$1$2$3/i;
 		#FIXME: unused?: ($filePrefix) = ($1 =~ /^\s*([^\s].*[^\s])\s*$/);   # Put trimmed prefix into a variable
 		
 		# This next block will extract the episode number from the filename (if possible)
@@ -1342,17 +1337,17 @@ foreach(@fileList){
 		if( $dubious && (($fileNum) = ($_ =~ /^\d+(\d\d)/)) ){
 			print "\nDubious extraction of episode number $fileNum from \"$before\""; $dubious_count++;
 		}
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){} # Match "Season 01 Episode 08-09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){} # Match "s01.e08-e09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^s(\d+)\D?e(\d+)[-&](\d+)/i) ){}  # Match "s01.e08-09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /^(\d+)x(\d+)[-&](\d+)/i) ){}      # Match "1x08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /^S(\d+)[-&](\d+)$/i)){$titles=\@sname;}        # Match "S08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /^(\d+)[-&](\d+)$/i) ){}                        # Match "08-09"
-		elsif( ($fileNum) = ($_ =~ /^season\D?\d+.?episode\D?(\d+)/i) ){} # Match "Season 01 Episode 08"
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /^s(\d+)\D?e(\d+)/i) ){}  # Match "s01e08"
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /^(\d+)x(\d+)/i) ){}      # Match "1x08"
-		elsif( ($fileNum) = ($_ =~ /^.S(\d+)$/i)){$titles=\@sname;}       # Match "S08" (NB: Filtering above includes an extra char before the S)
-		elsif( ($fileNum) = ($_ =~ /^(\d+)$/i) ){}                        # Match "08"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){} # Match "Season 01 Episode 08-09"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){} # Match "s01.e08-e09"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){}  # Match "s01.e08-09"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /(\d+)x(\d+)[-&](\d+)/i) ){}      # Match "1x08-09"
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$titles=\@sname;}        # Match "S08-09"
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /(\d+)[-&](\d+)/i) ){}                        # Match "08-09"
+		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?(\d+)/i) ){} # Match "Season 01 Episode 08"
+		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?e(\d+)/i) ){}  # Match "s01e08"
+		elsif( ($fileSeason, $fileNum) = ($_ =~ /(\d+)x(\d+)/i) ){}      # Match "1x08"
+		elsif( ($fileNum) = ($_ =~ /.S(\d+)/i)){$titles=\@sname;}       # Match "S08" (NB: Filtering above includes an extra char before the S)
+		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){}                        # Match "08"
 		else{                                                             # Finding episode number failed
 			print "\nCan't extract episode number from snippet '$_'\tof filename: \"$before\", ignoring.";
 		   	$warnings++;
@@ -1999,5 +1994,20 @@ sub readURLfile #{{{
 #
 #  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit {{{2
 #		 fuzzier, allowing "24/Season.6" and the like
+#
+#  v2.31 FLEXABILITY: --preproc evaluation moved earlier, to allow it to {{{2
+#		 manipulate the filename _before_ file extensions are detected.
+#		 BUGFIX: Now prints "Reading preferences" message when doing so
+#		 MAINTENANCE: Updated AniDB parser in sympathy with AniDB.info's
+#		 changes. AniDB search facility also updated.
+#
+#  v2.32 BUGFIX: Now prints newlines at end of messages {{{2
+#		 BUGFIX: Re-worked AniDB parser so that alternative episode titles are
+#		 optional- this was causing some pages to be percieved as blank by the
+#		 script.
+#		 BUGFIX: Updated AniDB parsers in sympathy with changes to AniDB.info
+#		 layout changes
+#		 FEATURE: Added new scheme: XYY. This creates output suitable for the
+#		 --dubious option. E.g. S01E08 -> 108
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
