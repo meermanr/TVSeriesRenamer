@@ -12,9 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
-#		 alternative to the existing sXXeYY
-#
 #  v2.34 BUGFIX: Series names which contained punctuation would confuse (or
 #		  crash!) the script if they happened to resemble a regular expression.
 #		  This also prevented it from being able to differentiate between
@@ -38,6 +35,10 @@
 #        leading space was included with the SXXEYY snippet, or the "S" was
 #        excluded.  Removed the complex (and now unnecessary) file-name
 #        pre-filter that was cauing the problem.
+#
+#  v2.36 FEATURE: Added support for S00E00E00 file numbering formats, which
+#        is more traditionally written as 00x00-00, e.g. "Season-name 1x12-13
+#        Eptitle-for-12 - Eptitle-for-13.ext"
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -1339,14 +1340,15 @@ foreach(@fileList){
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){} # Match "Season 01 Episode 08-09"
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){} # Match "s01.e08-e09"
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){}  # Match "s01.e08-09"
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)e(\d+)/i) ){}     # Match "s01.e08e09"
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /(\d+)x(\d+)[-&](\d+)/i) ){}      # Match "1x08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$titles=\@sname;}        # Match "S08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /(\d+)[-&](\d+)/i) ){}                        # Match "08-09"
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$titles=\@sname;}         # Match "S08-09"
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /(\d+)[-&](\d+)/i) ){}                         # Match "08-09"
 		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?(\d+)/i) ){} # Match "Season 01 Episode 08"
 		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?e(\d+)/i) ){}  # Match "s01e08"
 		elsif( ($fileSeason, $fileNum) = ($_ =~ /(\d+)x(\d+)/i) ){}      # Match "1x08"
-		elsif( ($fileNum) = ($_ =~ /.S(\d+)/i)){$titles=\@sname;}       # Match "S08" (NB: Filtering above includes an extra char before the S)
-		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){}                        # Match "08"
+		elsif( ($fileNum) = ($_ =~ /.S(\d+)/i)){$titles=\@sname;}        # Match "S08" (NB: Filtering above includes an extra char before the S)
+		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){}                         # Match "08"
 		else{                                                             # Finding episode number failed
 			print "\nCan't extract episode number from snippet '$_'\tof filename: \"$before\", ignoring.";
 		   	$warnings++;
@@ -2008,5 +2010,8 @@ sub readURLfile #{{{
 #		 layout changes
 #		 FEATURE: Added new scheme: XYY. This creates output suitable for the
 #		 --dubious option. E.g. S01E08 -> 108
+#
+#  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
+#		 alternative to the existing sXXeYY
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
