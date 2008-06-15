@@ -12,25 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.34 BUGFIX: Series names which contained punctuation would confuse (or
-#		  crash!) the script if they happened to resemble a regular expression.
-#		  This also prevented it from being able to differentiate between
-#		  numbers in the series title and a file's episode number.
-#		  BUGFIX: Empty lines in config files no longer upset the script
-#		  BUGFIX: TV.com search fixed - the site's HTML layout changed a bit too
-#		  much
-#		  BUGFIX: Shortcut finding is now case-insensitive, so fixed for
-#		  MacOS/Linux/BSD
-#		  FEATURE: Now understands double-episode filenames of the form
-#		  s01.e08-e09 (note the second "e")
-#		  BUGFIX: EpGuides.com parser improved - entries do not have to have
-#		  been aired to be parsed correctly - thanks to Tony White for his patch!
-#		  BUGFIX: "Specials" name extraction didn't check if the "s" in front of
-#		  the episode number was "alone". If it was part of a word, strange
-#		  things happened.
-#		  BUGFIX: Filename extensions defined in the file filter (see --help) is
-#		  no-longer case-sensitive
-#
 #  v2.35 BUGFIX: SXXEYY parsing had a couple of new bugs from v2.34 - either a
 #        leading space was included with the SXXEYY snippet, or the "S" was
 #        excluded.  Removed the complex (and now unnecessary) file-name
@@ -39,6 +20,9 @@
 #  v2.36 FEATURE: Added support for S00E00E00 file numbering formats, which
 #        is more traditionally written as 00x00-00, e.g. "Season-name 1x12-13
 #        Eptitle-for-12 - Eptitle-for-13.ext"
+#
+#  v2.37 BUGFIX: Dubious episode number extraction was broken in the previous
+#        release
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -1332,12 +1316,7 @@ foreach(@fileList){
 		# and then determine if it is an series 'special' or warn the user if the episode
 		# number cannot be extracted
 
-		# If flagged, treat numbers greater than 2 digits as shorthand for "1x08" / "01x08" / "001x08" etc
-		# Using the -preproc option to strip the "01x" would be better. EG: "rename -preproc='s/01x//;'"
-		if( $dubious && (($fileNum) = ($_ =~ /^\d+(\d\d)/)) ){
-			print "\nDubious extraction of episode number $fileNum from \"$before\""; $dubious_count++;
-		}
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){} # Match "Season 01 Episode 08-09"
+		if( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){} # Match "Season 01 Episode 08-09"
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){} # Match "s01.e08-e09"
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){}  # Match "s01.e08-09"
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)e(\d+)/i) ){}     # Match "s01.e08e09"
@@ -1354,6 +1333,9 @@ foreach(@fileList){
 		   	$warnings++;
 		   	next;
 		}
+
+		# If flagged, treat numbers greater than 2 digits as shorthand for "1x08" / "01x08" / "001x08" etc
+		if( $dubious  ) { ($fileNum) = ($fileNum =~ /\d*(\d{2})/); }
 		
 		if($fileSeason ne '' && $fileSeason != $season){
 			if($debug){
@@ -2013,5 +1995,24 @@ sub readURLfile #{{{
 #
 #  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
 #		 alternative to the existing sXXeYY
+#
+#  v2.34 BUGFIX: Series names which contained punctuation would confuse (or
+#		  crash!) the script if they happened to resemble a regular expression.
+#		  This also prevented it from being able to differentiate between
+#		  numbers in the series title and a file's episode number.
+#		  BUGFIX: Empty lines in config files no longer upset the script
+#		  BUGFIX: TV.com search fixed - the site's HTML layout changed a bit too
+#		  much
+#		  BUGFIX: Shortcut finding is now case-insensitive, so fixed for
+#		  MacOS/Linux/BSD
+#		  FEATURE: Now understands double-episode filenames of the form
+#		  s01.e08-e09 (note the second "e")
+#		  BUGFIX: EpGuides.com parser improved - entries do not have to have
+#		  been aired to be parsed correctly - thanks to Tony White for his patch!
+#		  BUGFIX: "Specials" name extraction didn't check if the "s" in front of
+#		  the episode number was "alone". If it was part of a word, strange
+#		  things happened.
+#		  BUGFIX: Filename extensions defined in the file filter (see --help) is
+#		  no-longer case-sensitive
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
