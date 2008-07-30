@@ -134,7 +134,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.37\nReleased 15 June 2008\n"; # {{{
+my $version = "TV Series Renamer 2.38\nReleased 30 July 2008\n"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
