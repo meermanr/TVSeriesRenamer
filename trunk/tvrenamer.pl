@@ -12,17 +12,15 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.35 BUGFIX: SXXEYY parsing had a couple of new bugs from v2.34 - either a
-#        leading space was included with the SXXEYY snippet, or the "S" was
-#        excluded.  Removed the complex (and now unnecessary) file-name
-#        pre-filter that was cauing the problem.
-#
 #  v2.36 FEATURE: Added support for S00E00E00 file numbering formats, which
 #        is more traditionally written as 00x00-00, e.g. "Season-name 1x12-13
 #        Eptitle-for-12 - Eptitle-for-13.ext"
 #
 #  v2.37 BUGFIX: Dubious episode number extraction was broken in the previous
 #        release
+#
+#  v2.38 BUGFIX: Non-anime series now default to "--nogroup", and Anime to (new
+#        option) "--group"
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -108,7 +106,7 @@ my $pad			 = undef; # Automatically choose padding (i.e. "8" -> "08" if there ar
 
 my $nocache      = 1;     # Do not use/make .cache files
 my $dubious      = 0;     # Take file numbers above 99 literally
-my $nogroup      = undef; # Use group
+my $nogroup      = undef; # Use auto-detection (Anime: Keep group, other: Discard)
 
 my $detailedView = undef; # Disabled
 my $interactive  = undef; # Disabled
@@ -175,7 +173,15 @@ Formatting options:
  numbers, 10-99 -> 2-digit numbers, 100-999 -> 3-digit, ...
 
  --pad=X            Pad episode number to X digits. (EG --pad=3 : ep8 -> ep008)
+
+ Note: If you do not specify --nogroup / --group the default behaviour is
+ dependant on the type of series being renamed. Anime defaults to --group and
+ everything else to --nogroup. You can force Anime/Other with the --search
+ option.
+
  --nogroup          Do not (attempt to) preserve group tags (EG: '[AnCo]')
+ --group            Attempt to preserve group tags (EG: '[AnCo]')
+
  --nogap            Do not place a gap between series name and episode number
  --gap              Force gap, useful when --nogap is automatically applied
  --gap=X            Use custom gap, perhaps to enable use of other scripts
@@ -290,6 +296,7 @@ if($#ARGV ne -1)
 			case /^--autoseries$/i   {$autoseries = 1;}
 			case /^--noautoseries$/i {$autoseries = 0;}
 			case /^--nogroup$/i      {$nogroup = 1;}
+			case /^--group$/i        {$nogroup = 0;}
 			case /^--nogap$/i        {$gap = undef;}
 			case /^--gap$/i          {$gap = ' ';}
 			case /^--gap=.*$/i       {/^--gap=(.*)$/i; $gap = $1;}
@@ -570,6 +577,9 @@ else
 		{
 			print $ANSIcyan."Current directory detected as anime.\n".$ANSInormal;
 
+			# Choose group behaviour is user has not
+			if( ! defined $nogroup ){ $nogroup = 0; }
+
 			print "Searching AniDB.info for \"$search_term\"... ";
 			my $searchURL = ('http://anidb.info/perl-bin/animedb.pl?show=animelist&adb.search='.uri_escape($search_term).'&do.search=search');
 			if($debug){print "Fetching $searchURL\n";}
@@ -651,6 +661,9 @@ else
 		# End detect anime }}}
 		else
 		{
+			# Choose group behaviour is user has not
+			if(! defined $nogroup){ $nogroup = 1; }
+
 			# Guess an URL for epGuides.com an use it (no need to save an URL shortcut) {{{
 			#
 			if($site eq Site_EpGuides)
@@ -1296,7 +1309,7 @@ foreach(@fileList){
 		s/\s+$//;                               # Remove trailing whitespace
 		s/^\s+//;                               # Remove leading whitespace
 		if($group){$group = " [$group]";}       # Apply make-up
-		if(defined $nogroup){$group = undef;}   # Crush group if unwanted
+		if($nogroup == 1){$group = undef;}      # Crush group if unwanted
 		$_ .= "$group.$fileExt";                # Append group and re-add file extension
 	}else{
 		# Note that series 'specials' are denoted with an 'S' before the episode number,
@@ -1353,7 +1366,7 @@ foreach(@fileList){
 			if($debug){print "\nfileNum2 defined for $fileNum as $fileNum2";}
 			$fileNum2 = pad($fileNum2, length $#{$titles});
 		}
-		if(defined $nogroup){$group = undef;}               # Crush group if unwanted
+		if($nogroup == 1){$group = undef;}               # Crush group if unwanted
 
 		#End FILENAME PARSER }}}
 		##[ CONSTRUCT NEW FILENAME ]####################################################{{{
@@ -2014,5 +2027,10 @@ sub readURLfile #{{{
 #		  things happened.
 #		  BUGFIX: Filename extensions defined in the file filter (see --help) is
 #		  no-longer case-sensitive
+#
+#  v2.35 BUGFIX: SXXEYY parsing had a couple of new bugs from v2.34 - either a
+#        leading space was included with the SXXEYY snippet, or the "S" was
+#        excluded.  Removed the complex (and now unnecessary) file-name
+#        pre-filter that was cauing the problem.
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
