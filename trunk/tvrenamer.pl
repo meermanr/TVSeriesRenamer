@@ -12,15 +12,13 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.36 FEATURE: Added support for S00E00E00 file numbering formats, which
-#        is more traditionally written as 00x00-00, e.g. "Season-name 1x12-13
-#        Eptitle-for-12 - Eptitle-for-13.ext"
-#
 #  v2.37 BUGFIX: Dubious episode number extraction was broken in the previous
 #        release
 #
 #  v2.38 BUGFIX: Non-anime series now default to "--nogroup", and Anime to (new
 #        option) "--group"
+#
+#  v2.38 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -43,6 +41,8 @@ use LWP::Simple;			# Adds get($url) function
 use URI::Escape;			# Convenient translation of " " <-> %20 etc in URIs
 use Compress::Zlib;			# AniDB sends us gzip'd data, and I can't persuade it not to!
 use File::Glob ':glob';		# Avoids using "perlglob(.exe)" which makes for neater Win32 stand-alone versions
+use Encode;					# Allow importing of UTF-8 data and generation of UTF-16LE names for Win32API::File
+
 if($^O eq "MSWin32" || $^O eq "cygwin"){
 	require Win32API::File;	# Low-level calls to circumvent windows Unicode hell
 	require Encode;			# Win32API::File expects unicode arguments in UTF16-LE
@@ -585,6 +585,15 @@ else
 			if($debug){print "Fetching $searchURL\n";}
 			$_ = get($searchURL);
 			$_ = Compress::Zlib::memGunzip($_);	
+			$_ = Encode::decode 'UTF-8', $_;
+			# Save snapshot for debugging
+			if($debug){
+				print $ANSIcyan."Saving html to .search_results.full...$ANSInormal\n";
+				open(RESULTS, '> .search_results.full');
+				binmode(RESULTS, ":raw");
+				print RESULTS $_;
+				close RESULTS;
+			}
 
 			# Strip attributes from non-<a> tags
 			s/<(?!a)([^ >]*)[^>]*\/?>/<\1>/g;
@@ -592,6 +601,7 @@ else
 			# Save snapshot for debugging
 			if($debug){
 				print $ANSIcyan."Saving (simplified) html to .search_results...$ANSInormal\n";
+				binmode(RESULTS, ":raw");
 				open(RESULTS, '> .search_results');
 				print RESULTS $_;
 				close RESULTS;
@@ -691,6 +701,7 @@ else
 				while($len==0 && $retries > 0){
 					print "Performing search...\n";
 					$page = get($url);
+					$page = Encode::decode 'UTF-8', $page;
 					$len = length($page);
 					$retries--;
 					# Note we sleep for 3 seconds between retries, but present the message AFTER the wait,
@@ -816,6 +827,7 @@ else
 				my $message = "\n".$ANSIup."Fetching document ".($debug?$inputFile:'')."... $ANSIsave$ANSIred\n";
 				print $message ;
 				if($_ = get($inputFile)){
+					$_ = Encode::decode 'UTF-8', $_;
 					print $ANSIrestore.$ANSInormal."[Done]\n";
 				}
 				else{
@@ -1262,6 +1274,7 @@ while ($file = readdir(DIR))
 {
 	if(! -d $file)         # Ensure not a directory
 	{
+		$file = Encode::decode 'UTF-8', $file;	# Filesystem assumed to use UTF-8 encoding
 		if(! defined $filterFiles || ($file =~ /$filterFiles/i) ){ push(@fileList, $file); }
 	}
 }
@@ -2032,5 +2045,9 @@ sub readURLfile #{{{
 #        leading space was included with the SXXEYY snippet, or the "S" was
 #        excluded.  Removed the complex (and now unnecessary) file-name
 #        pre-filter that was cauing the problem.
+#
+#  v2.36 FEATURE: Added support for S00E00E00 file numbering formats, which
+#        is more traditionally written as 00x00-00, e.g. "Season-name 1x12-13
+#        Eptitle-for-12 - Eptitle-for-13.ext"
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:

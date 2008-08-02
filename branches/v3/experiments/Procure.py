@@ -74,9 +74,9 @@ class ProcureSource(Thread):
 	Note: Be aware that only leaf nodes of a class tree are instatiated by
 	Procure. For example, if you had the following tree of class inheritance:
 	                    A
-	                  /   \
+	                  /   \\
 	                B       C
-	              /   \      \
+	              /   \      \\
 	            D       E      F
 
 	Only classes D, E and F would be instantiated. A, B and C would not be.
@@ -111,13 +111,13 @@ class ProcureSource(Thread):
 		import time
 		self.logging.debug("Pretending to search for %s" % self.series_name)
 		time.sleep(1)
-"""
+
 class ProcureSourceFile(ProcureSource):
 	pass
 
 class ProcureSourceSTDIN(ProcureSource):
 	pass
-"""
+
 class ProcureSourceWebsite(ProcureSource):
 	"""
 	Website data source template class.
@@ -187,7 +187,7 @@ class ProcureSourceWebsite(ProcureSource):
 		Parse the data downloaded from the URL obtained via self.search()
 		"""
 		self.logging.debug("Pretending to parse the response")
-"""
+
 class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 	def search(self):
 		import re
@@ -211,7 +211,7 @@ class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 				if m:
 					self.episode_data.append( m.groups() )
 
-"""
+
 class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 
 	root_url = "http://anidb.net/perl-bin/"
@@ -283,20 +283,18 @@ class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 			self.episode_data.extend( re.findall(p, self.data) )
 
 		self.logging.info("Retrieved data on %d episodes" % len(self.episode_data) )
-		print self.episode_data[0]
+		#print self.episode_data[0]
 
 
 
 if __name__ == "__main__":
 	import glob
-	"""
 	for plugin in glob.glob("Procure_plugins/*.py"):
 		if plugin[-12:] == "/__init__.py": continue
 		plugin = plugin[0:-3]	# Strip ".py"
 		plugin = plugin.replace("/", ".")
 		print "Importing", plugin
 		exec("from %s import *" % plugin)
-	"""
 
 	# Some test-cases
 	procure = Procure("One Piece")
