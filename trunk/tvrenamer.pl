@@ -1274,7 +1274,7 @@ while ($file = readdir(DIR))
 {
 	if(! -d $file)         # Ensure not a directory
 	{
-		$file = Encode::decode 'UTF-8', $file;	# Filesystem assumed to use UTF-8 encoding
+		$file = Encode::decode 'UTF-8', $file;
 		if(! defined $filterFiles || ($file =~ /$filterFiles/i) ){ push(@fileList, $file); }
 	}
 }
@@ -1592,6 +1592,14 @@ USERPROMPT: {
 
 							# Look for characters above the 7-bit ASCII range
 							$after_is_unicode = undef;
+							$teststring = $before;
+							while($teststring){
+								if(  ord substr($teststring, 0, 1, "") > 128 ){
+									$before_is_unicode = 1;
+									last;
+								}
+							}
+
 							$teststring = $after;
 							while($teststring){
 								if(  ord substr($teststring, 0, 1, "") > 128 ){
@@ -1600,20 +1608,23 @@ USERPROMPT: {
 								}
 							}
 
+
 							# Unicode source names not implemented
-							if($before =~ /\?/){
+							if($before =~ /\?/ || $before_is_unicode){
+								# FIXME Look into using http://perlingresprogramming.blogspot.com/2008/04/opening-files-with-unicode.html
 								unless($warned_w32){
 									print $ANSIcyan,
-									"\n  This script is not capable of renaming files with unicode characters",
-									"\n  in their name, as perl sees such file names as having \"?\" characters",
-									"\n  where you and I see Unicode.",
-									"\n",
-									"\n  The problem boils down to not being able to tell Windows which file",
-									"\n  we want renamed.",
-									"\n",
-									"\n  However, if this problem doesn't arise, the new name can contain",
-									"\n  Unicode - you just won't be able to update the name via this script",
-									"\n  anymore!",
+									"\n This script is unable to deal with files whose names already contain Unicode",
+									"\n characters. It can, however, rename files with ordinary names into files with",
+									"\n Unicode characters.",
+									"\n ",
+									"\n The problem is that the current code used by this script (which has been",
+									"\n written to run on Linux, Mac OS X and Windows) to obtain the list of files",
+									"\n to generate new names for returns garbage when it encounters Unicode",
+									"\n characters.",
+									"\n ",
+									"\n As far as the author knows, this only affects Windows users. Certainly it does",
+									"\n not occur under Linux.",
 									"\n",
 									$ANSInormal;
 									$warned_w32 = 1;
@@ -1622,9 +1633,10 @@ USERPROMPT: {
 							}
 							elsif($after_is_unicode){
 								# Unicode
-								$before	= Encode::encode("UTF16-LE", $before);
-								$after	= Encode::encode("UTF16-LE", $after);
-								$success= Win32API::File::MoveFileW($before, $after) 
+								my ($w_before, $w_after);
+								$w_before	= Encode::encode("UTF16-LE", $before);
+								$w_after	= Encode::encode("UTF16-LE", $after);
+								$success= Win32API::File::MoveFileW($w_before, $w_after) 
 									or print $ANSIred,"\nError renaming $before: ",Win32API::File::fileLastError(),$ANSInormal;
 
 									# Deprecated method ("hack") to achieve the above
@@ -1648,7 +1660,7 @@ USERPROMPT: {
 								$success = rename($before, $after);
 							} #}}}
 						}
-
+ 
 					if($success && $reversible){ #{{{
 						# Create undo information if requested and rename was successfull
 						if($undofile eq 'unrename.bat'){
