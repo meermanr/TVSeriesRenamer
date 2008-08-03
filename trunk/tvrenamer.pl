@@ -18,7 +18,7 @@
 #  v2.38 BUGFIX: Non-anime series now default to "--nogroup", and Anime to (new
 #        option) "--group"
 #
-#  v2.38 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
+#  v2.39 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -134,7 +134,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.38\nReleased 30 July 2008\n"; # {{{
+my $version = "TV Series Renamer 2.39\nReleased 03 August 2008\n"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
