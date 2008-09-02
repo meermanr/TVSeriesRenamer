@@ -12,13 +12,15 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.37 BUGFIX: Dubious episode number extraction was broken in the previous
-#        release
-#
 #  v2.38 BUGFIX: Non-anime series now default to "--nogroup", and Anime to (new
 #        option) "--group"
 #
 #  v2.39 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
+#
+#  v2.39 BUGFIX: Fixed compression support for generic-path HTTP sources (used
+#        to only work for AniDB.info unique hits, not those that require
+#        parsing a search-results page)
+#
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -827,19 +829,26 @@ else
 				my $message = "\n".$ANSIup."Fetching document ".($debug?$inputFile:'')."... $ANSIsave$ANSIred\n";
 				print $message ;
 				if($_ = get($inputFile)){
-					$_ = Encode::decode 'UTF-8', $_;
+					my $t;
 					print $ANSIrestore.$ANSInormal."[Done]\n";
+
+					# Attempt decompression
+					#
+					# (Experience shows that the memGunzip() function can
+					# handle more than just "pure" gzip data. Specifically
+					# magic number 0x1fc18b08 can be decompressed, where I'd
+					# expect that just 0x1f8b08 to be compatible becuase that's
+					# what RFC1952 says)
+					$t = Compress::Zlib::memGunzip($_);	
+					if( $t ne "" ){
+						if($debug){print $ANSIcyan."Compressed data detected\n".$ANSInormal;}
+						$_ = $t;
+					}
+
+					$_ = Encode::decode 'UTF-8', $_;
 				}
 				else{
 					print $ANSIred."Can't fetch \"$inputFile\", please check this URL in a browser\n$ANSIyellow Consider specifying an URL on the command-line. Error was: $!".$ANSInormal."\n";
-				}
-
-				# Check if data is gzip'd and uncompress
-				# 0x1f 0x8b = GZip marker, 0x08 = "DEFLATE" compression
-				# See http://www.ietf.org/rfc/rfc1952.txt
-				if(/^\x1f\x8b\x08/){
-					if($debug){print $ANSIcyan."Compressed data detected (gzip DEFLATE)\n".$ANSInormal;}
-					$_ = Compress::Zlib::memGunzip($_);
 				}
 
 				unless($nocache){
@@ -2061,5 +2070,8 @@ sub readURLfile #{{{
 #  v2.36 FEATURE: Added support for S00E00E00 file numbering formats, which
 #        is more traditionally written as 00x00-00, e.g. "Season-name 1x12-13
 #        Eptitle-for-12 - Eptitle-for-13.ext"
+#
+#  v2.37 BUGFIX: Dubious episode number extraction was broken in the previous
+#        release
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
