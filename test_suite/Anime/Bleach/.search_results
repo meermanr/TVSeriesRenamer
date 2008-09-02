@@ -1,0 +1,365 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<title>::AniDB.net:: Anime List ::</title>
+		<meta>
+		<link>
+		<link>
+		<link>
+		<script></script>
+	</head>
+	<body>
+<div>
+	<ul>
+		<li><span>Main</span>
+			<ul>
+				<li><a title="News" href="animedb.pl?show=main"><span>main</span></a></li>
+				<li><a title="Advanced search" href="animedb.pl?show=search"><span>search</span></a></li>
+				<li><a title="Anime calendar" href="animedb.pl?show=latestanimes"><span>calendar</span></a></li>
+				<li><a title="Anime schedule" href="animedb.pl?show=schedule"><span>schedule</span></a></li>
+				<li><a title="Random anime" href="animedb.pl?show=anime&amp;do.random=1"><span>random</span></a></li>
+			</ul>
+		</li>
+		<li><span>Listings</span>
+			<ul>
+				<li><a title="Latest additions" href="animedb.pl?show=latest"><span>latest</span></a></li>
+				<li><a title="Anime list" href="animedb.pl?show=animelist"><span>anime</span></a></li>
+				<li><a title="Group list" href="animedb.pl?show=grouplist"><span>groups</span></a></li>
+				<li><a title="User list" href="animedb.pl?show=userlist"><span>users</span></a></li>
+				<li><a title="Producer list" href="animedb.pl?show=producerlist"><span>producers</span></a></li>
+				<li><a title="Category list" href="animedb.pl?show=genren"><span>categories</span></a></li>
+				<li><a title="Tag list" href="animedb.pl?show=taglist"><span>tags</span></a></li>
+			</ul>
+		</li>
+		<li><span>Support</span>
+			<ul>
+				<li><a title="Report a mistake" href="http://wiki.anidb.net/w/Report_mistake" rel="anidb::wiki"><span>report</span></a></li>
+				<li><a title="Help @ wiki" href="http://wiki.anidb.net/w/Main_Page" rel="anidb::wiki"><span>help</span></a></li>
+				<li><a title="Help @ forum" href="http://forum.anidb.net/index.php" rel="anidb::forum"><span>forum</span></a></li>
+				<li><a title="Help @ irc" href="irc://irc.synirc.org/anidb"><span>irc</span></a></li>
+				<li><a title="Recommended links" href="http://wiki.anidb.net/w/Recommended_Links" rel="anidb::wiki"><span>links</span></a></li>
+				<li><a title="AniDB staff" href="animedb.pl?show=admin&amp;adm=user"><span>staff</span></a></li>
+			</ul>
+		</li>
+		<li><span>Signup or login</span>
+			<form><div><fieldset><input></fieldset><fieldset><input></fieldset><fieldset><input></fieldset><fieldset><input></fieldset><fieldset><input></fieldset>
+			<ul>
+				<li><a title="Show login page" href="animedb.pl?show=login"><span>login</span></a></li>
+				<li><a title="Signup now" href="animedb.pl?show=signup"><span>signup</span></a></li>
+				<li><button><span>Login</span></button></li>
+				<li><input></li>
+				<li><input></li>
+				<li><input> <span>remember</span></li>
+			</ul></div></form>
+		</li>
+	</ul>
+	<div>
+		<div>
+			<form>
+				<p><select><option>anime</option><option>group</option><option>producer</option><option>tags</option><option>user</option><option>mylist</option></select>
+				<input>
+				<input>
+				<input>
+				<input>
+				</p>
+			</form>
+		</div>
+	</div>
+</div>
+<div>
+	<div>
+		<h1>Anime List - Search for: Bleach</h1>
+		<div>
+		<ul>
+			<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;noalias=1&amp;do.search=search&amp;adb.search=Bleach">hide synonyms</a></li>
+			<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=1&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach">show order bar</a></li>
+		</ul>
+<div>
+	
+<ul>
+	<li>prev</li>
+	<li>next</li>
+	<li>all</li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=0">0-9</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=a">a</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=b">b</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=c">c</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=d">d</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=e">e</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=f">f</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=g">g</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=h">h</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=i">i</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=j">j</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=k">k</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=l">l</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=m">m</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=n">n</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=o">o</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=p">p</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=q">q</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=r">r</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=s">s</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=t">t</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=u">u</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=v">v</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=w">w</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=x">x</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=y">y</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=z">z</a></li>
+	<li><a href="animedb.pl?show=animelist&amp;orderby.name=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach&amp;char=other">other</a></li>
+</ul>
+	<table>
+		<tr>
+			<th>No</th>
+			<th>Image</th>
+			<th><a class="ascending" href="animedb.pl?show=animelist&amp;orderby.name=0.2&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort descending">Title</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.name=1.1&amp;orderby.award=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">Award</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.type=0.1&amp;orderby.name=1.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">Type</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.name=1.1&amp;orderby.eps=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">EPs</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.rating=0.1&amp;orderby.name=1.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">Rating</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.name=1.1&amp;orderby.attavg=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">Reviews</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.ucnt=0.1&amp;orderby.name=1.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">User</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.name=1.1&amp;orderby.airdate=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">Aired</a></th>
+			<th><a class="inactive" href="animedb.pl?show=animelist&amp;orderby.name=1.1&amp;orderby.enddate=0.1&amp;orderbar=0&amp;noalias=2&amp;do.search=search&amp;adb.search=Bleach" title="sort ascending">Ended</a></th>
+		</tr>
+	<tr>
+		<td>1</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=2369"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=2369">Bleach</a>
+			<span>(Bleach)</span></td>
+		<td><span><span>ARC Awards 2005</span></span></td>
+		<td>TV Series</td>
+		<td>-</td><td>8.22 (6897)
+			</td><td>8.05 (21)
+			</td>
+		<td>10806</td>
+		<td>05.10.2004</td>
+		<td>-</td>
+	</tr>
+	<tr>
+		<td>2</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=2369"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=2369">Bleach</a></td>
+		<td><span><span>ARC Awards 2005</span></span></td>
+		<td>TV Series</td>
+		<td>-</td><td>8.22 (6897)
+			</td><td>8.05 (21)
+			</td>
+		<td>10806</td>
+		<td>05.10.2004</td>
+		<td>-</td>
+	</tr>
+	<tr>
+		<td>3</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=6041"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=6041">BLEACH 3</a>
+			<span>(Gekijouban Bleach: Fade to Black Kimi no Na o Yobu)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>N/A (0)
+			</td><td>N/A (0)
+			</td>
+		<td>0</td>
+		<td>13.12.2008</td>
+		<td>13.12.2008</td>
+	</tr>
+	<tr>
+		<td>4</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=6041"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=6041">BLEACH Fade to Black : I call your name</a>
+			<span>(Gekijouban Bleach: Fade to Black Kimi no Na o Yobu)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>N/A (0)
+			</td><td>N/A (0)
+			</td>
+		<td>0</td>
+		<td>13.12.2008</td>
+		<td>13.12.2008</td>
+	</tr>
+	<tr>
+		<td>5</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=6041"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=6041">BLEACH: Fade to Black 君の名を呼ぶ</a>
+			<span>(Gekijouban Bleach: Fade to Black Kimi no Na o Yobu)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>N/A (0)
+			</td><td>N/A (0)
+			</td>
+		<td>0</td>
+		<td>13.12.2008</td>
+		<td>13.12.2008</td>
+	</tr>
+	<tr>
+		<td>6</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=4515"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=4515">Bleach Movie</a>
+			<span>(Gekijouban Bleach: Memories of Nobody)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>7.10 (1767)
+			</td><td>6.66 (2)
+			</td>
+		<td>3290</td>
+		<td>16.12.2006</td>
+		<td>16.12.2006</td>
+	</tr>
+	<tr>
+		<td>7</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=5352"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=5352">Bleach Movie 2</a>
+			<span>(Gekijouban Bleach: The DiamondDust Rebellion Mouhitotsu no Hyourinmaru)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>8.08 (46)
+			</td><td>N/A (0)
+			</td>
+		<td>153</td>
+		<td>22.12.2007</td>
+		<td>22.12.2007</td>
+	</tr>
+	<tr>
+		<td>8</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=5352"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=5352">BLEACH The DiamondDust Rebellion Another Hyourinmaru</a>
+			<span>(Gekijouban Bleach: The DiamondDust Rebellion Mouhitotsu no Hyourinmaru)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>8.08 (46)
+			</td><td>N/A (0)
+			</td>
+		<td>153</td>
+		<td>22.12.2007</td>
+		<td>22.12.2007</td>
+	</tr>
+	<tr>
+		<td>9</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=4515"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=4515">Bleach the Movie: Memories of Nobody</a>
+			<span>(Gekijouban Bleach: Memories of Nobody)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>7.10 (1767)
+			</td><td>6.66 (2)
+			</td>
+		<td>3290</td>
+		<td>16.12.2006</td>
+		<td>16.12.2006</td>
+	</tr>
+	<tr>
+		<td>10</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=5352"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=5352">BLEACH The Movie: The DiamondDust Rebellion Another Hyourinmaru</a>
+			<span>(Gekijouban Bleach: The DiamondDust Rebellion Mouhitotsu no Hyourinmaru)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>8.08 (46)
+			</td><td>N/A (0)
+			</td>
+		<td>153</td>
+		<td>22.12.2007</td>
+		<td>22.12.2007</td>
+	</tr>
+	<tr>
+		<td>11</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=2369"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=2369">bleach tv</a>
+			<span>(Bleach)</span></td>
+		<td><span><span>ARC Awards 2005</span></span></td>
+		<td>TV Series</td>
+		<td>-</td><td>8.22 (6897)
+			</td><td>8.05 (21)
+			</td>
+		<td>10806</td>
+		<td>05.10.2004</td>
+		<td>-</td>
+	</tr>
+	<tr>
+		<td>12</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=6041"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=6041">Gekijouban Bleach: Fade to Black Kimi no Na o Yobu</a></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>N/A (0)
+			</td><td>N/A (0)
+			</td>
+		<td>0</td>
+		<td>13.12.2008</td>
+		<td>13.12.2008</td>
+	</tr>
+	<tr>
+		<td>13</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=4515"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=4515">Gekijouban Bleach: Memories of Nobody</a></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>7.10 (1767)
+			</td><td>6.66 (2)
+			</td>
+		<td>3290</td>
+		<td>16.12.2006</td>
+		<td>16.12.2006</td>
+	</tr>
+	<tr>
+		<td>14</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=5352"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=5352">Gekijouban Bleach: The DiamondDust Rebellion Mouhitotsu no Hyourinmaru</a></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>8.08 (46)
+			</td><td>N/A (0)
+			</td>
+		<td>153</td>
+		<td>22.12.2007</td>
+		<td>22.12.2007</td>
+	</tr>
+	<tr>
+		<td>15</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=4515"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=4515">劇場版BLEACH: MEMORIES OF NOBODY</a>
+			<span>(Gekijouban Bleach: Memories of Nobody)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>7.10 (1767)
+			</td><td>6.66 (2)
+			</td>
+		<td>3290</td>
+		<td>16.12.2006</td>
+		<td>16.12.2006</td>
+	</tr>
+	<tr>
+		<td>16</td><td>
+			<a href="animedb.pl?show=anime&amp;aid=5352"><img></a>
+		</td><td><a href="animedb.pl?show=anime&amp;aid=5352">劇場版　BLEACH　The DiamondDust Rebellion　もう一つの氷輪丸</a>
+			<span>(Gekijouban Bleach: The DiamondDust Rebellion Mouhitotsu no Hyourinmaru)</span></td>
+		<td></td>
+		<td>Movie</td>
+		<td>1</td><td>8.08 (46)
+			</td><td>N/A (0)
+			</td>
+		<td>153</td>
+		<td>22.12.2007</td>
+		<td>22.12.2007</td>
+	</tr>
+	</table>
+</div>
+		<ul>
+			<li><a href="animedb.pl?show=main">back</a></li>
+		</ul>
+		</div><!--g_content-->
+		<div></div>
+	</div><!--layout-main-->
+</div><!--layout-content-->
+
+<div>
+	<p>V 0.1.52 cvs/mod 2008-08-02, (C) 2002-2008 by AniDB, all rights reserved [0s]</p>
+</div>
+<div><span>HINT:</span>
+	<span>
+Don't like the way AniDB looks? There are a number of <a href="http://wiki.anidb.net/w/AniDB:Css_styles">alternative styles</a> available for registered users.
+	</span>
+</div>
+	</body>
+</html>

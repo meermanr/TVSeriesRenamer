@@ -1,0 +1,2813 @@
+http://anidb.info/perl-bin/animedb.pl?show=anime&aid=2369
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>::AniDB.net:: Anime - Bleach ::</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+		<link rel="icon" href="http://static.anidb.net/favicon.ico"/>
+		<link rel="alternate" type="application/rss+xml" title="AniDB RDF" href="http://anidb.net/anidb.rdf"/>
+		<link rel="stylesheet" href="http://static.anidb.net/css/anidbstyle/anidbstyle.css" type="text/css" title="Style"/>
+		<script src="http://static.anidb.net/js/anidbscript.js" type="text/javascript"></script>
+	</head>
+	<body id="anidb">
+<div id="layout-nav">
+	<ul id="layout-menu">
+		<li class="sub-menu" title="Main"><span class="tab">Main</span>
+			<ul id="menu-main">
+				<li class="main"><a title="News" href="animedb.pl?show=main"><span>main</span></a></li>
+				<li class="search"><a title="Advanced search" href="animedb.pl?show=search"><span>search</span></a></li>
+				<li class="calendar"><a title="Anime calendar" href="animedb.pl?show=latestanimes"><span>calendar</span></a></li>
+				<li class="schedule"><a title="Anime schedule" href="animedb.pl?show=schedule"><span>schedule</span></a></li>
+				<li class="random"><a title="Random anime" href="animedb.pl?show=anime&amp;do.random=1"><span>random</span></a></li>
+			</ul>
+		</li>
+		<li class="sub-menu" title="Listings"><span class="tab">Listings</span>
+			<ul id="menu-lists">
+				<li class="latest"><a title="Latest additions" href="animedb.pl?show=latest"><span>latest</span></a></li>
+				<li class="anime"><a title="Anime list" href="animedb.pl?show=animelist"><span>anime</span></a></li>
+				<li class="group"><a title="Group list" href="animedb.pl?show=grouplist"><span>groups</span></a></li>
+				<li class="user"><a title="User list" href="animedb.pl?show=userlist"><span>users</span></a></li>
+				<li class="producer"><a title="Producer list" href="animedb.pl?show=producerlist"><span>producers</span></a></li>
+				<li class="category"><a title="Category list" href="animedb.pl?show=genren"><span>categories</span></a></li>
+				<li class="tag"><a title="Tag list" href="animedb.pl?show=taglist"><span>tags</span></a></li>
+			</ul>
+		</li>
+		<li class="sub-menu" title="Support"><span class="tab">Support</span>
+			<ul id="menu-support">
+				<li class="report"><a title="Report a mistake" href="http://wiki.anidb.net/w/Report_mistake" rel="anidb::wiki"><span>report</span></a></li>
+				<li class="help"><a title="Help @ wiki" href="http://wiki.anidb.net/w/Main_Page" rel="anidb::wiki"><span>help</span></a></li>
+				<li class="forum"><a title="Help @ forum" href="http://forum.anidb.net/index.php" rel="anidb::forum"><span>forum</span></a></li>
+				<li class="irc"><a title="Help @ irc" href="irc://irc.synirc.org/anidb"><span>irc</span></a></li>
+				<li class="reclinks"><a title="Recommended links" href="http://wiki.anidb.net/w/Recommended_Links" rel="anidb::wiki"><span>links</span></a></li>
+				<li class="staff"><a title="AniDB staff" href="animedb.pl?show=admin&amp;adm=user"><span>staff</span></a></li>
+			</ul>
+		</li>
+		<li class="sub-menu" title="Signup or login"><span class="tab">Signup or login</span>
+			<form action="animedb.pl" method="post"><div><fieldset><input type="hidden" name="aid" value="2369" /></fieldset><fieldset><input type="hidden" name="show" value="anime" /></fieldset>
+			<ul id="menu-login">
+				<li id="user-login"><a title="Show login page" href="animedb.pl?show=login"><span>login</span></a></li>
+				<li id="user-signup"><a title="Signup now" href="animedb.pl?show=signup"><span>signup</span></a></li>
+				<li id="user-xauth" title="Login"><button name="do.auth" type="submit" value="login"><span>Login</span></button></li>
+				<li id="user-xname" title="User name"><input name="xuser" class="text" maxlength="32" type="text" value=""/></li>
+				<li id="user-xpass" title="Password"><input name="xpass" class="text" maxlength="32" type="password"/></li>
+				<li id="user-xkeep" title="Remember login data"><input name="xdoautologin" type="checkbox" checked="checked"/> <span>remember</span></li>
+			</ul></div></form>
+		</li>
+	</ul>
+	<div id="layout-search">
+		<div class="search">
+			<form action="animedb.pl" method="get">
+				<p><select name="show" size="1"><option value="animelist" selected="selected">anime</option><option value="grouplist">group</option><option value="producerlist">producer</option><option value="animetag">tags</option><option value="userlist">user</option><option value="mylist">mylist</option></select>
+				<input accesskey="s" type="text" name="adb.search" class="text" maxlength="100"/>
+				<input type="hidden" name="uid" value=""/>
+				<input type="hidden" name="pass" value=""/>
+				<input type="submit" name="do.search" value="search" class="submit" />
+				</p>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="layout-content">
+	<div id="layout-tabs">
+		<ul class="main-tabs">
+			<li class="g_odd entry selected"><a href="animedb.pl?show=anime&amp;aid=2369"><span>entry</span></a></li>
+			<li class="edit"><a href="animedb.pl?show=addanime&amp;edit=2369"><span>edit</span></a></li>
+			<li class="g_odd comments"><a href="animedb.pl?show=cmt&amp;do=anime&amp;id=2369"><span>comments</span><span class="cnt cmts"> (14)</span></a></li>
+			<li class="reviews"><a href="animedb.pl?show=animeatt&amp;aid=2369"><span>reviews</span><span class="cnt att"> (21)</span></a></li>
+		</ul>
+	</div><!--layout-tabs-->
+	<div id="layout-main">
+		<h1>Anime: Bleach</h1>
+		<div class="g_content anime_all">
+		<ul class="g_list links">
+			<li class="g_odd"><a href="animedb.pl?show=addanimetitle&amp;aid=2369">titles</a></li>
+			<li><a href="animedb.pl?show=addaproducer&amp;aid=2369">producers</a></li>
+			<li class="g_odd"><a href="animedb.pl?show=addseq&amp;aid=2369">relations</a></li>
+			<li class="categories"><a href="animedb.pl?show=addgenren&amp;aid=2369">categories</a></li>
+			<li class="g_odd votes"><a href="animedb.pl?show=animevotes&amp;aid=2369">vote graph</a></li>
+			<li class="relations"><a href="animedb.pl?show=rel&amp;aid=2369">relation graph</a></li>
+		</ul>
+	<div class="g_section info">
+		<h4><span>Info: Bleach</span></h4>
+		<div class="block">
+			<div class="image">
+				<img src="http://img5.anidb.net/pics/anime/8620.jpg" alt="Bleach" />
+			</div>
+			<div class="data">
+	<div class="g_definitionlist data">
+		<table>
+			<tr class="g_odd romaji">
+				<th class="field">Main Title</th>
+				<td class="value">Bleach
+		(<a class="short_link" href="http://anidb.net/a2369">a2369</a>)</td>
+			</tr>
+			<tr class="official verified no">
+				<th class="field">Official Title</th>
+				<td class="value">
+				<span class="icons">
+<span class="i_icon i_audio_en" title=" language: english"><span>en</span></span>
+				</span>
+				<label>Bleach</label></td>
+			</tr>
+			<tr class="g_odd official verified no">
+				<th class="field">Official Title</th>
+				<td class="value">
+				<span class="icons">
+<span class="i_icon i_audio_ja" title=" language: japanese"><span>ja</span></span>
+				</span>
+				<label>ブリーチ</label></td>
+			</tr>
+			<tr class="official verified yes">
+				<th class="field">Official Title</th>
+				<td class="value">
+				<span class="icons">
+<span class="i_icon i_audio_cs" title=" language: czech"><span>cs</span></span>
+<span class="i_icon i_audio_fr" title=" language: french"><span>fr</span></span>
+<span class="i_icon i_audio_pl" title=" language: polish"><span>pl</span></span>
+<span class="i_icon i_audio_ro" title=" language: romanian"><span>ro</span></span><span class="i_icon i_verified" title="these title are considered to be correct for the coresponding language"><span>verified</span></span>
+				</span>
+				<label>Bleach</label></td>
+			</tr>
+			<tr class="g_odd official verified yes">
+				<th class="field">Official Title</th>
+				<td class="value">
+				<span class="icons">
+<span class="i_icon i_audio_he" title=" language: hebrew"><span>he</span></span><span class="i_icon i_verified" title="this title is considered to be correct for the coresponding language"><span>verified</span></span>
+				</span>
+				<label>`בליץ</label></td>
+			</tr>
+			<tr class="official verified yes">
+				<th class="field">Official Title</th>
+				<td class="value">
+				<span class="icons">
+<span class="i_icon i_audio_th" title=" language: thai"><span>th</span></span><span class="i_icon i_verified" title="this title is considered to be correct for the coresponding language"><span>verified</span></span>
+				</span>
+				<label>บลีช เทพมรณะ</label></td>
+			</tr>
+			<tr class="g_odd official verified no">
+				<th class="field">Official Title</th>
+				<td class="value">
+				<span class="icons">
+<span class="i_icon i_audio_pt-BR" title=" language: brazilian portuguese"><span>pt-BR</span></span>
+<span class="i_icon i_audio_hu" title=" language: hungarian"><span>hu</span></span>
+<span class="i_icon i_audio_es" title=" language: spanish"><span>es</span></span>
+<span class="i_icon i_audio_de" title=" language: german"><span>de</span></span>
+				</span>
+				<label>Bleach</label></td>
+			</tr>
+			<tr class="synonyms">
+				<th class="field">Synonym</th>
+				<td class="value">bleach tv, Блиич, Блич, Бліч, المُبيض</td>
+			</tr>
+			<tr class="g_odd shortnames">
+				<th class="field">Short</th>
+				<td class="value">BTV</td>
+			</tr>
+			<tr class="type">
+				<th class="field">Type</th>
+				<td class="value">TV Series, unknown number of episodes</td>
+			</tr>
+			<tr class="g_odd year">
+				<th class="field">Year</th>
+				<td class="value">05.10.2004 till ?</td>
+			</tr>
+			<tr class="categories">
+				<th class="field"><a href="animedb.pl?show=genren">Categories</a></th>
+				<td class="value">
+<a href="animedb.pl?show=animelist&amp;catid.4=100" title="search for other animes with this category">Action</a>, 
+<a href="animedb.pl?show=animelist&amp;catid.20=100" title="search for other animes with this category">Martial Arts</a>, 
+<a href="animedb.pl?show=animelist&amp;catid.209=100" title="search for other animes with this category">Parallel Universe</a>, 
+<a href="animedb.pl?show=animelist&amp;catid.5=100" title="search for other animes with this category">Shounen</a>, 
+<a href="animedb.pl?show=animelist&amp;catid.18=100" title="search for other animes with this category">Super Power</a>, 
+<a href="animedb.pl?show=animelist&amp;catid.173=100" title="search for other animes with this category">Swordplay</a>
+- <a href="animedb.pl?show=animelist&amp;catid.4=100&amp;catid.20=100&amp;catid.209=100&amp;catid.5=100&amp;catid.18=100&amp;catid.173=100" title="search for other animes with all of these categories" class="action">similar</a></td>
+			</tr>
+			<tr class="g_odd producers">
+				<th class="field"><a href="animedb.pl?show=producerlist">Producers</a></th>
+				<td class="value">
+<a href="animedb.pl?show=producer&amp;prid=264" title="Original Work (原作) - Individual">Kubo Taito</a>,
+<a href="animedb.pl?show=producer&amp;prid=90" title="Production (製作) - Company">Dentsu</a>,
+<a href="animedb.pl?show=producer&amp;prid=7" title="Production (製作) - Company">Studio Pierrot</a>,
+<a href="animedb.pl?show=producer&amp;prid=89" title="Production (製作) - Company">TV Tokyo</a>,
+<a href="animedb.pl?show=producer&amp;prid=47" title="Music Work (音楽制作) - Company">Aniplex</a>,
+<a href="animedb.pl?show=producer&amp;prid=199" title="Music Assistance (音楽協力) - Company">TV Tokyo Music</a></td>
+			</tr>
+			<tr class="resources">
+				<th class="field">Resources</th>
+				<td class="value">
+<a href="http://www.tv-tokyo.co.jp/anime/bleach/" rel="anidb::extern">Official page</a>,
+<a href="http://www.animenewsnetwork.com/encyclopedia/anime.php?id=4240" rel="anidb::extern">ANN</a>,
+<a href="http://www.animenfo.com/animetitle,1582,wkkkkd,bleach.html" rel="anidb::extern">AnimeNFO</a>,
+<a href="http://www.allcinema.net/prog/show_c.php?num_c=321468" rel="anidb::extern">Allcinema</a></td>
+			</tr>
+			<tr class="g_odd similar">
+				<th class="field">Similar Anime</th>
+				<td class="value">by
+<a href="http://www.anime-planet.com/anirec/780.html" rel="anidb::extern">Anime Planet</a>
+<a class="i_inline i_help" href="http://wiki.anidb.net/w/animeplanet" rel="anidb::wiki 300-450-1-1-helppopup"><span>help</span></a></td>
+			</tr>
+			<tr class="relations">
+				<th class="field"><a href="animedb.pl?show=rel&amp;aid=2369">Relations</a></th>
+				<td class="value">
+	<table class="relationlist">
+		<tr>
+			<td class="type">side story</td>
+			<td class="list">
+<a href="animedb.pl?show=anime&amp;aid=6041">Gekijouban Bleach: Fade to Black Kimi no Na o Yobu</a>,
+<a href="animedb.pl?show=anime&amp;aid=4515">Gekijouban Bleach: Memories of Nobody</a>,
+<a href="animedb.pl?show=anime&amp;aid=5352">Gekijouban Bleach: The DiamondDust Rebellion Mouhitotsu no Hyourinmaru</a>
+			</td>
+		</tr>
+	</table></td>
+			</tr>
+			<tr class="g_odd rating">
+				<th class="field">Rating</th>
+				<td class="value"><span class="rating anime"><a href="animedb.pl?show=animevotes&amp;aid=2369">N/A</a> <span class="count">(0)</span></span></td>
+			</tr>
+			<tr class="tmprating">
+				<th class="field">Tmp. Rating</th>
+				<td class="value"><span class="rating tmpanime high"><a href="animedb.pl?show=animevotes&amp;aid=2369">8.22</a> <span class="count">(6897)</span></span></td>
+			</tr>
+		</table>
+	</div><!--g_definitionlist data-->
+			</div><!--data-->
+		</div><!--block-->
+		<div class="desc">
+Kurosaki Ichigo is not a regular 15 year old, because he has always had the ability to see spirits and ghosts. One day, a female Shinigami (God of Death) named Kuchiki Rukia appears before him, hunting for an evil spirit. But during the confrontation, the Shinigami's powers are transfered to Ichigo. Thus begins the adventures of Ichigo and Rukia and their mission to herd Hollows (fallen spirits) as well as confronting other spiritual beings.
+		</div>
+	</div><!--g_section info--><div class="g_section tags">
+		<h4><span>Tags</span></h4>
+		<div id="htmltagcloud">
+<span class="tagcloud11"><a href="animedb.pl?show=animelist&amp;tagid=645">comic relief animal sidekick</a></span>
+<span class="tagcloud10"><a href="animedb.pl?show=animelist&amp;tagid=688">damsel in distress</a></span>
+<span class="tagcloud10"><a href="animedb.pl?show=animelist&amp;tagid=355">drastic change of life</a></span>
+<span class="tagcloud4"><a href="animedb.pl?show=animelist&amp;tagid=1919">endless anime is endless</a></span>
+<span class="tagcloud11"><a href="animedb.pl?show=animelist&amp;tagid=121">endless pointless fighting</a></span>
+<span class="tagcloud7"><a href="animedb.pl?show=animelist&amp;tagid=991">fighting</a></span>
+<span class="tagcloud14"><a href="animedb.pl?show=animelist&amp;tagid=483">fillers</a></span>
+<span class="tagcloud0"><a href="animedb.pl?show=animelist&amp;tagid=848">ghost</a></span>
+<span class="tagcloud10"><a href="animedb.pl?show=animelist&amp;tagid=482">parallel world</a></span>
+<span class="tagcloud7"><a href="animedb.pl?show=animelist&amp;tagid=929">perpetual ongoing</a></span>
+<span class="tagcloud8"><a href="animedb.pl?show=animelist&amp;tagid=177">protection complex</a></span>
+<span class="tagcloud15"><a href="animedb.pl?show=animelist&amp;tagid=59">shinigami</a></span>
+<span class="tagcloud0"><a href="animedb.pl?show=animelist&amp;tagid=1952">shounen jump</a></span>
+<span class="tagcloud7"><a href="animedb.pl?show=animelist&amp;tagid=14">super power</a></span>
+<span class="tagcloud11"><a href="animedb.pl?show=animelist&amp;tagid=992">swords</a></span>
+</div>
+		</div>
+<div class="g_section awards"><h4><span>Awards</span></h4>
+<a class="i_icon i_award" title="Best Action 2005" href="http://forum.anime-reactor.net/viewtopic.php?t=17458" id="arc2005_action"><span>Best Action 2005</span></a>
+</div>
+<div class="g_section groups">
+	<h4><span>Group status</span></h4>
+	<table id="grouplist" class="grouplist">
+		<tr class="header">
+			<th class="date lastupdate">Last Update</th>
+			<th class="name group">Name</th>
+			<th class="state">State</th>
+			<th class="note"><abbr title="Group Note">N</abbr></th>
+			<th class="eps">Episodes</th>
+			<th class="epno last"><abbr title="Highest episode number">HE</abbr></th>
+			<th class="specials"><abbr title="Number of specials">SP</abbr></th>
+			<th class="languages">Languages</th>
+			<th class="rating">Rating</th>
+			<th class="cmts">Cmts</th>
+		</tr>
+		<tr id="gid_488" class="g_odd ongoing">
+			<td class="date lastupdate">29.08.2008</td>
+			<td class="name group"><a href="animedb.pl?show=group&amp;gid=488" title="SaiyaMan">S^M</a></td>
+			<td class="state ongoing"><a href="animedb.pl?show=group&amp;gid=488&amp;aid=2369">ongoing</a></td>
+			<td class="note"></td>
+			<td class="epbar"><span class="completion" title="Done: 1,7,19,25-28,31,33-36,38,46,52-53,61-65,68-70,128-130,132,142-158,160-165,172,175-176,178,184-185"><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="5" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="11" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="5" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="4" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="2" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="1" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="4" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="1" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="7" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="5" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="2" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="7" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="5" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="2" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="3" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="57" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="3" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="1" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="9" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="17" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="1" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="6" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="6" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="2" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="2" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="1" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="5" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="2" height="10" alt="Done"></img></span></td>
+			<td class="epno lastep">185</td>
+			<td class="number specials">0</td>
+			<td class="languages"><span class="i_icon i_audio_ja" title="audio language: japanese"><span>ja</span></span> <span class="i_icon i_sub_en" title="sub language: english"><span>en</span></span> </td>
+			<td class="rating"><a href="animedb.pl?show=animegroupvotes&amp;agid=8686" class="350.400.1.1.agvotes" rel="anidb::popup">N/A <span class="count">(7)</span></a></td>
+			<td class="number cmts"><a href="animedb.pl?show=cmt&amp;do=animegroup&amp;id=8686" class="action 600.500.1.1.cmt" rel="anidb::popup">0</a></td>
+		</tr>
+		<tr id="gid_2445" class="ongoing">
+			<td class="date lastupdate">28.08.2008</td>
+			<td class="name group"><a href="animedb.pl?show=group&amp;gid=2445" title="DatteBayo-FR">DB-FR</a></td>
+			<td class="state ongoing"><a href="animedb.pl?show=group&amp;gid=2445&amp;aid=2369">ongoing</a></td>
+			<td class="note"></td>
+			<td class="epbar"><span class="completion" title="Done: 75-185"><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="74" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="111" height="10" alt="Done"></img></span></td>
+			<td class="epno lastep">185</td>
+			<td class="number specials">0</td>
+			<td class="languages"><span class="i_icon i_audio_ja" title="audio language: japanese"><span>ja</span></span> <span class="i_icon i_sub_fr" title="sub language: french"><span>fr</span></span> </td>
+			<td class="rating"><a href="animedb.pl?show=animegroupvotes&amp;agid=17762" class="350.400.1.1.agvotes" rel="anidb::popup">N/A <span class="count">(5)</span></a></td>
+			<td class="number cmts"><a href="animedb.pl?show=cmt&amp;do=animegroup&amp;id=17762" class="action 600.500.1.1.cmt" rel="anidb::popup">0</a></td>
+		</tr>
+		<tr id="gid_357" class="g_odd ongoing">
+			<td class="date lastupdate">28.08.2008</td>
+			<td class="name group"><a href="animedb.pl?show=group&amp;gid=357" title="O Melhor Dos Animes">OMDA</a></td>
+			<td class="state ongoing"><a href="animedb.pl?show=group&amp;gid=357&amp;aid=2369">ongoing</a></td>
+			<td class="note"></td>
+			<td class="epbar"><span class="completion" title="Done: 1-185"><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="185" height="10" alt="Done"></img></span></td>
+			<td class="epno lastep">185</td>
+			<td class="number specials">3</td>
+			<td class="languages"><span class="i_icon i_audio_ja" title="audio language: japanese"><span>ja</span></span> <span class="i_icon i_sub_pt-BR" title="sub language: brazilian portuguese"><span>pt-BR</span></span> </td>
+			<td class="rating"><a href="animedb.pl?show=animegroupvotes&amp;agid=9020" class="350.400.1.1.agvotes" rel="anidb::popup">6.14 <span class="count">(66)</span></a></td>
+			<td class="number cmts"><a href="animedb.pl?show=cmt&amp;do=animegroup&amp;id=9020" class="action 600.500.1.1.cmt" rel="anidb::popup">4</a></td>
+		</tr>
+		<tr id="gid_1412" class="ongoing">
+			<td class="date lastupdate">28.08.2008</td>
+			<td class="name group"><a href="animedb.pl?show=group&amp;gid=1412" title="Dattebayo">DB</a></td>
+			<td class="state ongoing"><a href="animedb.pl?show=group&amp;gid=1412&amp;aid=2369">ongoing</a></td>
+			<td class="note"></td>
+			<td class="epbar"><span class="completion" title="Done: 50-185"><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="49" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="136" height="10" alt="Done"></img></span></td>
+			<td class="epno lastep">185</td>
+			<td class="number specials">1</td>
+			<td class="languages"><span class="i_icon i_audio_ja" title="audio language: japanese"><span>ja</span></span> <span class="i_icon i_sub_en" title="sub language: english"><span>en</span></span> </td>
+			<td class="rating"><a href="animedb.pl?show=animegroupvotes&amp;agid=14079" class="350.400.1.1.agvotes" rel="anidb::popup">6.65 <span class="count">(620)</span></a></td>
+			<td class="number cmts"><a href="animedb.pl?show=cmt&amp;do=animegroup&amp;id=14079" class="action 600.500.1.1.cmt" rel="anidb::popup">78</a></td>
+		</tr>
+		<tr id="gid_6463" class="g_odd ongoing">
+			<td class="date lastupdate">09.08.2008</td>
+			<td class="name group"><a href="animedb.pl?show=group&amp;gid=6463" title="Akiba-key Fansub">AkF</a></td>
+			<td class="state ongoing"><a href="animedb.pl?show=group&amp;gid=6463&amp;aid=2369">ongoing</a></td>
+			<td class="note"></td>
+			<td class="epbar"><span class="completion" title="Done: 183"><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="182" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="1" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="2" height="10" alt="Not done"></img></span></td>
+			<td class="epno lastep">183</td>
+			<td class="number specials">0</td>
+			<td class="languages"><span class="i_icon i_audio_ja" title="audio language: japanese"><span>ja</span></span> <span class="i_icon i_sub_es" title="sub language: spanish"><span>es</span></span> </td>
+			<td class="rating"><a href="animedb.pl?show=animegroupvotes&amp;agid=35777" class="350.400.1.1.agvotes" rel="anidb::popup">N/A <span class="count">(0)</span></a></td>
+			<td class="number cmts"><a href="animedb.pl?show=cmt&amp;do=animegroup&amp;id=35777" class="action 600.500.1.1.cmt" rel="anidb::popup">0</a></td>
+		</tr>
+		<tr id="gid_4815" class="ongoing">
+			<td class="date lastupdate">12.08.2008</td>
+			<td class="name group"><a href="animedb.pl?show=group&amp;gid=4815" title="DivXman">DivXman</a></td>
+			<td class="state ongoing"><a href="animedb.pl?show=group&amp;gid=4815&amp;aid=2369">ongoing</a></td>
+			<td class="note"></td>
+			<td class="epbar"><span class="completion" title="Done: 170-181"><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="169" height="10" alt="Not done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_darkblue.gif" width="12" height="10" alt="Done"></img><img src="http://static.anidb.net/pics/anidb_bar_h_blue.gif" width="4" height="10" alt="Not done"></img></span></td>
+			<td class="epno lastep">181</td>
+			<td class="number specials">0</td>
+			<td class="languages"><span class="i_icon i_audio_ja" title="audio language: japanese"><span>ja</span></span> <span class="i_icon i_sub_fr" title="sub language: french"><span>fr</span></span> </td>
+			<td class="rating"><a href="animedb.pl?show=animegroupvotes&amp;agid=35130" class="350.400.1.1.agvotes" rel="anidb::popup">N/A <span class="count">(0)</span></a></td>
+			<td class="number cmts"><a href="animedb.pl?show=cmt&amp;do=animegroup&amp;id=35130" class="action 600.500.1.1.cmt" rel="anidb::popup">0</a></td>
+		</tr>
+		<tr class="g_odd">
+			<td></td>
+			<td class="name group"><a href="animedb.pl?show=group&amp;gid=0&amp;aid=2369">no group</a></td>
+			<td colspan="7"></td>
+			<td class="action"><a href="animedb.pl?show=anime&amp;aid=2369&amp;showallag=1#grouplist">show all</a>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="g_section episodes">
+	<form action="animedb.pl" method="post">
+		<fieldset>
+		<input type="hidden" name="show" value="maddtomylist" />
+		<input type="hidden" name="aid" value="2369" />
+		</fieldset>
+	<h4><span>Episode list</span></h4>
+	<table id="eplist" class="eplist">
+		<tr class="header">
+			<th class="id">EP</th>
+			<th class="title">Title</th>
+			<th class="duration">Duration</th>
+			<th class="date airdate">Air Date</th>
+		</tr>
+		<tr class="g_odd" id="eid_22206">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=22206">1</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>A Shinigami is Born! <span class="aka">( 死神になっちゃった日 / Shinigami ni Nacchatta Hi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">05.10.2004</td>
+		</tr>
+		<tr id="eid_24989">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=24989">2</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Pay or Play <span class="aka">( 死神のお仕事 / Shinigami no Oshigoto )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">12.10.2004</td>
+		</tr>
+		<tr class="g_odd" id="eid_25125">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=25125">3</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Sibling Rivalry <span class="aka">( 兄の想い、妹の想い / Ani no Omoi, Imouto no Omoi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">19.10.2004</td>
+		</tr>
+		<tr id="eid_25127">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=25127">4</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>And Your Bird Can Speak <span class="aka">( 呪いのインコ / Noroi no Inko )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">26.10.2004</td>
+		</tr>
+		<tr class="g_odd" id="eid_25728">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=25728">5</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Beat the Invisible Enemy! <span class="aka">( 見えない敵を殴れ！ / Mienai Teki o Nagure! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">02.11.2004</td>
+		</tr>
+		<tr id="eid_25826">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=25826">6</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Fight to the Death! Ichigo vs. Ichigo <span class="aka">( 死闘！一護VS イチゴ / Shitou! Ichigo Tai Ichigo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">09.11.2004</td>
+		</tr>
+		<tr class="g_odd" id="eid_26212">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26212">7</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Greetings from a Stuffed Toy <span class="aka">( ぬいぐるみからコンにちは / Nuigurumi Kara Konnichiwa )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">16.11.2004</td>
+		</tr>
+		<tr id="eid_26214">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26214">8</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>June 17, a Memory of Rain <span class="aka">( 6月17日、雨の記憶 / Rokugatsu Juunananichi, Ame no Kioku )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">23.11.2004</td>
+		</tr>
+		<tr class="g_odd" id="eid_26345">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26345">9</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Unbeatable Enemy <span class="aka">( 倒せない敵 / Taosenai Teki )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">30.11.2004</td>
+		</tr>
+		<tr id="eid_26346">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26346">10</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Assault on Trip at Sacred Ground! <span class="aka">( ぶらり霊場突撃の旅! / Burari Reijou Totsugeki no Tabi! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.12.2004</td>
+		</tr>
+		<tr class="g_odd" id="eid_26598">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26598">11</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Legendary Quincy <span class="aka">( 伝説のクインシー / Densetsu no Quincy )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">14.12.2004</td>
+		</tr>
+		<tr id="eid_26868">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26868">12</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>A Gentle Right Arm <span class="aka">( やさしい右腕 / Yasashii Uwan )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">21.12.2004</td>
+		</tr>
+		<tr class="g_odd" id="eid_26991">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26991">13</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Flower and Hollow <span class="aka">( 花とホロウ / Hana to Hollow )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">28.12.2004</td>
+		</tr>
+		<tr id="eid_26992">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=26992">14</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Back to Back, A Fight to the Death! <span class="aka">( 背中合わせの死闘！ / Senaka Awase no Shitou! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">11.01.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_27582">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=27582">15</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Kon`s Great Plan <span class="aka">( コンのウハウハ大作戦 / Kon no uhauha Dai Sakusen )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">18.01.2005</td>
+		</tr>
+		<tr id="eid_28088">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=28088">16</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Encounter: Abarai Renji! <span class="aka">( 阿散井恋次、見参！ / Abarai Renji, Kenzan! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">25.01.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_28319">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=28319">17</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo Dies! <span class="aka">( 一護、死す！ / Ichigo Shisu! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">01.02.2005</td>
+		</tr>
+		<tr id="eid_28850">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=28850">18</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Reclaim! The Power of the Shinigami <span class="aka">( 取り戻せ！死神の力！ / Torimodose! Shinigami no Chikara! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">08.02.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_29112">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=29112">19</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo Becomes a Hollow! <span class="aka">( 一護、ホロウに墜ちる！ / Ichigo, Hollow ni Ochiru! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">15.02.2005</td>
+		</tr>
+		<tr id="eid_30248">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=30248">20</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichimaru Gin`s Shadow <span class="aka">( 市丸ギンの影 / Ichimaru Gin no Kage )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">22.02.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_30266">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=30266">21</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Enter! The World of the Shinigami <span class="aka">( 突入！死神の世界 / Totsunyuu! Shinigami no Sekai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">01.03.2005</td>
+		</tr>
+		<tr id="eid_30524">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=30524">22</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Man who Hates Shinigami <span class="aka">( 死神を憎む男 / Shinigami o Nikumu Otoko )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">08.03.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_31424">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=31424">23</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>14 Days Before Rukia`s Execution <span class="aka">( ルキア処刑、14日前 / Rukia Shokei, Juuyokka mae )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">15.03.2005</td>
+		</tr>
+		<tr id="eid_33703">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=33703">24</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Assemble! The 13 Divisions <span class="aka">( 結集！護廷13隊 / Kesshuu! Gotei Juusan Tai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">22.03.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_34120">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=34120">25</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Penetrate the Center with an Enormous Bombshell? <span class="aka">( 巨大砲弾で中央突破？ / Kyodai Houdan de Chuuoutoppa? )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">29.03.2005</td>
+		</tr>
+		<tr id="eid_34153">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=34153">26</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Formation! The Worst Tag <span class="aka">( 結成！最悪のタッグ / Kessei! Saiaku no Tag )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">05.04.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_35607">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=35607">27</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Release the Death Blow! <span class="aka">( 必殺の一撃を放て！ / Hissatsu no Ichigeki o Houte! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">12.04.2005</td>
+		</tr>
+		<tr id="eid_35825">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=35825">28</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Orihime Targeted <span class="aka">( 狙われた織姫 / Nerawareta Orihime )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">19.04.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_35968">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=35968">29</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Breakthrough! The Shinigami`s Encompassing Net <span class="aka">( 突破せよ！死神包囲網 / Toppaseyo! Shinigami Houimou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">26.04.2005</td>
+		</tr>
+		<tr id="eid_36224">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=36224">30</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Renji`s Confrontation <span class="aka">( 立ちはだかる恋次 / Tachihadakaru Renji )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">03.05.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_36411">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=36411">31</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Resolution to Kill <span class="aka">( 斬る為の覚悟 / Kiru Tame no Kakugo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">10.05.2005</td>
+		</tr>
+		<tr id="eid_36560">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=36560">32</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Star and the Stray Dog <span class="aka">( 星と野良犬 / Hoshi to Norainu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">17.05.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_36631">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=36631">33</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Miracle! New Hero of Enigma <span class="aka">( 奇跡！謎の新ヒーロー / Kiseki! Nazo no Shin Hero )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">24.05.2005</td>
+		</tr>
+		<tr id="eid_36632">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=36632">34</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Tragedy of Dawn <span class="aka">( 夜明けの惨劇 / Yoake no Sangeki )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">31.05.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_36633">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=36633">35</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Aizen Assassination! The Creeping Darkness <span class="aka">( 藍染暗殺！忍び寄る闇 / Aizen Ansatsu! Shinobi Yoru Yami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.06.2005</td>
+		</tr>
+		<tr id="eid_37673">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=37673">36</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Zaraki Kenpachi, drawing close! <span class="aka">( 更木剣八、迫る！ / Zaraki Kenpachi, Semaru! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">14.06.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_37916">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=37916">37</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Reason for Fists <span class="aka">( 拳の理由 / Kobushi no Riyuu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">21.06.2005</td>
+		</tr>
+		<tr id="eid_37922">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=37922">38</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Driven into a Corner! Broken Zangetsu <span class="aka">( 絶体絶命！折られた斬月 / Zettai Zetsumei! Orareta Zangetsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">28.06.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_37926">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=37926">39</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Immortal Man <span class="aka">( 不死身の男 / Fujimi no Otoko )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">05.07.2005</td>
+		</tr>
+		<tr id="eid_38549">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=38549">40</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Shinigami Ganju Saw <span class="aka">( ガンジュの見た死神 / Ganju no Mita Shinigami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">12.07.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_38667">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=38667">41</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Reunion, Ichigo and Rukia <span class="aka">( 再会、一護とルキア / Saikai, Ichigo to Rukia )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">19.07.2005</td>
+		</tr>
+		<tr id="eid_38668">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=38668">42</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Shunshin (God of Flash) Yoruichi, Dance! <span class="aka">( 瞬神夜一、舞う！ / Shunshin Yoruichi, Mau! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">26.07.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_38669">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=38669">43</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Vicious Shinigami <span class="aka">( 卑劣な死神 / Hiretsu na Shinigami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">02.08.2005</td>
+		</tr>
+		<tr id="eid_38670">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=38670">44</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ishida, Extreme Limits of his Power! <span class="aka">( 石田、極限の力！ / Ishida, Kyokugen no Chikara! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">09.08.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_39738">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=39738">45</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Exceeding the Limits! <span class="aka">( 限界を越えろ！ / Genkai o Koero! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">16.08.2005</td>
+		</tr>
+		<tr id="eid_39887">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=39887">46</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Authentication!  The School of Shinigami <span class="aka">( 実録！死神の学校 / Jitsuroku! Shinigami no Gakkou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">23.08.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_39888">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=39888">47</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Those Who Take Revenge <span class="aka">( 仇討つ者たち / Adautsu Monotachi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">30.08.2005</td>
+		</tr>
+		<tr id="eid_39889">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=39889">48</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Hitsugaya, Howl! <span class="aka">( 日番谷、吼える！ / Hitsugaya, Hoeru! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">06.09.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_41140">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=41140">49</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rukia`s Nightmare <span class="aka">( ルキアの悪夢 / Rukia no Akumu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">13.09.2005</td>
+		</tr>
+		<tr id="eid_41322">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=41322">50</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Resurrected Lion <span class="aka">( よみがえる獅子 / Yomigaeru Shishi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">20.09.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_41672">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=41672">51</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Morning of the Execution <span class="aka">( 処刑の朝 / Shokei no Asa )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">27.09.2005</td>
+		</tr>
+		<tr id="eid_41673">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=41673">52</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Renji, Vow to his Soul! Battle to the Death with Byakuya <span class="aka">( 恋次, 魂の誓い! 白哉との死闘 / Renji, Tama no Chikai! Byakuya to no Shitou )</span></label>
+			</td>
+			<td class="duration">25m</td>
+			<td class="date airdate">04.10.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_41674">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=41674">53</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichimaru Gin`s Temptation, Destroyed Resolution <span class="aka">( 市丸ギンの誘惑, 崩された覚悟 / Ichimaru Gin no Yuuwaku, Kuzusareta Kakugo )</span></label>
+			</td>
+			<td class="duration">25m</td>
+			<td class="date airdate">04.10.2005</td>
+		</tr>
+		<tr id="eid_41849">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=41849">54</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>An Accomplished Oath! Get back Rukia! <span class="aka">( 果たされる誓い！ルキア奪還なるか！ / Hatasareru chikai! Rukia dakkan naruka! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">18.10.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_42191">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=42191">55</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Strongest Shinigami! The Ultimate Teacher and Student Showdown <span class="aka">( 最強の死神！究極の師弟対決 / Saikyou no Shinigami! Kyuukyoku no Shitei Taiketsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">25.10.2005</td>
+		</tr>
+		<tr id="eid_42192">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=42192">56</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>High Speed Battle! The Goddess Warrior, Decided <span class="aka">( 超速の戦い！武の女神、決す / Chousoku no Tatakai! Takeshi no Joshin, Kessu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">01.11.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_42193">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=42193">57</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Senbonzakura, Crushed! Zangetsu Thrusts Through the Sky <span class="aka">( 千本桜、粉砕！天を衝く斬月 / Senbonzakura, Funsai! Ten o Tsuku Zangetsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">08.11.2005</td>
+		</tr>
+		<tr id="eid_43347">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=43347">58</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Open! The Black Blade, Power of a Miracle <span class="aka">( 開放！黒き刃、奇跡の力 / Kaihou! Kuroki Yaiba, Kiseki no Chikara )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">15.11.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_44633">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=44633">59</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Conclusion of the Battle! White Pride and Black Thoughts <span class="aka">( 死闘決着！白き誇りと黒き想い / Shitou Kecchaku! Shiroiki Hokori to Kuroki Omoi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">22.11.2005</td>
+		</tr>
+		<tr id="eid_44634">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=44634">60</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Reality of the Despair, the Assassin`s Dagger is Swung <span class="aka">( 絶望の真実、振り下ろされた凶刃 / Zetsubou no Shinjitsu, Furiorosareta Kyoujin )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">06.12.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_44776">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=44776">61</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Aizen Stands! Horrible Ambitions <span class="aka">( 藍染、立つ！恐るべき野望 / Aizen, Tatsu! Okorubeki Yabou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">13.12.2005</td>
+		</tr>
+		<tr id="eid_44777">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=44777">62</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Gather Together! Army of the Strongest Shinigami! <span class="aka">( 集結せよ！最強の死神軍団 / Shuuketsuseyo! Saikyou no Shinigami Gundan )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">20.12.2005</td>
+		</tr>
+		<tr class="g_odd" id="eid_45347">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=45347">63</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rukia`s Decision, Ichigo`s Feelings <span class="aka">( ルキアの決意、一護の想い / Rukia no Ketsui, Ichigo no Omoi )</span></label>
+			</td>
+			<td class="duration">46m</td>
+			<td class="date airdate">10.01.2006</td>
+		</tr>
+		<tr id="eid_45367">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=45367">64</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>New School Term, Renji has come to the Material World?! <span class="aka">( 新学期、現世に恋次がやって来た！？ / Shingakki, Gense ni Renji ga Yatte Kita !? )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">17.01.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_45368">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=45368">65</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creeping Fear, The Second Victim <span class="aka">( 忍び寄る恐怖、２番目の犠牲者 / Shinobiyoru Kyoufu, Nibanme no Giseisha )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">24.01.2006</td>
+		</tr>
+		<tr id="eid_45369">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=45369">66</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Break Through! Trap that Lurks in the Maze <span class="aka">( 突破せよ！迷宮に潜む罠 / Toppaseyo! Meikyuu ni Hisomu Wana )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">31.01.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_46139">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=46139">67</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Game of Death! Disappearing Classmate <span class="aka">( 死のゲーム！消えるクラスメイト / Shi no Game! Kieru Classmate )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.02.2006</td>
+		</tr>
+		<tr id="eid_46140">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=46140">68</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Demon`s True Form, The Secret Revealed <span class="aka">( 悪魔の正体, 明かされた秘密 / Akuma no Shoutai, Akasareta Himitsu )</span></label>
+			</td>
+			<td class="duration">25m</td>
+			<td class="date airdate">14.02.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_46141">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=46141">69</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>It`s Name is Bount! Those Who Hunt Souls <span class="aka">( その名はバウント！魂を狩る者たち / Sono Na wa Bount! Tamashii o Karu Mono-tachi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">14.02.2006</td>
+		</tr>
+		<tr id="eid_46142">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=46142">70</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rukia`s Return! Substitute Team Revival <span class="aka">( ルキアの帰還！代行チーム復活 / Rukia no Kikan! Daikou Team Fukkatsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">21.02.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_46803">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=46803">71</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Moment of Collision!! An Evil Hand Draws Near to the Quincy <span class="aka">( 激突の時！クインシーに迫る魔の手 / Gekitotsu no Toki! Quincy ni Semaru Ma no Te )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.03.2006</td>
+		</tr>
+		<tr id="eid_47377">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=47377">72</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Water assault! Escape from the closed hospital <span class="aka">( 水の攻撃！閉ざされた病院からの脱出 / Mizu no Kougeki! Tozasareta Byouin Kara no Dasshutsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">14.03.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_47378">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=47378">73</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Gathering at the Place of Fortune! The Man who makes his Move <span class="aka">( 場運と集結! 動き出す男 / Ba Un to Shuuketsu! Ugokidasu Otoko )</span></label>
+			</td>
+			<td class="duration">25m</td>
+			<td class="date airdate">28.03.2006</td>
+		</tr>
+		<tr id="eid_47379">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=47379">74</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Memories of an Eternally Living Clan <span class="aka">( 永遠を生きる一族の記憶 / Eien o Ikiru Ichizoku no Kioku )</span></label>
+			</td>
+			<td class="duration">25m</td>
+			<td class="date airdate">28.03.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_47612">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=47612">75</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Earth-Shattering Event at 11th Squad! The Shinigami who Rises Again <span class="aka">( 十一番隊激震!よみがえった死神 / Juuichi ban tai gekishin! Yomigaetta shinigami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">04.04.2006</td>
+		</tr>
+		<tr id="eid_47611">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=47611">76</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Crashing force! Frido vs Zangetsu <span class="aka">( 力の激突!フリードVS斬月 / Chikara no gekitotsu! Frido vs Zangetsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">04.04.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_48491">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=48491">77</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Unquellable Hatred! The Shinigami that Kenpachi Cut Down <span class="aka">( 消えぬ怨念!剣八が斬った死神 / Kie nu onnen! Kenpachi ga kitta Shinigami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">11.04.2006</td>
+		</tr>
+		<tr id="eid_48492">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=48492">78</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Gotei 13, Shocked!! Truth Buried by History <span class="aka">( 護廷十三隊驚愕!!歴史に埋もれた真実 / Gotei juusan tai kyougaku!! Rekishi ni uzumore ta shinjitsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">02.05.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_48992">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=48992">79</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Yoshino`s decision of death <span class="aka">( 芳野、死をかけた想い / Yoshino, shi o kake ta omoi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">09.05.2006</td>
+		</tr>
+		<tr id="eid_48993">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=48993">80</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Assault From a Formidable Enemy! A Tiny Final Line of Defense?! <span class="aka">( 強敵の急襲!小さな最終防衛線!? / Kyouteki no kyuushuu! Chiisana saishuu bouei sen!? )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">16.05.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_49911">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=49911">81</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Hitsugaya Moves! The Attacked City. <span class="aka">( 日番谷動く! 襲われた街 )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">23.05.2006</td>
+		</tr>
+		<tr id="eid_49912">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=49912">82</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo vs. Druk! The appearance of the faded darkness. <span class="aka">( 一護VSダルク! 白き闇の出現 )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">30.05.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_49913">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=49913">83</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Gray Shadow, The Secret of the Dolls. <span class="aka">( 灰色の影, ドールの秘密 )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">06.06.2006</td>
+		</tr>
+		<tr id="eid_50426">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=50426">84</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Breaking Up of the Substitute Team? The Betrayal of Rukia <span class="aka">( 代行チーム分裂？裏切ったルキア / Daikou team bunretsu? Uragitta Rukia )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">13.06.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_50799">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=50799">85</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Battle of Tears! Rukia vs. Orihime <span class="aka">( 涙の死闘！ルキアvs織姫 / Namida no shitou! Rukia vs Orihime )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">13.06.2006</td>
+		</tr>
+		<tr id="eid_51040">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=51040">86</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rangiku Dances! Cut Down the Invisible Enemy <span class="aka">( 乱菊舞う！見えない敵を斬れ / Rangiku mau! Mie nai teki o kire )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">20.06.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_51041">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=51041">87</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Byakuya Assembles! The Gotei 13 Make Their Move <span class="aka">( 白哉召集！動き出す護廷十三隊 / Byakuya shoushuu! Ugokidasu Gotei juusan tai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">04.07.2006</td>
+		</tr>
+		<tr id="eid_51307">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=51307">88</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Annihilation of the Vice Captains!? Trap in the Underground Cave <span class="aka">( 副隊長全滅!?地下洞窟の罠 / Fuku taichou zenmetsu!? Chikadoukustu no wana )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">11.07.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_51546">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=51546">89</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rematch?! Ishida vs. Nemu <span class="aka">( 再戦!? 石田 VS ネム / Saisen!? Ishida VS Nemu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">18.07.2006</td>
+		</tr>
+		<tr id="eid_51547">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=51547">90</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Abarai Renji, Soul of Bankai! <span class="aka">( 阿散井恋次、魂の卍解！ / Abarai Renji, tamashii no bankai! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">25.07.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_51976">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=51976">91</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Shinigami and Quincy, the Reviving Power <span class="aka">( 死神とクインシー、よみがえる力 / Shinigami to kuinshii, yomigaeru chikara )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">01.08.2006</td>
+		</tr>
+		<tr id="eid_52471">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=52471">92</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Enter the World of the Shinigami Again <span class="aka">( 死神世界への突入、再び / Shinigami sekai he no totsunyuu, futatabi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">08.08.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_52472">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=52472">93</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Assault of the Bounts! Chaos in the Gotei 13 <span class="aka">( バウンド強襲！激震の護廷十三隊 / BAUNTO kyoushuu! Gekishin no Gotei juusan tai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">15.08.2006</td>
+		</tr>
+		<tr id="eid_52473">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=52473">94</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Hitsugaya`s Resolution! The Moment of Conflict Approaches <span class="aka">( 日番谷の決意！激突の時迫る / Hitsugaya no ketsui! Gekitotsu no toki semaru )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">22.08.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_52474">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=52474">95</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Byakuya Takes the Field! Dance of the Wind-Splitting Cherry Blossoms <span class="aka">( 白哉出陣！風を裂く桜の舞 / Byakuya shutsujin! Fuu o saku sakura no mai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">05.09.2006</td>
+		</tr>
+		<tr id="eid_62028">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=62028">96</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo Byakuya Kariya, Battle of the Three Extremes! <span class="aka">( 一護・白哉・狩矢、三極の戦い！ / Ichigo Byakuya Kariya, sankyoku no tatakai! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">12.09.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_62029">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=62029">97</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Hitsugaya Moves Out! Cut Down the Enemy in the Forest <span class="aka">( 日番谷出撃！森の中の敵を斬れ / Hitsugaya no shutsugeki! Mori no naka no teki wo kire )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">19.09.2006</td>
+		</tr>
+		<tr id="eid_62405">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=62405">98</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Clash! Zaraki Kenpachi vs. Ichinose Maki <span class="aka">( 激突！更木剣八VS一之瀬真樹 / gekitotsu! zaraki kenpachi VS ichinose maki )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">04.10.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_63317">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=63317">99</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Shinigami vs. Shinigami! The Uncontrollable Power <span class="aka">( 死神VS死神！暴走する力 / Shinigami VS Shinigami! Bousousuru Chikara )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">11.10.2006</td>
+		</tr>
+		<tr id="eid_63318">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=63318">100</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Soifon dies? The Last of the Secret Mobile Corps <span class="aka">( 砕蜂死す？隠密機動の最後 / Soifon Shisu? Onmitsu Kidou no Saigo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">18.10.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_63319">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=63319">101</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Mayuri`s Bankai!! Sawatari Clash of the Demon <span class="aka">( マユリ卍解!!沢渡・悪魔の激突 / Mayuri Bankai!! Sawatari Akuma no Gekitotsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">01.11.2006</td>
+		</tr>
+		<tr id="eid_64094">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=64094">102</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Last Quincy! The Exploding Power <span class="aka">( 最後のクインシー！暴発する力 / Saigo no Quincy! Bouhatsusuru Chikara )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">08.11.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_64095">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=64095">103</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ishida, The Limit Breaching Attack! <span class="aka">( 石田、限界を超えて撃て！ / Ishida, Genkai o Koete Ute! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">15.11.2006</td>
+		</tr>
+		<tr id="eid_65128">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=65128">104</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>10th Squad`s Struggle to the Death! The Release of Hyourinmaru <span class="aka">( 死闘十番隊！氷輪丸を放て / Shitou Juu Bantai! Hyourinmaru wo Houte )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">22.11.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_65129">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=65129">105</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Kariya! Countdown to the Detonation <span class="aka">( 狩矢！爆発へのカウントダウン / Kariya! Bakuhatsu he no Kauntodaun )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">29.11.2006</td>
+		</tr>
+		<tr id="eid_65130">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=65130">106</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Life and Revenge! Ishida, the Ultimate Decision <span class="aka">( 命と復讐！石田、究極の選択 / Inochi to Fukushuu! Ishida, Kyuukyoku no Sentaku )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">06.12.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_65544">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=65544">107</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Swung-Down Edge! The Moment of Ruin <span class="aka">( 振り下ろされた刃！破滅の瞬間 / Furiorosareta Yaiba! Hametsu no Shunkan )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">13.12.2006</td>
+		</tr>
+		<tr id="eid_65545">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=65545">108</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Wailing Bount! The Last Clash <span class="aka">( 慟哭のバウント！最後の激突 / Doukoku no Bount! Saigo no Gekitotsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">20.12.2006</td>
+		</tr>
+		<tr class="g_odd" id="eid_65620">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=65620">109</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo and Rukia, Thoughts Revolving Around Heaven <span class="aka">( 一護とルキア、廻天する想い / Ichigo to Rukia, Kaitensuru Omoi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">04.01.2007</td>
+		</tr>
+		<tr id="eid_65684">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=65684">110</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Reopening of the Substitute Business! The Terrifying Transfer Student <span class="aka">( 代行業再開！恐怖の転校生 / Daikou gyou saikai! Kyoufu no tenkousei )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">10.01.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_66044">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=66044">111</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Shock! The Father`s True Character <span class="aka">( 驚愕！親父達の正体 / Kyougaku! Oyaji tachi no shoutai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">17.01.2007</td>
+		</tr>
+		<tr id="eid_66045">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=66045">112</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Vizards and the Arrancars <span class="aka">( 戦いの始まり、仮面の軍勢と破面 / Tatakai no Hajimari, Vizard to Arrancar )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">24.01.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_66046">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=66046">113</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Prelude to the Apocalypse, The Arrancar`s Attack! <span class="aka">( 世界崩壊への序曲、アランカル来襲！ / Sekai Houkai e no Jokyoku, Arrancar Raishuu! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">31.01.2007</td>
+		</tr>
+		<tr id="eid_66754">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=66754">114</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Reunion, Ichigo and Rukia <span class="aka">( 再会、一護とルキア / Saikai, Ichigo to Rukia )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.02.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_67012">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=67012">115</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Mission! The Shinigamis Who Came <span class="aka">( 特命！やってきた死神たち / Tokumei! Yatteki ta shinigami tachi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">14.02.2007</td>
+		</tr>
+		<tr id="eid_67013">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=67013">116</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Evil Eye, Aizen Again <span class="aka">( 悪しき瞳、藍染再び / Ashiki hitomi, Aizen futatabi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">21.02.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_67014">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=67014">117</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rukia`s Battle Begins! The Freezing White Blade <span class="aka">( ルキア戦闘開始！凍りつく白き刃 / Rukia Sentou Kaishi! Kooritsuku Shiroki Yaiba )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">28.02.2007</td>
+		</tr>
+		<tr id="eid_67425">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=67425">118</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ikkaku`s Bankai! The Power that Breaks Everything <span class="aka">( 一角卍解！全てを砕く力 )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.03.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_67716">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=67716">119</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Team Zaraki`s Secret Story! The lucky men <span class="aka">( 更木隊秘話！ツイている男たち / Zaraki tai hiwa! Tsui te iru otoko tachi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">21.03.2007</td>
+		</tr>
+		<tr id="eid_67717">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=67717">120</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Hitsugaya scatters! The broken Hyourinmaru <span class="aka">( 日番谷散る！砕けた氷輪丸 / Hitsugaya chiru! Kudake ta Hyourinmaru )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">28.03.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_68502">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=68502">121</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Clash! The protector vs. the bearer <span class="aka">( 激突！護る者VS被る者 / Gekitotsu! Mamoru mono VS koumuru mono )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">11.04.2007</td>
+		</tr>
+		<tr id="eid_68503">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=68503">122</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Vizard! The power of the awakened <span class="aka">( ヴァイザード！目覚めし者たちの力 / Vizard! Mezameshi Mono-tachi no Chikara )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">18.04.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_71852">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=71852">123</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo, Complete Hollowification?! <span class="aka">( 一護、完全ホロウ化!? / Ichigo, kanzen hollow ka!? )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">25.04.2007</td>
+		</tr>
+		<tr id="eid_71853">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=71853">124</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Clash! The Black Bankai and the White Bankai <span class="aka">( 激突！黒い卍解と白い卍解 / Gekitotsu! Kuroi bankai to shiroi banka )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">02.05.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_71854">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=71854">125</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Urgent Report! Aizen`s Terrifying Plan <span class="aka">( 緊急報告！藍染の恐るべき計画 / Kinkyuu houkoku! Aizen no osorubeki keikaku! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">09.05.2007</td>
+		</tr>
+		<tr id="eid_72402">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=72402">126</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Uryuu vs. Ryuuken! Clash of the Parent-Child Quincys <span class="aka">( 雨竜VS竜弦！激突クインシー親子 / Uryuu VS Ryuuken! Gekitotsu kuinshii oyako )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">16.05.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_72403">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=72403">127</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Urahara`s Decision, Orihime`s Thoughts <span class="aka">( 浦原の決断、織姫の想い / Urahara no ketsudan, Orihime no omoi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">30.05.2007</td>
+		</tr>
+		<tr id="eid_73497">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=73497">128</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Nightmare Arrancar! Team Hitsugaya moves out <span class="aka">( 悪夢のアランカル！日番谷隊出撃 / Akumu no arankaru! Hitsugaya tai shutsugeki )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">06.06.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_73663">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=73663">129</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Swooping Descent of the Dark Emissary! The Propagation of Malice <span class="aka">( 舞い降りた闇の使者！増殖する悪意 / Maiori ta yami no shisha! Zoushoku suru akui )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">13.06.2007</td>
+		</tr>
+		<tr id="eid_73664">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=73664">130</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Invisible Enemy! Hitsugaya`s Merciless Decision <span class="aka">( 見えない敵！日番谷、非情な決断 / Mie nai teki! Hitsugaya, hijou na ketsudan )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">20.06.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_73667">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=73667">131</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rangiku`s Tears, the Sorrowful Parting of Brother and Sister <span class="aka">( 乱菊の涙、哀しき兄妹の別れ / Rangiku no Namida, Kanashiki Keimai no Wakare )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">27.06.2007</td>
+		</tr>
+		<tr id="eid_75595">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=75595">132</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Hitsugaya, Karin and Soccer Ball <span class="aka">( 日番谷と夏梨とサッカーボール / Hitsugaya to Karin to Soccer Ball )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">04.07.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_78050">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=78050">133</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ikkaku`s Hot-Blooded Kendo Tale <span class="aka">( 一角、熱血剣道物語 / Ikkaku, nekketsu kendou monogatari )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">11.07.2007</td>
+		</tr>
+		<tr id="eid_78051">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=78051">134</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Beautiful Patissier, Yumichika! <span class="aka">( 美しきパティシエ、弓親！ / Utsukushiki Patissier, Yumichika! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">18.07.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_78052">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=78052">135</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Kon is Deceived! Rangiku on the Lookout.. <span class="aka">( はかられた、コン！乱菊は見ていた・・ / Hakarare ta, Kon! Rangiku wa mite ita.. )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">25.07.2007</td>
+		</tr>
+		<tr id="eid_80131">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=80131">136</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Civil War in Hueco Mondo! Ulquiorra`s death <span class="aka">( ウェコムンドの内乱！ウルキオラの死 / Hueco Mundo no Nairan! Ulquiorra no Shi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">08.08.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_80132">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=80132">137</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Battle of bad faith, Aizen`s trap <span class="aka">( 悪意の戦い、藍染の罠 / Akui no tatakai, aizen no wana )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">22.08.2007</td>
+		</tr>
+		<tr id="eid_81177">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=81177">138</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Second move of Hueco Mundo! Hitsugaya vs Yammy <span class="aka">( ウェコムンド再動!日番谷vsヤミー / Hueco Mundo Saidou! Hitsugaya vs Yammy )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">29.08.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_81178">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=81178">139</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo vs Grimmjow, 11 second battle! <span class="aka">( 一護VSグリムジョー、 11秒の戦い! / Ichigo VS Grimmjow, Juuichibyou no Tatakai! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">05.09.2007</td>
+		</tr>
+		<tr id="eid_81546">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=81546">140</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ulquiorra`s Scheme, the Moment when the Sun Sets <span class="aka">( 策謀のウルキオラ、太陽が沈む時 / Sakubou no Ulquiorra, taiyou ga shizumu toki )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">12.09.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_81547">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=81547">141</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Goodbye..., Kurosaki <span class="aka">( さよなら…、黒崎くん / Sayonara..., Kurosaki-kun )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">19.09.2007</td>
+		</tr>
+		<tr id="eid_82750">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=82750">142</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Strict Order! The Forbidden Rescue of Inoue Orihime <span class="aka">( 厳命!井上織姫ノ救出ヲ禁ズ / Genmei! Inoue Orihime no kyujutsu wo kinzu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">26.09.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_82751">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=82751">143</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Revival of Grimmjow <span class="aka">( 復活のグリムジョー / Fukkatsu no Grimmjow )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">03.10.2007</td>
+		</tr>
+		<tr id="eid_83026">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83026">144</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ishida Chad, the quickening of a new power <span class="aka">( 石田・チャド、新しき力の胎動 / Ishida Chad, Atarashiki Chikara no Taidou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">17.10.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_83027">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83027">145</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Espada Gathers! Aizen`s royal assembly <span class="aka">( エスパーダ集結！藍染の御前会議 / Espada shuuketsu! Aizen no gozen kaigi )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">24.10.2007</td>
+		</tr>
+		<tr id="eid_83028">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83028">146</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Her Name is Nel! The Appearance of the Strange Arrancar <span class="aka">( その名はネル！不思議なアランカル登場 / Sono Na wa Nel! Fushigi na Arrancar Toujou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">31.10.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_84450">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84450">147</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Forest of Menos! The Search for the Missing Rukia <span class="aka">( メノスの森！消えたルキアを探せ！ / Menos no Mori! Kieta Rukia o Sagase! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.11.2007</td>
+		</tr>
+		<tr id="eid_85041">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85041">148</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ashido, the Shinigami Who Came from the Past <span class="aka">( アシド、過去から来た死神 / Ashido, Kako Kara Kita Shinigami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">14.11.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_85042">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85042">149</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Through the Crumbling Forest, a Million Menos <span class="aka">( 崩れ行く森、百万のメノス / Kuzure iku mori, hyuakuman no Menosu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">21.11.2007</td>
+		</tr>
+		<tr id="eid_85043">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85043">150</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Oath! Back Here Alive Again <span class="aka">( 誓い！再び生きてこの場所へ / Sakai! Futatabi ikite kono basho he )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">28.11.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_85044">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85044">151</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Raging Storm! Encounter with the Dancing Arrancar <span class="aka">( 吹き荒れる暴風！踊るアランカルとの遭遇 / Fukiareru boufuu! Odoru arankaru to no souguu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">05.12.2007</td>
+		</tr>
+		<tr id="eid_85664">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85664">152</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo Strikes Back! This is my Bankai <span class="aka">( 一護反撃！こいつが俺の卍解だ / Ichigo hangeki! Koitsu ga ore no bankai da )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">12.12.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_85665">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85665">153</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Devilish Research! Szayel Aporro`s Plan <span class="aka">( 悪魔の研究！ザエルアポロの企み / Akuma no Kenkyuu! Szayel Aporro no Takurami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">19.12.2007</td>
+		</tr>
+		<tr id="eid_85781">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85781">154</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rukia and Kaien, the Sorrowful Reunion <span class="aka">( ルキアと海燕、哀しみの再会 / Rukia to Kaien, kanashimi no saikai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">26.12.2007</td>
+		</tr>
+		<tr class="g_odd" id="eid_85782">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=85782">155</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Rukia Retaliates! Release the Desperate Kidou <span class="aka">( ルキア反撃！決死の鬼道を放て / Rukia hangeki! Kesshi no kidou wo hanate )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">09.01.2008</td>
+		</tr>
+		<tr id="eid_86177">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=86177">156</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ishida &amp; Pesshe, the United Attack of Friendship <span class="aka">( 石田＆ペッシェ、友情の合体攻撃 / Ishida &amp; Pesshe, yuujou no gattai kougeki )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">16.01.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_86608">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=86608">157</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ishida`s Trump Card, Seele Schneider <span class="aka">( 石田の切り札、魂を切り裂くもの / Ishida no Kirifuda, Tamashii o Kirisaku Mono )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">23.01.2008</td>
+		</tr>
+		<tr id="eid_86609">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=86609">158</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Right Arm of the Giant, Left Arm of the Devil <span class="aka">( 巨人の右腕、悪魔の左腕 / Kyojin no Uwan, Akuma no Sawan )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">30.01.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_87831">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=87831">159</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Sado Yasutora dies! Orihime`s Tears <span class="aka">( 茶渡泰虎死す！織姫の涙 / Sado Yasutora Shisu! Orihime no Namida )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">06.02.2008</td>
+		</tr>
+		<tr id="eid_87923">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=87923">160</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Testament, Your Heart is Right Here... <span class="aka">( 遺言、心は此処に… / Yuigon, Kokoro wa Koko ni... )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">13.02.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_87924">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=87924">161</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Cruel Arrancar <span class="aka">( 残酷な破面、ウルキオラの挑発 / Zankoku na Arrancar, Ulquiorra no Chouhatsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">20.02.2008</td>
+		</tr>
+		<tr id="eid_87925">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=87925">162</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Szayel Aporro Laughs <span class="aka">( 笑うザエルアポロ、恋次包囲網完成 / Warau Szayel Aporro, Renji Houimou Kansei )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">27.02.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_88420">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=88420">163</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Shinigami and Quincy, the Battle with Madness <span class="aka">( 死神とクインシー、狂気との戦い / Shinigami to Quincy, Kyouki tono Tatakai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">05.03.2008</td>
+		</tr>
+		<tr id="eid_88421">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=88421">164</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ishida`s Strategy, the 20-second Offense and Defense <span class="aka">( 石田の作戦！攻防の２０秒 / Ishida no Sakusen! Koubou no Nijuubyou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">12.03.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_88422">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=88422">165</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Murderous Intent Boils! The Joyful Grimmjow <span class="aka">( 殺意沸騰！歓喜のグリムジョー / Satsui Futtou! Kanki no Grimmjow )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">19.03.2008</td>
+		</tr>
+		<tr id="eid_88489">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=88489">166</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Desperate Effort VS Desperate Effort! The Hollowized Ichigo <span class="aka">( 死力VS死力！ホロウ化した一護 / Shiryoku VS Shiryoku! Hollow-ka shita Ichigo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">09.04.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_88490">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=88490">167</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Moment of Conclusion, the End of Grimmjow <span class="aka">( 決着の時、グリムジョーの最後 / Kecchaku no Toki, Grimmjow no Saigo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">16.04.2008</td>
+		</tr>
+		<tr id="eid_90241">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=90241">168</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The New Captain Appears! His name is Amagai Shuusuke <span class="aka">( 新隊長登場！その名は天貝繍助 / Shin Taichou Toujou! Sono Na wa Amagai Shuusuke )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">23.04.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_90251">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=90251">169</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>New Development, the Dangerous Transfer Student Appears! <span class="aka">( 新展開､危険な転校生現る！ / Shin Tenkai, Kiken na Tenkousei Arawaru! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">07.05.2008</td>
+		</tr>
+		<tr id="eid_90448">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=90448">170</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Desperate Struggle Under the Moonlit Night, the Mysterious Assassin and Zanpakutou <span class="aka">( 月夜の死闘、謎の刺客と斬魄刀 / Tsukiyo no Shitou, Nazo no Shikaku to Zanpakutou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">14.05.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_90449">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=90449">171</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Kenryuu, the Profusion of Blooming Crimson Flowers <span class="aka">( 犬龍、咲き乱れる紅の華 / Kenryuu, Sakimidareru Beni no Hana )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">21.05.2008</td>
+		</tr>
+		<tr id="eid_90450">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=90450">172</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Kibune Goes to War! The Violent Wind that Rages <span class="aka">( 貴船出陣！吹き荒れる烈風 / Kibune Shutsujin! Fukiareru Reppuu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">28.05.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_90856">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=90856">173</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Appearance of the Great Evil! The Darkness in the House of Kasumiooji <span class="aka">( 巨悪の登場！霞大路家の闇 / Kyoaku no Toujou! Kasumiooji ka no Yami )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">04.06.2008</td>
+		</tr>
+		<tr id="eid_91222">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91222">174</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Captured Ichigo, Shatter the Mirror`s Barrier! <span class="aka">( 囚われた一護、鏡の結界を破れ！ / Torawareta Ichigo, Kagami no Kekkai o Yabure )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">11.06.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_91306">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91306">175</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Revenging Assassin, Ichigo is Targeted <span class="aka">( 復讐の刺客、狙われた一護 / Fukushuu no Shikaku, Nerawareta Ichigo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">18.06.2008</td>
+		</tr>
+		<tr id="eid_91361">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91361">176</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Mystery! The Sword-Consuming Assassin <span class="aka">( 怪奇！刀を喰う暗殺者 / Kaiki! Katana o Kuu Ansatsusha )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">25.06.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_91362">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91362">177</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Reversal of Rukia, the Rampaging Blade <span class="aka">( 逆転のルキア！暴走する刀 / Gyakuten no Rukia! Bousousuru Katana )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">25.06.2008</td>
+		</tr>
+		<tr id="eid_91363">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91363">178</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Nightmare Which is Shown, Ichigo`s Inside the Mirror <span class="aka">( 見せられた悪夢、鏡の中の一護 / Miserareta Akumu, Kagami no Nakano Ichigo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">02.07.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_91364">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91364">179</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Confrontation?! Amagai vs. Gotei 13 <span class="aka">( 対立！？ 天貝VS護廷十三隊 / Tairitsu!? Amagai VS Gotei Juusan Tai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">09.07.2008</td>
+		</tr>
+		<tr id="eid_91902">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91902">180</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Princess` Decision, the Sorrowful Bride <span class="aka">( 姫の決意、哀しき花嫁 / Hime no Ketsui, Kanashiki Hanayome )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">16.07.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_91934">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91934">181</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The 2nd Division Sorties! Ichigo is Surrounded <span class="aka">( 二番隊出撃！包囲された一護 / Niban tai Shutsugeki! Houisareta Ichigo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">23.07.2008</td>
+		</tr>
+		<tr id="eid_91935">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91935">182</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Amagai`s True Strength, the Released Zanpakutou! <span class="aka">( 天貝の実力、斬魄刀解放！ / Amagai no Jitsuryoku, Zanpakutou Kaihou! )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">30.07.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_91936">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=91936">183</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>The Darkness Which Moves! Kibune`s True Colors <span class="aka">( 動き出した闇！貴船(きぶね)の正体 / Ugokidashita Yami! Kibune no Shoutai )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">06.08.2008</td>
+		</tr>
+		<tr id="eid_92509">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=92509">184</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Kira and Kibune, Offense and Defense of 3rd Division <span class="aka">( 吉良と貴船、三番隊の攻防 / Kira to Kibune, san ban tai no koubou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">20.08.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_92510">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=92510">185</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ice and Flame! Fierce Fight of Amagai vs. Hitsugaya <span class="aka">( 氷と炎！天貝VS日番谷の激闘 / Koori to honoo! Amagai VS Hitsugaya no gekitou )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">27.08.2008</td>
+		</tr>
+		<tr id="eid_92511">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=92511">186</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Sortie Orders! Suppress the House of Kasumiōji <span class="aka">( 出撃指令！霞大路家を制圧せよ / Shutsugeki shirei! Kasumiōji ka o seiatsu seyo )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">03.09.2008</td>
+		</tr>
+		<tr class="g_odd" id="eid_92722">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=92722">187</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Ichigo Rages! The Assassin`s Secret <span class="aka">( 一護激怒！暗殺者の秘密 / Ichigo gekido! Ansatsu sha no himitsu )</span></label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate">10.09.2008</td>
+		</tr>
+		<tr class="newtype" id="eid_37749">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=37749">S1</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Jump Festa Anime Tour 2004 - Memories in the Rain</label>
+			</td>
+			<td class="duration">30m</td>
+			<td class="date airdate"><i>12.06.2005</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_38474">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=38474">S2</a></td>
+			<td class="title">
+				<span class="icons">
+					<span class="i_icon i_comment" title="Comment: small clip introducing some captains and lieutenants."><span>cmt</span></span>
+				</span>
+				<label>Jump Festa Anime Tour 2004 - Gotei 13 Omake</label>
+			</td>
+			<td class="duration">3m</td>
+			<td class="date airdate">12.06.2005</td>
+		</tr>
+		<tr id="eid_48005">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=48005">S3</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Jump Festa Anime Tour 2005 - The Sealed Sword Frenzy</label>
+			</td>
+			<td class="duration">30m</td>
+			<td class="date airdate"><i>23.03.2006</i></td>
+		</tr>
+		<tr class="g_odd newtype" id="eid_83079">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83079">C1</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless OP 01</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr id="eid_83080">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83080">C2</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless OP 02</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_83081">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83081">C3</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless OP 03</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr id="eid_83082">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83082">C4</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless OP 04</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_83083">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83083">C5</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 01</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr id="eid_83084">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83084">C6</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 02</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_83085">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83085">C7</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 03</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr id="eid_83086">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83086">C8</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 04</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_83087">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83087">C9</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 05</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr id="eid_83088">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83088">C10</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 06</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_83089">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83089">C11</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 07</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr id="eid_83090">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=83090">C12</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Creditless ED 08</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>28.09.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_84366">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84366">C13</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 01</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr id="eid_84367">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84367">C14</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 02</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_84368">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84368">C15</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 03</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr id="eid_84369">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84369">C16</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 04</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_84370">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84370">C17</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 05</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr id="eid_84371">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84371">C18</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 06</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_84372">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84372">C19</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 07</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr id="eid_84373">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84373">C20</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 08</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_84374">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84374">C21</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 09</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr id="eid_84375">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84375">C22</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 10</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_84376">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84376">C23</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 11</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr id="eid_84377">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84377">C24</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 12</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_84378">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=84378">C25</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Bleach Character 13</label>
+			</td>
+			<td class="duration">2m</td>
+			<td class="date airdate"><i>16.10.2007</i></td>
+		</tr>
+		<tr class="newtype" id="eid_24826">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=24826">T1</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Promo</label>
+			</td>
+			<td class="duration">1m</td>
+			<td class="date airdate"><i>04.10.2004</i></td>
+		</tr>
+		<tr class="g_odd newtype" id="eid_52044">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=52044">P1</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Parody of episode 1</label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate"><i>13.07.2006</i></td>
+		</tr>
+		<tr id="eid_41690">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=41690">P41</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Parody of episode 41</label>
+			</td>
+			<td class="duration">23m</td>
+			<td class="date airdate"><i>22.09.2005</i></td>
+		</tr>
+		<tr class="g_odd" id="eid_44916">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=44916">P59</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Parody of episode 59</label>
+			</td>
+			<td class="duration">25m</td>
+			<td class="date airdate"><i>01.12.2005</i></td>
+		</tr>
+		<tr id="eid_72059">
+			<td class="id eid"><a href="animedb.pl?show=ep&amp;eid=72059">P67</a></td>
+			<td class="title">
+				<span class="icons">
+					
+				</span>
+				<label>Parody of episode 67</label>
+			</td>
+			<td class="duration">22m</td>
+			<td class="date airdate"><i>23.04.2007</i></td>
+		</tr>
+	</table>
+	</form>
+</div>
+		<ul class="g_list links">
+			<li class="g_odd"><a href="animedb.pl?show=addep&amp;aid=2369">add episode</a></li>
+			<li><a class="500.450.1.1.dreq" href="animedb.pl?show=creq&amp;dreq=1&amp;tb=animetb&amp;id=2369" rel="anidb::popup"><span>request removal</span></a></li>
+			<li class="g_odd"><a href="animedb.pl?show=animelist">back</a></li>
+		</ul>
+		</div><!--g_content-->
+		<div class="g_end"></div>
+	</div><!--layout-main-->
+</div><!--layout-content-->
+
+<div id="layout-footer">
+	<p>V 0.1.52 cvs/mod 2008-08-02, (C) 2002-2008 by AniDB, all rights reserved [0s]</p>
+</div>
+<div id="layout-hint"><span class="head">HINT:</span>
+	<span class="msg">
+Don't like these messages? They are not shown to registered users. Why not <a href="animedb.pl?show=signup">sign up now</a>? It's free!
+	</span>
+</div>
+	</body>
+</html>
