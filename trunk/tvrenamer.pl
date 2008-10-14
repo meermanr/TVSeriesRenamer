@@ -1135,8 +1135,15 @@ else
 				
 				foreach(@input)
 				{
+					# Episodes with airdates
+					if( ($num, $epTitle) = ($_ =~ /\s+$season-(..).*\d+ [A-Z][a-z]+ \d+ \s*(.*)$/) )
+					{
+						# Cleanup whitespace (and tags if using online version)
+						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						check_and_push($epTitle, \@name, $num);
+					}
 					# Most episodes (new parser, v2.34)
-					if( ($num, $epTitle) = ($_ =~ /\s+$season-(..)(.*)$/) )
+					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..)(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
 						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
