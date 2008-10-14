@@ -17,9 +17,18 @@
 #
 #  v2.39 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
 #
-#  v2.39 BUGFIX: Fixed compression support for generic-path HTTP sources (used
+#  v2.40 BUGFIX: Fixed compression support for generic-path HTTP sources (used
 #        to only work for AniDB.info unique hits, not those that require
 #        parsing a search-results page)
+#
+#  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
+#        global, so although my tests show it works  for EpGuides and AniDB,
+#        things may go wrong.
+#
+#        ENHANCEMENT: Added --dontgroup and --dogroup options to disable/enable
+#        special handling of filename text found between square brackets (e.g.:
+#        '[AnCo]'). This is useful when the "group" is actually the episode
+#        number (e.g.: '[3x15]')
 #
 #
 # TODO: {{{1
@@ -109,6 +118,7 @@ my $pad			 = undef; # Automatically choose padding (i.e. "8" -> "08" if there ar
 my $nocache      = 1;     # Do not use/make .cache files
 my $dubious      = 0;     # Take file numbers above 99 literally
 my $nogroup      = undef; # Use auto-detection (Anime: Keep group, other: Discard)
+my $dontgroup    = 0;     # Whether group-extraction is enabled or not (0 = "Do extract", 1 = "No special treatment")
 
 my $detailedView = undef; # Disabled
 my $interactive  = undef; # Disabled
@@ -183,6 +193,10 @@ Formatting options:
 
  --nogroup          Do not (attempt to) preserve group tags (EG: '[AnCo]')
  --group            Attempt to preserve group tags (EG: '[AnCo]')
+ --dontgroup        Don't treat groups specially. Useful when the
+                    episode-number is surrounded by square brackets (EG:
+                    '[3x11]')
+ --dogroup          Opposite of --dontgroup
 
  --nogap            Do not place a gap between series name and episode number
  --gap              Force gap, useful when --nogap is automatically applied
@@ -299,6 +313,8 @@ if($#ARGV ne -1)
 			case /^--noautoseries$/i {$autoseries = 0;}
 			case /^--nogroup$/i      {$nogroup = 1;}
 			case /^--group$/i        {$nogroup = 0;}
+			case /^--dontgroup$/i    {$dontgroup = 1;}
+			case /^--dogroup$/i      {$dontgroup = 0;}
 			case /^--nogap$/i        {$gap = undef;}
 			case /^--gap$/i          {$gap = ' ';}
 			case /^--gap=.*$/i       {/^--gap=(.*)$/i; $gap = $1;}
@@ -815,15 +831,16 @@ else
 			
 			if($debug && $nocache){print "Will not look for cache file\n";}
 			if($doFetch){
-				# Note about ANSI: {{{
-				#   We're going to use a trick so that if an error message is produced during the fetch it will NOT be
-				#   displayed after the "..." but instead on it's own line underneath.
+				# Note about ANSI: {{{ We're going to use a trick so that if an error message is produced during the
+				# fetch it will NOT be displayed after the "..." but instead on it's own line underneath.
 				#   
-				#   To do this we first ensure there's a blank line below us (this is not always the case if the screen is scrolling on
-				#   each new line we create) and then pop back up onto our line, write out "Fetching document..." and save the cursor position
-				#   on the screen. Send a newline, safe in the knowledge that this new line will not scroll the text (which would make a mess of 
-				#   our saved screen coordinate). If an error occurs it's displayed on its own line and we won't print "[Done], so we don't have to 
-				#   clean up the cursor position. If there's no error we simply restore the cursor position and write out "[Done]".
+				#   To do this we first ensure there's a blank line below us (this is not always the case if the screen
+				#   is scrolling on each new line we create) and then pop back up onto our line, write out "Fetching
+				#   document..." and save the cursor position on the screen. Send a newline, safe in the knowledge that
+				#   this new line will not scroll the text (which would make a mess of our saved screen coordinate). If
+				#   an error occurs it's displayed on its own line and we won't print "[Done], so we don't have to clean
+				#   up the cursor position. If there's no error we simply restore the cursor position and write out
+				#   "[Done]".
 				#   
 				#   Nifty eh? }}}
 				my $message = "\n".$ANSIup."Fetching document ".($debug?$inputFile:'')."... $ANSIsave$ANSIred\n";
@@ -845,7 +862,11 @@ else
 						$_ = $t;
 					}
 
-					$_ = Encode::decode 'UTF-8', $_;
+					# XXX
+					# Removed in v2.41, was causing problems with epguides.com, but didn't seem to preclude correct use
+					# of AniDB...
+					# Probably obsolete since "binmode(STDOUT, ':utf8')" was added to the top of the script...
+					#$_ = Encode::decode 'UTF-8', $_;
 				}
 				else{
 					print $ANSIred."Can't fetch \"$inputFile\", please check this URL in a browser\n$ANSIyellow Consider specifying an URL on the command-line. Error was: $!".$ANSInormal."\n";
@@ -1329,8 +1350,10 @@ foreach(@fileList){
 	s/\[[0-9a-f]{8}\]/ /gi;             # Remove matching '[]' if their content fits the bill of a CRC
 	s/\s+/ /g;                          # Reduce multiple white space to a single " "
 
-	($group) = ($_ =~ /\[([^\]]*)\]/);  # Yank contents of matching '[]' as the release group
-	s/^(.*)\[$group\](.*)$/$1$2/;       # Strip group (ifdef)
+	if(!$dontgroup){
+		($group) = ($_ =~ /\[([^\]]*)\]/);  # Yank contents of matching '[]' as the release group
+		s/^(.*)\[$group\](.*)$/$1$2/;       # Strip group (ifdef)
+	}
 	s/^\s*$escaped_series(.*)$/$1/i;    # Strip series name (ifdef), overcomes numbers-in-series troubles
 
 	if($cleanup){
@@ -1345,15 +1368,6 @@ foreach(@fileList){
 		# hence we use $titles to reference our current name list (either @name or @sname)
 		# and take care to detect which we need
 
-		# XXX 2008-06-06: Commented out this pre-filter as I don't think I need
-		# it any more. It used to be done to make sure that numbers in the
-		# series name didn't interfere with the detection, but this is now done
-		# at the top of this block.
-		#
-		# Remove everything except Season & Episode numbers (note submissive '*?')
-		#s/^.*?(season\D?\d+|(?:(?<![^a-z])S)?\d+)(x\d+|\D?e\d+|\D?episode\D?\d+)?([-&]e?\d+)?.*$/$1$2$3/i;
-		#FIXME: unused?: ($filePrefix) = ($1 =~ /^\s*([^\s].*[^\s])\s*$/);   # Put trimmed prefix into a variable
-		
 		# This next block will extract the episode number from the filename (if possible)
 		# and then determine if it is an series 'special' or warn the user if the episode
 		# number cannot be extracted
@@ -1372,6 +1386,11 @@ foreach(@fileList){
 		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){}                         # Match "08"
 		else{                                                             # Finding episode number failed
 			print "\nCan't extract episode number from snippet '$_'\tof filename: \"$before\", ignoring.";
+			if(!$dontgroup){
+				if( $before =~ /\[/ || $before =~ /\]/){
+					print " (Consider using --dontgroup)";
+				}
+			}
 		   	$warnings++;
 		   	next;
 		}
@@ -1450,7 +1469,7 @@ foreach(@fileList){
 			next;
 		}
 	}
-	s/&#(\d+);/eval("v$1")/ge;	# HTML Entities -> Unicode (EG: "&#9829;" -> v9829 -> "Ã¢ÂÂ¥" = U+2665)
+	s/&#(\d+);/eval("v$1")/ge;	# HTML Entities -> Unicode (EG: "&#9829;" -> v9829 -> "♥" = U+2665)
 	if($unixy){ tr/\ /_/; }     # Replace " " with _
 	s/(.*)(\..+)$/$1\L$2/;      # Force extension to lowercase
 
