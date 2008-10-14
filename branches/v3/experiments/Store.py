@@ -81,17 +81,31 @@ class Store():
 		# Input OK, keep it
 		self.data += [ data ]
 
-	def dump(self):
-		import pprint, re
-		print self.by_season()
-		print self.by_source()
-		print self.by_episode()
-		print self.by_title(re.compile("Are"))
+	def dump(self, list):
+		for d in list:
+			keys = d.keys()
+			keys.sort()
+			for key in keys:
+				print "%15s: %s" % (key, d[key])
+			print
 
-	def _by_generic(self, key, filter=None):
+	def _by_generic(self, key, filter=None, input=None):
+		"""
+		Generalised sorting and filtering function.
+
+		"key" should be the name of a key in episode dictionaries, such as "EpisodeNumber".
+
+		"filter", when provided, should be of the same types that episode
+		values for "key" are. Special case for strings: filter can be a regular
+		expression pattern object.
+
+		"input", when provided, should be list of episodes. Typically used to
+		further refine the output from a previous filtering.
+		"""
 		import re
+		if input is None: input = self.data
 		l = []
-		for datum in self.data:
+		for datum in input:
 			if filter is not None:
 				# Perform a check
 				if type(filter) is type(re.compile("")):
@@ -107,33 +121,16 @@ class Store():
 		l = [ d for (x, d) in l ]
 		return l
 
-	def by_season(self, season=None):
-		return self._by_generic("SeasonNumber", season)
+	def by_season(self, season=None, input=None,):
+		return self._by_generic("SeasonNumber", season, input)
 
-	def by_source(self, source=None):
-		return self._by_generic("Source", source)
+	def by_source(self, source=None, input=None):
+		return self._by_generic("Source", source, input)
 
-	def by_episode(self, episode=None):
-		return self._by_generic("EpisodeNumber", episode)
+	def by_episode(self, episode=None, input=None):
+		return self._by_generic("EpisodeNumber", episode, input)
 
-	def by_title(self, title=None):
-		return self._by_generic("EpisodeTitle", title)
-
-
-if __name__ == "__main__":
-	class C():
-		def doit(self, s):
-			# Test for finding caller
-			s.add_episode({"SeasonNumber": 1, "EpisodeNumber": 1, "EpisodeTitle": "Hello", "Source": "1test"})
-			s.add_episode({"SeasonNumber": 1, "EpisodeNumber": 2, "EpisodeTitle": "There", "Source": "1test"})
-			s.add_episode({"SeasonNumber": 1, "EpisodeNumber": 3, "EpisodeTitle": "How", "Source": "2test"})
-			s.add_episode({"SeasonNumber": 2, "EpisodeNumber": 1, "EpisodeTitle": "Are", "Source": "2test"})
-			s.add_episode({"SeasonNumber": 2, "EpisodeNumber": 2, "EpisodeTitle": "You", "Source": "2test"})
-			s.add_episode({"SeasonNumber": 2, "EpisodeNumber": 3, "EpisodeTitle": "Doing", "Source": "0test"})
-			s.add_episode({"SeasonNumber": 3, "EpisodeNumber": 4, "EpisodeTitle": "Today?", "Source": "0test"})
-
-	s = Store("Test")
-	c = C()
-	c.doit(s)
-
-	s.dump()
+	def by_title(self, title=None, input=None):
+		import re
+		if type(title) is type(""): title = re.compile(title)
+		return self._by_generic("EpisodeTitle", title, input)

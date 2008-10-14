@@ -7,64 +7,65 @@ logging.addLevelName(logging.WARN,	"[33mWARN[0m")
 logging.addLevelName(logging.ERROR,	"[31mERROR[0m")
 logging.addLevelName(logging.INFO,	"[32mINFO[0m")
 
-class Procure():
+def lookup_series(series_name):
 	"""
-	A class for procuring series and season data from various sources, such as
-	websites, static files and user input.
+	Returns a Store object containing episode data related to series_name.
 
-	This class automatically finds classes derived from ProcureSource, and
-	instantiates those that do not have subclasses (i.e. are the leaf nodes of
-	an inheritance tree). These instances are then run and eventually
-	harvested.
+	This is achieved by finding all sub-classess of ProcureSource and
+	instantiating "leaves" (of the inheritance tree), running them (they're
+	threads), waiting for them to complete, and then combining their results.
+
+	input series: (String) Title of series to procure data about
 	"""
+	import logging
+	from Store import Store
 
-	logging = None
-	instances = []
-	
-	def __init__(self, series_name):
-		"""
-		Find all classes dervied (indirectly) from ProcureSource and
-		instantiate them
+	logging.basicConfig(level=logging.DEBUG)	# Optional, defaults to warning
+	log = logging = logging.getLogger("Lookup Series %s" % series_name)
 
-		input series: (String) Title of series to procure data about
-		"""
-		import logging
-
-		logging.basicConfig(level=logging.DEBUG)	# Optional, defaults to warning
-		self.logging = logging.getLogger(self.__class__.__name__)
-
-		class_list = [ProcureSource]	# Root class
-		subclass_list = []
-		while True:
-			for c in class_list:
-				# Find subclasses of each class
-				s = type(c).__subclasses__(c)
-				if len(s) > 0:
-					subclass_list.extend(s)
-				else:
-					# No subclasses, therefore this is the leaf node. We found
-					# what we were looking for
-					subclass_list.append(c)
-
-			if class_list == subclass_list:
-				# No expansion took place, we have all leaf classes
-				break
+	class_list = [ProcureSource]	# Root class
+	subclass_list = []
+	while True:
+		for c in class_list:
+			# Find subclasses of each class
+			s = type(c).__subclasses__(c)
+			if len(s) > 0:
+				subclass_list.extend(s)
 			else:
-				class_list = subclass_list
-				subclass_list = []
+				# No subclasses, therefore this is the leaf node. We found
+				# what we were looking for
+				subclass_list.append(c)
 
-		self.logging.info("Found %d sources" % len(class_list))
-		self.logging.debug([c.__name__ for c in class_list])
-		self.instances = [x(series_name) for x in class_list]
+		if class_list == subclass_list:
+			# No expansion took place, we have all leaf classes
+			break
+		else:
+			class_list = subclass_list
+			subclass_list = []
 
-		self.logging.info("Querying sources")
-		[x.start() for x in self.instances]
+	log.info("Found %d sources" % len(class_list))
+	log.debug([c.__name__ for c in class_list])
+	instances = [x(series_name) for x in class_list]
 
-		[x.join() for x in self.instances]
-		self.logging.info("All queries complete")
+	log.info("Querying sources")
+	[x.start() for x in instances]
 
+	[x.join() for x in instances]
+	log.info("All queries complete")
 
+	log.info("Harvesting episode data")
+	store = Store(series_name)
+	for x in instances:
+		print x, len(x.episode_data)
+		for ep in x.episode_data:
+			try:
+				store.add_episode(ep)
+			except Store.StoreError, inst:
+				log.warn("While processing episode '%s': %s" % (ep, inst.args[0]) )
+				pass
+	log.info("Got %d data-points" % len(store.by_episode()))
 
+	return store
 
 
 from threading import Thread
@@ -83,9 +84,10 @@ class ProcureSource(Thread):
 	Only classes D, E and F would be instantiated. A, B and C would not be.
 	"""
 
+	# Not used, just for clarity
 	logging			= None
 	series_name		= None
-	episode_data	= []
+	episode_data	= None
 
 	def __init__(self, series_name):
 		import thread, logging
@@ -96,9 +98,11 @@ class ProcureSource(Thread):
 		logging.addLevelName(logging.DEBUG, "[36mDEBUG[0m")
 		logging.addLevelName(logging.WARN, "[33mWARN[0m")
 		logging.addLevelName(logging.ERROR, "[31mERROR[0m")
+		logging.addLevelName(logging.CRITICAL, "[31mERROR[0m")
 		logging.addLevelName(logging.INFO, "[32mINFO[0m")
 
 		self.series_name = series_name
+		self.episode_data = []
 
 
 	def run(self):
@@ -112,6 +116,7 @@ class ProcureSource(Thread):
 		import time
 		self.logging.debug("Pretending to search for %s" % self.series_name)
 		time.sleep(1)
+
 
 """
 class ProcureSourceFile(ProcureSource):
@@ -131,34 +136,15 @@ class ProcureSourceWebsite(ProcureSource):
 
 	def run(self):
 		import urllib2
-		try:
-			self.search()
-			self.parse()
-		except urllib2.HTTPError:
-			self.logging.error("Aborting due to errors")
-		except Exception, inst:
-			if inst.args[0] == "Giving up":
-				pass
-			else:
-				raise
+		for i, html in enumerate(self.search()):
+			try:
+				self.parse(html, "%s-%d" % (self.__class__.__name__, i) )
+			except urllib2.HTTPError:
+				self.logging.error("Aborting due to errors")
 
 		if len(self.episode_data) > 0:
 			self.logging.info("Got data on %d episodes" % len(self.episode_data) )
 
-		# XXX A hack, do it properly, and do it in a more generic class that Website
-		from Store import Store
-		s = Store("Test")	# <-- Here's why this should be done earlier.
-		for ep in self.episode_data:
-			try:
-				s.add_episode(ep)
-			except Store.StoreError, inst:
-				self.logging.warn("While processing episode '%s': %s" % (ep, inst.args[0]) )
-				# Ignore and continue trying to populate the store
-				# TODO: Emit warning
-				pass
-		s.dump()
-		import __main__
-		__main__.store = s
 
 	def downloadURL(self, URL, already_quoted=False):
 		import urllib, urllib2
@@ -177,9 +163,15 @@ class ProcureSourceWebsite(ProcureSource):
 				self.logging.debug("%s: %s" % (key, inst.headers[key]) )
 			raise
 
-	def simplified_html(self):
+	def simplified_html(self, html_in=None):
+		"""
+		Strips all attribute paramaters from HTML source (e.g. "<a href=...>" becomes "<a>")
+
+		If html_in is not provided, self.data is used instead.
+		"""
 		import re
-		return re.sub("<\s*([^> ]+)[^>]*?>", "<\\1>", self.data)
+		if html_in is None: html_in = self.data
+		return re.sub("<\s*([^> ]+)[^>]*?>", "<\\1>", html_in)
 
 	def decompress_gzipped_response(self):
 		import gzip, StringIO
@@ -200,40 +192,51 @@ class ProcureSourceWebsite(ProcureSource):
 
 	def search(self):
 		"""
-		Obtain an URL which points at the series data we are looking for
+		A generator which find, fetches and yields HTML pages for parse().
 		"""
 		self.logging.debug("Pretending to query a website")
+		raise StopIteration
 
-	def parse(self):
+	def parse(self, html, source):
 		"""
-		Parse the data downloaded from the URL obtained via self.search()
+		Parse HTML provided by search(), and add found episodes to self.episode_data
+
+		"source" is a unique name for the HTML, this is used to distinguish
+		hits from multiple pages.
 		"""
 		self.logging.debug("Pretending to parse the response")
 
-"""
 class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 	def search(self):
 		import re
 		short_name = re.sub("(?:The\s+)?(.*?)(?:, The)?", "\\1", self.series_name)
 		short_name = re.sub("\s+", "", short_name)
 		self.downloadURL("http://epguides.com/%s" % short_name)
+		yield self.data
+		raise StopIteration
 
-	def parse(self):
+	def parse(self, html, source):
 		import re
 
-		# Groupings:
-		#  1: Episode number
-		#  2: Episode title
+		# Groupings
+		# TODO: Pilots will cause a problem, because they don't have a season number
 		patterns = dict()
-		patterns["normal"]	= re.compile("^\s*\d+\.\s+(\d+)-\s*(\d+)(?:\s+\S+){4}\s+<[^>]+>(.*)<[^>]+>$")
-		patterns["pilot"]	= re.compile("^\s+(P)- (1)\s+<[^>]+>(.*)<[^>]+>$")
+		patterns["normal"]	= re.compile("^\s*(?P<AbsoluteEpisodeNumber>\d+)\.\s+(?P<SeasonNumber>\d+)-\s*(?P<EpisodeNumber>\d+)(?:\s+\S+){4}\s+<[^>]+>(?P<EpisodeTitle>.*)<[^>]+>$")
+		patterns["pilot"]	= re.compile("^\s+(P)- (?P<EpisodeNumber>1)\s+<[^>]+>(?P<EpisodeTitle>.*)<[^>]+>$")
 
-		for l in self.data.splitlines():
-			for p in patterns:
-				m = re.match(patterns[p], l)
-				if m:
-					self.episode_data.append( m.groups() )
-"""
+		# Collect results of applying all patterns
+		for l in html.splitlines():
+			for i, key in enumerate(patterns.keys()):
+				p = patterns[key]
+				for m in re.finditer(p, l):
+					if m is None: continue
+					d = {"Source": "%s-%d" % (source, i)}
+					for k in ["SeasonNumber", "EpisodeNumber", "EpisodeTitle", "AbsoluteEpisodeNumber"]:
+						try:
+							d[k] = m.group(k)
+						except IndexError:
+							pass
+					self.episode_data.append(d)
 
 
 class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
@@ -244,59 +247,59 @@ class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 	def search(self):
 		import urllib
 
+		search_url = self.root_url + "animedb.pl?show=animelist&adb.search=%s&do.search=search" % urllib.quote_plus(self.series_name)
+		self.logging.debug("Search URL: %s" % search_url)
+		self.downloadURL(search_url, already_quoted=True)
+		# TODO: Open a "bug" report with AniDB.info - their HTTP headers should
+		# report that the content type is compressed - NOT text/html. It's not.
+		self.decompress_gzipped_response()
+
+		import re
+		# List of patterns, increasing in fuzziness
+		patterns = []
+		patterns.append('<a href="(.*?)">%s</a>' % self.series_name)
+		patterns.append('<a href="(.*?)">%s, The</a>' % self.series_name)
+		patterns.append('<a href="(.*?)">%s, A</a>' % self.series_name)
+
+		# Compile patterns
+		patterns = [re.compile(p, re.MULTILINE) for p in patterns]
+
+		# Collect results of applying all patterns
+		for p in patterns:
+			self.page_list.extend( re.findall(p, self.data) )
+
+		# Remove duplicates (more common than you'd think)
+		# The awesome one-liner works by creating a second list which is offset
+		# by one (achieved by prepending a None element) so that zip()
+		# effectively produces pairs of neighbours (n, n+1). We then filter out
+		# all the cases where n == n+1
+		self.page_list = sorted(self.page_list)
+		self.page_list = [ x[0] for x in zip(self.page_list, [None]+self.page_list) if x[0] != x[1] ]
+
+		# Clean-up: &amp; -> &
+		self.page_list = [ re.sub("&amp;", "&", p) for p in self.page_list ]
+
+		# Yield results
 		if self.page_list:
-			self.logging.error("Not implemented yet. Would have investigated next search result, or raised an exception if no uninvestigated results exist")
-			pass
-		else:
-			search_url = self.root_url + "animedb.pl?show=animelist&adb.search=%s&do.search=search" % urllib.quote_plus(self.series_name)
-			self.logging.debug("Search URL: %s" % search_url)
-			self.downloadURL(search_url, already_quoted=True)
-			# TODO: Open a "bug" report with AniDB.info - their HTTP headers should
-			# report that the content type is compressed - NOT text/html. It's not.
-			self.decompress_gzipped_response()
+			if len(self.page_list) > 1:
+				self.logging.info("Found %d matches!" % len(self.page_list) )
+			else:
+				self.logging.info("Found match!")
 
-			import re
-			# List of patterns, increasing in fuzziness
-			patterns = []
-			patterns.append('<a href="(.*?)">%s</a>' % self.series_name)
-
-			# Compile patterns
-			patterns = [re.compile(p, re.MULTILINE) for p in patterns]
-
-			# Collect results of applying all patterns
-			for p in patterns:
-				self.page_list.extend( re.findall(p, self.data) )
-
-			# Remove duplicates (more common than you'd think)
-			# The awesome one-liner works by creating a second list which is offset
-			# by one (achieved by prepending a None element) so that zip()
-			# effectively produces pairs of neighbours (n, n+1). We then filter out
-			# all the cases where n == n+1
-			self.page_list = sorted(self.page_list)
-			self.page_list = [ x[0] for x in zip(self.page_list, [None]+self.page_list) if x[0] != x[1] ]
-
-			# Clean-up: &amp; -> &
-			self.page_list = [ re.sub("&amp;", "&", p) for p in self.page_list ]
-
-			# Use results
-			if self.page_list:
-				if len(self.page_list) > 1:
-					self.logging.info("Found %d matches!" % len(self.page_list) )
-					self.logging.warn("Only first match will be used, fallback not yet implemented")
-				else:
-					self.logging.info("Found match!")
-
+			for page in self.page_list:
 				self.downloadURL("%s%s" % (self.root_url, self.page_list[0]), already_quoted=True)
 				self.decompress_gzipped_response()
+				yield self.data
 
-			else:
-				self.logging.debug("No match found in search results. Giving up.")
-				raise Exception("Giving up")
+		else:
+			self.logging.debug("No match found in search results. Giving up.")
 
-	def parse(self):
+		raise StopIteration
+
+	def parse(self, html, source):
 		import re
 
-		data = self.simplified_html()
+		data = self.simplified_html(html)
 
 		# Example data
 		#  <tr>
@@ -306,12 +309,10 @@ class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 		#                          
 		#                  </span>
 		#                  <label>The Assassin of the Mist! <span>( Zabójca we mgle / 霧の暗殺者！ / นักฆ่าในสายหมอก / L`assassin dans la brume / Kiri no Ansatsusha! )</span></label>
-		#          </td>
-		#          <td>25m</td>
-		#          <td>14.11.2002</td>
-		#  </tr>
-
-
+		#         </td>
+		#         <td>25m</td>
+		#         <td>14.11.2002</td>
+		# </tr>
 
 		patterns = []
 		patterns.append('(?x)<tr>\s*<td><a>(?P<EpisodeNumber>\d+)</a></td>\s*<td>\s*<span>[^<]*</span>\s*<label>(?P<EpisodeTitle>[^<]*)<span>(?P<AltEpTitles>[^<]*)</span></label>\s*</td>\s*<td>(?P<duration>[^<]*)</td>\s*<td>(?P<aired>[^<]*)</td>\s*</tr>')
@@ -320,14 +321,10 @@ class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 		patterns = [re.compile(p, re.MULTILINE | re.DOTALL) for p in patterns]
 
 		# Collect results of applying all patterns
-		#
-		# TODO: Record source for use with Store class - source should be
-		# unique to the URL in someway (i.e. so that multiple search results
-		# can be added)
-		for p in patterns:
+		for i, p in enumerate(patterns):
 			for m in re.finditer(p, data):
 				if m is None: continue
-				d = {"SeasonNumber": 1, "Source": "AniDB"}	 # AniDB doesn't "do" seasons
+				d = {"SeasonNumber": 1, "Source": "%s-%d" % (source, i)}	 # AniDB doesn't "do" seasons
 				for k in ["EpisodeNumber", "EpisodeTitle", "AltEpTitles", "duration", "aired"]:
 					try:
 						d[k] = m.group(k)
@@ -346,5 +343,6 @@ if __name__ == "__main__":
 		exec("from %s import *" % plugin)
 
 	# Some test-cases
-	procure = Procure("Naruto")
+	store = lookup_series("Naruto")
+	store.dump(store.by_title("Are"))
 
