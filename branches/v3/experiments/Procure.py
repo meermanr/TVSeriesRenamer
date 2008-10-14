@@ -48,7 +48,7 @@ def lookup_series(series_name):
 	instances = [x(series_name) for x in class_list]
 
 	log.info("Querying sources")
-	[x.start() for x in instances]
+	for x in instances: x.start()
 
 	[x.join() for x in instances]
 	log.info("All queries complete")
@@ -343,6 +343,6 @@ if __name__ == "__main__":
 		exec("from %s import *" % plugin)
 
 	# Some test-cases
-	store = lookup_series("Naruto")
-	store.dump(store.by_title("Are"))
+	store = lookup_series("Futurama")
+	store.dump(store.by_episode())
 
