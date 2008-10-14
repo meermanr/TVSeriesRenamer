@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python -i
+# vim: set fileencoding=utf-8 :
 
 import logging
 logging.addLevelName(logging.DEBUG,	"[36mDEBUG[0m")
@@ -112,11 +113,13 @@ class ProcureSource(Thread):
 		self.logging.debug("Pretending to search for %s" % self.series_name)
 		time.sleep(1)
 
+"""
 class ProcureSourceFile(ProcureSource):
 	pass
 
 class ProcureSourceSTDIN(ProcureSource):
 	pass
+"""
 
 class ProcureSourceWebsite(ProcureSource):
 	"""
@@ -142,6 +145,21 @@ class ProcureSourceWebsite(ProcureSource):
 		if len(self.episode_data) > 0:
 			self.logging.info("Got data on %d episodes" % len(self.episode_data) )
 
+		# XXX A hack, do it properly, and do it in a more generic class that Website
+		from Store import Store
+		s = Store("Test")	# <-- Here's why this should be done earlier.
+		for ep in self.episode_data:
+			try:
+				s.add_episode(ep)
+			except Store.StoreError, inst:
+				self.logging.warn("While processing episode '%s': %s" % (ep, inst.args[0]) )
+				# Ignore and continue trying to populate the store
+				# TODO: Emit warning
+				pass
+		s.dump()
+		import __main__
+		__main__.store = s
+
 	def downloadURL(self, URL, already_quoted=False):
 		import urllib, urllib2
 
@@ -158,6 +176,10 @@ class ProcureSourceWebsite(ProcureSource):
 			for key in inst.headers:
 				self.logging.debug("%s: %s" % (key, inst.headers[key]) )
 			raise
+
+	def simplified_html(self):
+		import re
+		return re.sub("<\s*([^> ]+)[^>]*?>", "<\\1>", self.data)
 
 	def decompress_gzipped_response(self):
 		import gzip, StringIO
@@ -188,6 +210,7 @@ class ProcureSourceWebsite(ProcureSource):
 		"""
 		self.logging.debug("Pretending to parse the response")
 
+"""
 class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 	def search(self):
 		import re
@@ -210,6 +233,7 @@ class ProcureSourceWebsiteEpGuides(ProcureSourceWebsite):
 				m = re.match(patterns[p], l)
 				if m:
 					self.episode_data.append( m.groups() )
+"""
 
 
 class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
@@ -272,19 +296,44 @@ class ProcureSourceWebsiteAniDB(ProcureSourceWebsite):
 	def parse(self):
 		import re
 
+		data = self.simplified_html()
+
+		# Example data
+		#  <tr>
+		#          <td><a>7</a></td>
+		#          <td>
+		#                  <span>
+		#                          
+		#                  </span>
+		#                  <label>The Assassin of the Mist! <span>( Zabójca we mgle / 霧の暗殺者！ / นักฆ่าในสายหมอก / L`assassin dans la brume / Kiri no Ansatsusha! )</span></label>
+		#          </td>
+		#          <td>25m</td>
+		#          <td>14.11.2002</td>
+		#  </tr>
+
+
+
 		patterns = []
-		patterns.append('<td class=".*?eid"><a href=".*?;eid=\d+">(\d+)</a></td>\s*<td[^>]*>.*?<label>(.*?)<span>.*?</span></label>\s*</td>')
+		patterns.append('(?x)<tr>\s*<td><a>(?P<EpisodeNumber>\d+)</a></td>\s*<td>\s*<span>[^<]*</span>\s*<label>(?P<EpisodeTitle>[^<]*)<span>(?P<AltEpTitles>[^<]*)</span></label>\s*</td>\s*<td>(?P<duration>[^<]*)</td>\s*<td>(?P<aired>[^<]*)</td>\s*</tr>')
 
 		# Compile patterns
 		patterns = [re.compile(p, re.MULTILINE | re.DOTALL) for p in patterns]
 
 		# Collect results of applying all patterns
+		#
+		# TODO: Record source for use with Store class - source should be
+		# unique to the URL in someway (i.e. so that multiple search results
+		# can be added)
 		for p in patterns:
-			self.episode_data.extend( re.findall(p, self.data) )
-
-		self.logging.info("Retrieved data on %d episodes" % len(self.episode_data) )
-		#print self.episode_data[0]
-
+			for m in re.finditer(p, data):
+				if m is None: continue
+				d = {"SeasonNumber": 1, "Source": "AniDB"}	 # AniDB doesn't "do" seasons
+				for k in ["EpisodeNumber", "EpisodeTitle", "AltEpTitles", "duration", "aired"]:
+					try:
+						d[k] = m.group(k)
+					except IndexError:
+						pass
+				self.episode_data.append(d)
 
 
 if __name__ == "__main__":
@@ -297,5 +346,5 @@ if __name__ == "__main__":
 		exec("from %s import *" % plugin)
 
 	# Some test-cases
-	procure = Procure("One Piece")
+	procure = Procure("Naruto")
 
