@@ -24,6 +24,48 @@ def lookup_series(series_name):
 	log = logging = logging.getLogger("Lookup Series %s" % series_name)
 
 	class_list = [ProcureSource]	# Root class
+
+	# Get a list of all modules
+	import __main__, inspect
+	for varname in dir(__main__):
+		var = getattr(__main__, varname)
+		if not inspect.ismodule(var): continue
+		if "__file__" not in dir(var): continue
+		if "plugin" not in var.__file__: continue
+
+		# Therefore var refers to the plugins package (a module composed of
+		# modules)
+		plugins = var
+
+		for varname2 in dir(plugins):
+			var2 = getattr(plugins, varname2)
+			if inspect.ismodule(var2):
+				
+				# So now we're looking at one of the plugin modules
+				plugin = var2
+
+				if "Procure" in dir(plugin):
+					plugin_imported_module = getattr(plugin, "Procure")
+					print plugin_imported_module
+					if inspect.ismodule(plugin_imported_module):
+						if "ProcureSource" in dir(plugin_imported_module):
+							plugin_imported_baseclass = getattr(plugin_imported_module, "ProcureSource")
+							print plugin_imported_baseclass
+							if inspect.isclass(plugin_imported_baseclass):
+								class_list.append(plugin_imported_baseclass)
+								continue
+
+				if "ProcureSource" in dir(plugin):
+					plugin_imported_baseclass = getattr(plugin, "ProcureSource")
+					print plugin_imported_baseclass
+					if inspect.isclass(plugin_imported_baseclass):
+						class_list.append(plugin_imported_baseclass)
+						continue
+
+	print class_list
+
+	import pdb; pdb.set_trace()
+
 	subclass_list = []
 	while True:
 		for c in class_list:
@@ -46,6 +88,9 @@ def lookup_series(series_name):
 	log.info("Found %d sources" % len(class_list))
 	log.debug([c.__name__ for c in class_list])
 	instances = [x(series_name) for x in class_list]
+
+	import sys
+	sys.exit()
 
 	log.info("Querying sources")
 	for x in instances: x.start()
@@ -192,7 +237,7 @@ class ProcureSourceWebsite(ProcureSource):
 
 	def search(self):
 		"""
-		A generator which find, fetches and yields HTML pages for parse().
+		A generator which finds, fetches and yields HTML pages for parse().
 		"""
 		self.logging.debug("Pretending to query a website")
 		raise StopIteration
@@ -340,9 +385,10 @@ if __name__ == "__main__":
 		plugin = plugin[0:-3]	# Strip ".py"
 		plugin = plugin.replace("/", ".")
 		print "Importing", plugin
-		exec("from %s import *" % plugin)
+		#exec("from %s import *" % plugin)
+		exec("import %s" % plugin)
 
 	# Some test-cases
 	store = lookup_series("Futurama")
-	store.dump(store.by_episode())
+	#store.dump(store.by_episode())
 

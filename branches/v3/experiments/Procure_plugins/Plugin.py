@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-"""
-from Procure import *
+#from Procure import *
+import Procure
 
-class ProcureSourceWebsitePlugin(ProcureSourceWebsite):
+class ProcureSourcePlugin(Procure.ProcureSource):
 	pass
-"""
+
