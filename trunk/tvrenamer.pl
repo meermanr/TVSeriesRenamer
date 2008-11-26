@@ -12,11 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.38 BUGFIX: Non-anime series now default to "--nogroup", and Anime to (new
-#        option) "--group"
-#
-#  v2.39 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
-#
 #  v2.40 BUGFIX: Fixed compression support for generic-path HTTP sources (used
 #        to only work for AniDB.info unique hits, not those that require
 #        parsing a search-results page)
@@ -29,6 +24,8 @@
 #        special handling of filename text found between square brackets (e.g.:
 #        '[AnCo]'). This is useful when the "group" is actually the episode
 #        number (e.g.: '[3x15]')
+#
+#  v2.42 BUGFIX: Updated TV.com parser in response to site changes
 #
 #
 # TODO: {{{1
@@ -1068,28 +1065,7 @@ else
 			case Format_URL_TV2 { #{{{
 				# Remember that all attributes are stripped before the HTML is passed to us. Sample data:
 				#
-				#                          <tr>
-				#                <td>
-				#                                                                                    2
-				#                                                                            </td>
-				#                <td>
-				#                  <a>My Mentor</a>
-				#                </td>
-				#                <td>
-				#                  10/4/2001
-				#                </td>
-				#                <td>
-				#                  S101
-				#                </td>
-				#                <td>
-				#                  <a>4 Reviews</a>
-				#                </td>
-				#                                  <td>
-				#                    &nbsp;                  </td>
-				#                                <td>
-				#                  8.9
-				#                </td>
-				#              </tr>
+				# <table><thead><tr><th><div>no.</div></th><th><div>episode</div></th><th><div>air date</div></th><th><div>prod #</div></th><th><div>reviews</div></th><th><div>downloads</div></th><th><div>score</div></th></tr></thead><tbody><tr><td><div>1</div></td><td><div><a>Pilot</a></div></td><td><div>1/13/2008</div></td><td><div>276022</div></td><td><div><a> Reviews</a></div></td><td><div>&nbsp;</div></td><td><div>9.09</div></td></tr>
 
 				my $offset = 0;
 				my ($epSeason, $epNum, $epTitle, $epOffset);
@@ -1102,7 +1078,7 @@ else
 				}
 
 				while($offset < length($_)){
-					if(($epNum, $epTitle) = (substr($_, $offset) =~ /<tr>\s*<td>\s*(\d+|Pilot)\s*<\/td>\s*<td>\s*<a>(.*?)<\/a>\s*<\/td>/ms)){
+					if(($epNum, $epTitle) = (substr($_, $offset) =~ /<tr>\s*<td>\s*<div>\s*(\d+|Pilot)\s*<\/div>\s*<\/td>\s*<td>\s*<div>\s*<a>(.*?)<\/a>\s*<\/div>\s*<\/td>/ms)){
 					if($debug){print "epNum = $epNum & epTitle = $epTitle\n";}
 					if($epNum == "Pilot"){$epNum = 1;}
 					if(!defined $epOffset){$epOffset = ($epNum-1);} # "-1" to ensure that epNum-epOffset = 1 for the first epTitle (Note epNum="Pilot" can make epNum= -1)
@@ -2099,5 +2075,10 @@ sub readURLfile #{{{
 #
 #  v2.37 BUGFIX: Dubious episode number extraction was broken in the previous
 #        release
+#
+#  v2.38 BUGFIX: Non-anime series now default to "--nogroup", and Anime to (new
+#        option) "--group"
+#
+#  v2.39 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
