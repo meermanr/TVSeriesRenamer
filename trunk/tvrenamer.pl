@@ -16,17 +16,20 @@
 #        to only work for AniDB.info unique hits, not those that require
 #        parsing a search-results page)
 #
-#  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
-#        global, so although my tests show it works  for EpGuides and AniDB,
-#        things may go wrong.
-#
 #        ENHANCEMENT: Added --dontgroup and --dogroup options to disable/enable
 #        special handling of filename text found between square brackets (e.g.:
 #        '[AnCo]'). This is useful when the "group" is actually the episode
 #        number (e.g.: '[3x15]')
 #
+#  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
+#        global, so although my tests show it works  for EpGuides and AniDB,
+#        things may go wrong.
+#
 #  v2.42 BUGFIX: Updated TV.com parser in response to site changes
 #
+#        ENHANCEMENT: Adding --deaccent option, which strips accents from
+#        proposed filenames. E.g.: è -> e
+#        Thank you Brian Stolz for the patch!
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
