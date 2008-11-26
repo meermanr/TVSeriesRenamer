@@ -16,6 +16,10 @@
 #        to only work for AniDB.info unique hits, not those that require
 #        parsing a search-results page)
 #
+#        ENHANCEMENT: Adding --deaccent option, which strips accents from
+#        proposed filenames. E.g.: è -> e
+#        Thank you Brian Stolz for the patch!
+#
 #  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
 #        global, so although my tests show it works  for EpGuides and AniDB,
 #        things may go wrong.
@@ -50,6 +54,7 @@ use URI::Escape;			# Convenient translation of " " <-> %20 etc in URIs
 use Compress::Zlib;			# AniDB sends us gzip'd data, and I can't persuade it not to!
 use File::Glob ':glob';		# Avoids using "perlglob(.exe)" which makes for neater Win32 stand-alone versions
 use Encode;					# Allow importing of UTF-8 data and generation of UTF-16LE names for Win32API::File
+use Text::Unaccent;			# Provide unac_string(), as used by --deaccent
 
 if($^O eq "MSWin32" || $^O eq "cygwin"){
 	require Win32API::File;	# Low-level calls to circumvent windows Unicode hell
@@ -125,6 +130,7 @@ my $reversible   = undef; # Disabled
 my $debug        = undef; # Disabled
 my $ANSIcolour   = 1;     # Use colour
 my $cleanup      = undef; # Disabled
+my $deaccent     = 0;     # Don't remove accents
 
 if($ANSIcolour && $ENV{'TERM'} eq '' && $INC{'Win32/Console/ANSI.pm'} eq ''){print "You appear to be using MS-DOS without the Win32::Console::ANSI module, colour disabled!\n (See script header for a workaround)\n\n"; $ANSIcolour = 0;}
 
@@ -143,7 +149,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.41\nReleased 15 October 2008\n"; # {{{
+my $version = "TV Series Renamer 2.42\nReleased 26 November 2008\n"; # {{{
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -201,6 +207,8 @@ Formatting options:
  --separator=X      Text to go between episode number and title (EG \" - \")
  --unixy            Replace spaces with underscores (usually other way around)
  --cleanup          Don't require input, just clean-up names
+
+ --deaccent         Remove accents from characters (e.g. è -> e)
 
 Specifying data to use:
  --season=X         Override season detection
@@ -333,6 +341,7 @@ if($#ARGV ne -1)
 			case /^--nofilter$/i     {$filterFiles = undef;}
 			case /^--unixy$/i        {$unixy = 1;}
 			case /^--cleanup$/i      {$cleanup = 1;}
+			case /^--deaccent$/i     {$deaccent = 1;}
 			case /^--ansi$/i         {$ANSIcolour = 1;}
 			case /^--noansi$/i       {$ANSIcolour = 0;}
 			case /^--reversible$/i   {$reversible = 1;}
@@ -1746,7 +1755,7 @@ sub check_and_push #{{{
 
 sub clean_up #{{{
 {
-# Prepare arguments for filesystem, and do some tyding
+# Prepare arguments for filesystem, and do some tidying
 	foreach(@_){
 		tr/\\/-/;                   # Replace invalid char \ with -
 		tr/\//-/;                   # Replace invalid char / with -
@@ -1757,6 +1766,10 @@ sub clean_up #{{{
 		tr/\x60/\x27/;              # Replace ` with ' (Using ANSI char vals in _hex_)
 		tr/\x22/\x27/;              # Replace " with '
 		tr/\x3F//d;                 # Delete invalid char '?'
+		if($deaccent == 1){
+			# Remove accents, e.g. è -> e
+			$_ = unac_string('ISO-8859-1', $_);
+		}
 	}
 	return @_;
 } #}}} End sub
