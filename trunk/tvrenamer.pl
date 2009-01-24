@@ -12,15 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.40 BUGFIX: Fixed compression support for generic-path HTTP sources (used
-#        to only work for AniDB.info unique hits, not those that require
-#        parsing a search-results page)
-#
-#        ENHANCEMENT: Added --dontgroup and --dogroup options to disable/enable
-#        special handling of filename text found between square brackets (e.g.:
-#        '[AnCo]'). This is useful when the "group" is actually the episode
-#        number (e.g.: '[3x15]')
-#
 #  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
 #        global, so although my tests show it works  for EpGuides and AniDB,
 #        things may go wrong.
@@ -30,6 +21,9 @@
 #        ENHANCEMENT: Adding --deaccent option, which strips accents from
 #        proposed filenames. E.g.: è -> e
 #        Thank you Brian Stolz for the patch!
+#
+#  v2.43 ENHANCEMENT: Filename pattern-matching reordered such that 7x01 is
+#        preferred over 8-00, which was causing problems with episodes of "24"
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -146,7 +140,8 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.42\nReleased 30 November 2008\n"; # {{{
+my $version = "TV Series Renamer 2.43 beta\nReleased 18 January 2009\n"; # {{{
+print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
@@ -1298,7 +1293,7 @@ closedir(DIR);
 
 my (@b, @a);                # Arrays to store $before and $after values
 my $dubious_count = 0;
-my ($before, $after, $fileExt, $filePrefix, $fileSeason, $fileNum, $sfileNum, $fileNum2, $group, $titles);
+my ($before, $after, $fileExt, $filePrefix, $fileSeason, $fileNum, $sfileNum, $fileNum2, $group, $titles, $match);
 
 print $ANSIred;             # Set text colour to red
 
@@ -1351,18 +1346,18 @@ foreach(@fileList){
 		# and then determine if it is an series 'special' or warn the user if the episode
 		# number cannot be extracted
 
-		if( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){} # Match "Season 01 Episode 08-09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){} # Match "s01.e08-e09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){}  # Match "s01.e08-09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)e(\d+)/i) ){}     # Match "s01.e08e09"
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /(\d+)x(\d+)[-&](\d+)/i) ){}      # Match "1x08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$titles=\@sname;}         # Match "S08-09"
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /(\d+)[-&](\d+)/i) ){}                         # Match "08-09"
-		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?(\d+)/i) ){} # Match "Season 01 Episode 08"
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?e(\d+)/i) ){}  # Match "s01e08"
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /(\d+)x(\d+)/i) ){}      # Match "1x08"
-		elsif( ($fileNum) = ($_ =~ /.S(\d+)/i)){$titles=\@sname;}        # Match "S08" (NB: Filtering above includes an extra char before the S)
-		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){}                         # Match "08"
+		if( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){$match='Match "Season 01 Episode 08-09"';}
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){$match='Match "s01.e08-e09"';} 
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){$match='Match "s01.e08-09"';}
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)e(\d+)/i) ){$match='Match "s01.e08e09"';}
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /(\d+)x(\d+)[-&](\d+)/i) ){$match='Match "1x08-09"';}
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$match='Match "S08-09"'; $titles=\@sname;}         
+		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?(\d+)/i) ){$match='Match "Season 01 Episode 08"';}
+		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?e(\d+)/i) ){$match='Match "s01e08"';}
+		elsif( ($fileSeason, $fileNum) = ($_ =~ /(\d+)x(\d+)/i) ){$match='Match "1x08"';}
+		elsif( ($fileNum) = ($_ =~ /.S(\d+)/i)){$match='Match "S08" (NB: Includes an extra char before the S)'; $titles=\@sname;}
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /(\d+)[-&](\d+)/i) ){$match='Match "08-09"';}
+		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){$match='Match "08"';}
 		else{                                                             # Finding episode number failed
 			print "\nCan't extract episode number from snippet '$_'\tof filename: \"$before\", ignoring.";
 			if(!$dontgroup){
@@ -1425,6 +1420,7 @@ foreach(@fileList){
 			if($debug && ($before ne $_)){
 				print "\n".
 					"\n$ANSIblue"."Working Set: $_".$ANSInormal.
+					"\n\$match = ".$match.
 					"\n\$filePrefix = ".$filePrefix.
 					"\n\$local_gap = ".$local_gap.
 					"\n\$epNum = ".$epNum.
@@ -2083,5 +2079,14 @@ sub readURLfile #{{{
 #        option) "--group"
 #
 #  v2.39 BUGFIX: Fixed Unicode support for UTF-8 systems (Linux and probably Mac OS X).
+#
+#  v2.40 BUGFIX: Fixed compression support for generic-path HTTP sources (used
+#        to only work for AniDB.info unique hits, not those that require
+#        parsing a search-results page)
+#
+#        ENHANCEMENT: Added --dontgroup and --dogroup options to disable/enable
+#        special handling of filename text found between square brackets (e.g.:
+#        '[AnCo]'). This is useful when the "group" is actually the episode
+#        number (e.g.: '[3x15]')
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
