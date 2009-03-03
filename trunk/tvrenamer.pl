@@ -25,6 +25,10 @@
 #  v2.43 ENHANCEMENT: Filename pattern-matching reordered such that 7x01 is
 #        preferred over 8-00, which was causing problems with episodes of "24"
 #
+#  v2.44 ENHANCEMENT: Pilot episode support for EpGuides vastly improved.
+#        BUGFIX: --version doesn't print the version twice anymore
+#        BUGFIX: Removed warning about $* being unsupported
+#
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
 #	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
@@ -140,7 +144,11 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
+<<<<<<< HEAD:trunk/tvrenamer.pl
 my $version = "TV Series Renamer 2.43 beta\nReleased 03 March 2009\n"; # {{{
+=======
+my $version = "TV Series Renamer 2.44\nReleased 03 March 2009\n"; # {{{
+>>>>>>> Released as v2.44:trunk/tvrenamer.pl
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -343,7 +351,7 @@ if($#ARGV ne -1)
 			case /^--unassociate-with-video-folders$/ {$do_win32_associate = -1;}
 			
 			case /^--help$/i        {print $helpMessage; exit;}
-			case /^--version$/i     {print $version; exit;}
+			case /^--version$/i     {exit;}
 			
 			case qr/^-.+/           {print "Invalid option $_!\nUse --help for list of available options\n"; exit 1;}
 			else                    {$implicit_format = 1; $inputFile = $_; $format= Format_AutoDetect;}
@@ -356,7 +364,7 @@ if($#ARGV ne -1)
 # This is used whenever pattern matching on the series is done
 my $escaped_series;
 $escaped_series = $series;
-$escaped_series =~ s/([({\[^$*+?\]})])/\\$1/g;
+$escaped_series =~ s/([({\[^\$\*+?\]})])/\\$1/g;
 
 #------------------------------------------------------------------------------}}}
 # Setup ANSI sequences {{{
