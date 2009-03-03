@@ -5,7 +5,7 @@
 trap 'exit $?' ERR
 
 # We can't assume this when called from DOS
-cd ~/svn/tvrenamer/release
+cd ~/projects/tvrenamer_pl/release
 
 VERSION=$(grep 'my $version' tvrenamer.pl | sed -e 's/^.*\([0-9]\+\.[0-9]\+\).*$/\1/')
 
@@ -15,10 +15,8 @@ if [ -d ../tags/v$VERSION ]; then
 fi
 
 # Merge in changes (i.e. updated $version string)
-diff ../trunk/tvrenamer.pl tvrenamer.pl | patch ../trunk/tvrenamer.pl
-svn commit ../trunk/tvrenamer.pl -m "Released as v$VERSION"
+cp tvrenamer.pl ../trunk/tvrenamer.pl
+git commit ../trunk/tvrenamer.pl -m "Released as v$VERSION"
 
 # Tag release
-svn mkdir ../tags/v$VERSION
-svn cp ../trunk/tvrenamer.pl ../tags/v$VERSION/
-svn commit ../tags/v$VERSION -m "Tagging release v$VERSION"
+git tag -a "v$VERSION" -m ""

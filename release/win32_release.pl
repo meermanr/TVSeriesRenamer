@@ -17,14 +17,14 @@ $ENV{"PATH"}="c:\\Perl\\bin;".$ENV{"PATH"};
 # Read original into memory
 print "Reading in original tvrenamer.pl...";
 local(*FH, $/);     # Temporarily disable the record seperator (aka "enter slurp mode")
-open(FH, '< C:\\cygwin\\home\\meermanr\\svn\\tvrenamer\\trunk\\tvrenamer.pl');
+open(FH, '< C:\\cygwin\\home\\meermanr\\projects\\tvrenamer_pl\\trunk\\tvrenamer.pl');
 $_ = <FH>;
 close(FH);
 print " done\n";
 
 # Update release VERSION
 print "Updating version string to match most recent changelog entry...\n";
-$version = qx!c:\\cygwin\\bin\\bash.exe -login -i -c "head -n300 ~/svn/tvrenamer/trunk/tvrenamer.pl | egrep '^# +v[0-9]' |sed -e 's/^#\\s\\+v//' | cut -d ' ' -f1 | tail -n1"!;
+$version = qx!c:\\cygwin\\bin\\bash.exe -login -i -c "head -n300 ~/projects/tvrenamer_pl/trunk/tvrenamer.pl | egrep '^# +v[0-9]' |sed -e 's/^#\\s\\+v//' | cut -d ' ' -f1 | tail -n1"!;
 $version =~ s/\n//mg;	# Can't use chomp due to $/ override (above)
 print "Version detected to be $version\n";
 s/(^my \$version = "\D+)\d+\.\d+/$1$version/m;
