@@ -23,6 +23,9 @@
 #
 #  v2.44 ENHANCEMENT: Pilot episode support for EpGuides vastly improved.
 #
+#  v2.45 ENHANCEMENT: EpGuides support improved by removing apostrophes from
+#        series names before looking them up
+#
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
 #	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
@@ -691,6 +694,7 @@ else
 			{
 				$format = Format_EpGuides;
 				my  ($shortSeries) = ($search_term =~ /^(?:The\s+)?(.*?)\s*(?:, The)?$/i);
+				$shortSeries =~ tr/'//d;
 				$shortSeries =~ s/\s+//g;
 				$inputFile = "http://epguides.com/$shortSeries/";
 			}    
