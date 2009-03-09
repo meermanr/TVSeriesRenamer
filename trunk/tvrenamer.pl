@@ -12,6 +12,10 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
+#  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
+#        global, so although my tests show it works  for EpGuides and AniDB,
+#        things may go wrong.
+#
 #  v2.42 BUGFIX: Updated TV.com parser in response to site changes
 #
 #        ENHANCEMENT: Adding --deaccent option, which strips accents from
@@ -22,6 +26,8 @@
 #        preferred over 8-00, which was causing problems with episodes of "24"
 #
 #  v2.44 ENHANCEMENT: Pilot episode support for EpGuides vastly improved.
+#        BUGFIX: --version doesn't print the version twice anymore
+#        BUGFIX: Removed warning about $* being unsupported
 #
 #  v2.45 ENHANCEMENT: EpGuides support improved by removing apostrophes from
 #        series names before looking them up
@@ -94,7 +100,7 @@ my $format       = Format_AutoFetch;
 my $site         = Site_EpGuides;	# Preferred site search for title data. NB: These are tried in the order they are listed above
 my $search_anime = undef; 			# Search TV sites
 
-my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|mp4|mpeg4|mov|srt|sub|ssa|smi|sami|txt)$';
+my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|mp4|mpeg4|srt|sub|ssa|smi|sami|txt)$';
 my ($series)     = (getcwd() =~ /\/([^\/]+)$/);     # Grab current dir name, discard rest of path
 my $exclude_series     = 1;	# 0=Always include series name, 1=Exclude if cwd is "Series X", 2=Always exclude
 my $autoseries   = 0;	# Do not automatically use scraped series name
@@ -141,7 +147,11 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.43 beta\nReleased 18 January 2009\n"; # {{{
+<<<<<<< HEAD:trunk/tvrenamer.pl
+my $version = "TV Series Renamer 2.43 beta\nReleased 03 March 2009\n"; # {{{
+=======
+my $version = "TV Series Renamer 2.44\nReleased 03 March 2009\n"; # {{{
+>>>>>>> Released as v2.44:trunk/tvrenamer.pl
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -344,7 +354,7 @@ if($#ARGV ne -1)
 			case /^--unassociate-with-video-folders$/ {$do_win32_associate = -1;}
 			
 			case /^--help$/i        {print $helpMessage; exit;}
-			case /^--version$/i     {print $version; exit;}
+			case /^--version$/i     {exit;}
 			
 			case qr/^-.+/           {print "Invalid option $_!\nUse --help for list of available options\n"; exit 1;}
 			else                    {$implicit_format = 1; $inputFile = $_; $format= Format_AutoDetect;}
@@ -357,7 +367,7 @@ if($#ARGV ne -1)
 # This is used whenever pattern matching on the series is done
 my $escaped_series;
 $escaped_series = $series;
-$escaped_series =~ s/([({\[^$*+?\]})])/\\$1/g;
+$escaped_series =~ s/([({\[^\$\*+?\]})])/\\$1/g;
 
 #------------------------------------------------------------------------------}}}
 # Setup ANSI sequences {{{
@@ -1109,36 +1119,26 @@ else
 			} # End case Format_TV }}}
 			case Format_EpGuides { #{{{
 			# EpGuides.com format
-            #                             Original
-            #   Episode #     Prod #      Air Date   Titles
-            # _____ ______ ___________  ___________ ___________________________________________
-            # 
-            # 
-            # Pilot
-            # 
-            #        P- 0       1992                 The Spirit of Christmas (Jesus vs. Frosty)
-            #        P- 0        101                 Pilot
-            #        P- 0       1995                 The Spirit of Christmas (Jesus vs. Santa)
-            # 
-            # Special
-            # 
-            #        S- 0        301      4 Jul 99   Oh Holy Night
-            # 
-            # Season 1
-            # 
-            #   1.   1- 1        101     13 Aug 97   Cartman Gets an Anal Probe
-            #   2.   1- 2        103     20 Aug 97   Volcano
-            #   3.   1- 3        102     27 Aug 97   Weight Gain 4000
+			#                            Original
+			#  Episode #      Prod #     Air Date   Episode Title
+			#_____ ______ ____________ ___________ ___________________________________________
+			#
+			#
+			#Season 1
+			#
+			#  1.   1- 1                26 Mar 05   Rose
+			#  2.   1- 2                 2 Apr 05   The End of the World
+			#  3.   1- 3                 9 Apr 05   The Unquiet Dead
 			##
 			# OR (after simplification that takes place prior to this stage)
 			##
-            #  1.   1- 1        101     13 Aug 97   <a>Cartman Gets an Anal Probe</a>
-            #  2.   1- 2        103     20 Aug 97   <a>Volcano</a>
-            #  3.   1- 3        102     27 Aug 97   <a>Weight Gain 4000</a>
+			#  1.   1- 1                26 Mar 05   <a>Rose</a>
+			#  2.   1- 2                 2 Apr 05   <a>The End of the World</a>
+			#  3.   1- 3                 9 Apr 05   <a>The Unquiet Dead</a>
 			#
-			# NB: The air date is missing in some cases, and the production code in others
-				my ($num, $epTitle, $lastPilotNum);
-				$lastPilotNum = -1;	# i.e. none
+			# NB: The air date is missing in some cases
+			#
+				my ($num, $epTitle);
 				
 				foreach(@input)
 				{
@@ -1164,29 +1164,11 @@ else
 						check_and_push($epTitle, \@name, $num);
 					}
 					# Pilot episodes (c.f. "Lost" & "24" season 1)
-					elsif( ($num, $epTitle) = ($_ =~ /\s+P-\s*(\d+).{26}(.*$)/) )
+					elsif( ($num, $epTitle) = ($_ =~ /\s+P-\s*(\d+).*?\d+ \w{3} \d{2}(.*$)/) )
 					{
-						# Often a series has multiple P-0 entries, but people like to order then by release date.
-						# So we assume pilots are listed chronologically
-						if( $num == 0 && $lastPilotNum != -1 )
-						{
-							$lastPilotNum += 1;
-							$num = $lastPilotNum;
-						}
-						else
-						{
-							$lastPilotNum = $num;
-						}
 						# Cleanup whitespace (and tags if using online version)
 						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
 						check_and_push($epTitle, \@pname, $num);
-					}
-					# Special episodes
-					elsif( ($num, $epTitle) = ($_ =~ /\s+S-\s*(\d+).{26}(.*$)/) )
-					{
-						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
-						check_and_push($epTitle, \@sname, $num);
 					}
 				}
 			
@@ -1298,8 +1280,6 @@ else
 		my $i = $[; foreach (@name) {print "$i|$_\n"; $i++}
 		print "Episode titles (Specials, \@sname)\n";
 		my $i = $[; foreach (@sname) {print "$i|$_\n"; $i++}
-		print "Episode titles (Pilots, \@pname)\n";
-		my $i = $[; foreach (@pname) {print "$i|$_\n"; $i++}
 	}
 	# End EPISODE DATA PARSER }}}
 } # end else clause of if($cleanup)
@@ -1378,25 +1358,18 @@ foreach(@fileList){
 		# and then determine if it is an series 'special' or warn the user if the episode
 		# number cannot be extracted
 
-		if( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){$match='Match "Season $$ Episode @@-@@"';}
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){$match='Match "S$$.E@@-E@@"';} 
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){$match='Match "S$$.E@@-@@"';}
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)e(\d+)/i) ){$match='Match "S$$.E@@E@@"';}
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /(\d+)x(\d+)[-&](\d+)/i) ){$match='Match "$x@@-@@"';}
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$match='Match "S@@-@@" (Special)'; $titles=\@sname;}         
-		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?P(\d+)/i) ){$match='Match "Season $$ Episode P@@" (Pilot)'; $titles=\@pname;}
-		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?(\d+)/i) ){$match='Match "Season $$ Episode @@"';}
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?ep(\d+)/i) ){$match='Match "S$$EP@@" (Pilot)'; $titles=\@pname;}
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?pe(\d+)/i) ){$match='Match "S$$PE@@" (Pilot)'; $titles=\@pname;}
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?e(\d+)/i) ){$match='Match "S$$E@@"';}
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /(\d+)xp(\d+)/i) ){$match='Match "$xP@@" (Pilot)'; $titles=\@pname;}
-		elsif( ($fileSeason, $fileNum) = ($_ =~ /(\d+)x(\d+)/i) ){$match='Match "$x@@"';}
-		elsif( ($fileNum) = ($_ =~ /.S(\d+)/i)){$match='Match "S@@" (Special)'; $titles=\@sname;}
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /(\d+)[-&](\d+)/i) ){$match='Match "@@-@@"';}
-		elsif( ($fileNum) = ($_ =~ /pe(\d+)/i) ){$match='Match "PE@@"'; $titles=\@pname;}
-		elsif( ($fileNum) = ($_ =~ /p(\d+)/i) ){$match='Match "P@@"'; $titles=\@pname;}
-		elsif( ($fileNum) = ($_ =~ /s(\d+)/i) ){$match='Match "S@@"'; $titles=\@sname;}
-		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){$match='Match "@@"';}
+		if( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){$match='Match "Season 01 Episode 08-09"';}
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){$match='Match "s01.e08-e09"';} 
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){$match='Match "s01.e08-09"';}
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)e(\d+)/i) ){$match='Match "s01.e08e09"';}
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /(\d+)x(\d+)[-&](\d+)/i) ){$match='Match "1x08-09"';}
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$match='Match "S08-09"'; $titles=\@sname;}         
+		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?(\d+)/i) ){$match='Match "Season 01 Episode 08"';}
+		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?e(\d+)/i) ){$match='Match "s01e08"';}
+		elsif( ($fileSeason, $fileNum) = ($_ =~ /(\d+)x(\d+)/i) ){$match='Match "1x08"';}
+		elsif( ($fileNum) = ($_ =~ /.S(\d+)/i)){$match='Match "S08" (NB: Includes an extra char before the S)'; $titles=\@sname;}
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /(\d+)[-&](\d+)/i) ){$match='Match "08-09"';}
+		elsif( ($fileNum) = ($_ =~ /(\d+)/i) ){$match='Match "08"';}
 		else{                                                             # Finding episode number failed
 			print "\nCan't extract episode number from snippet '$_'\tof filename: \"$before\", ignoring.";
 			if(!$dontgroup){
@@ -1431,24 +1404,16 @@ foreach(@fileList){
 
 		#End FILENAME PARSER }}}
 		##[ CONSTRUCT NEW FILENAME ]####################################################{{{
-		# Print all source data before compiling new name
-		if($debug && ($before ne $_)){
-			print "\n".
-				"\n$ANSIblue"."Working Set: $_".$ANSInormal.
-				"\n\$match = ".$match.
-				"\n\$fileSeason = ".$fileSeason.
-				"\n\$fileNum = ".$fileNum.
-				"\n\$fileNum2 = ".$fileNum2.
-				"\n\$group = ".$group.
-				"\n\$fileExt = ".$fileExt
-				;
-		}
-		if(defined $$titles[$dispNum] || defined $sname[$dispNum] || defined $pname[$dispNum]) {
+		if(defined $$titles[$dispNum] || defined $pname[$dispNum]) {
+			if(!defined $$titles[$dispNum] && defined $pname[$dispNum]){
+				print "$ANSIyellow\nNo input corresponds to $ANSIbold\"$before\"$ANSInormal$ ANSIyellow(treated as ep ", $titles==\@sname ? "S" : "", "$fileNum),\n falling back to pilot P-$fileNum: \"$pname[$dispNum]\".$ANSIred";
+				$warnings++;
+				$titles = \@pname;
+			}
 			check_group();
 			if($exclude_series == 2){$filePrefix = '';}							# See default settings
 			my $S = ($titles == \@sname) ? 'S' : '' ;                           # "Special episode" prefix
-			my $P = ($titles == \@pname) ? 'P' : '' ;                           # "Pilot episode" prefix
-			my $dispNum = $S.$P.$dispNum . ($fileNum2 ? "-".$S.$fileNum2 : ''); # Compound file number (special prefix & double episode)
+			my $dispNum = $S.$dispNum . ($fileNum2 ? "-".$S.$fileNum2 : '');    # Compound file number (special prefix & double episode)
 			my $epTitle2 = $fileNum2 ? " - ".$$titles[$fileNum2] : '' ;         # Double episode's second title
 			my $epNum;
 			my $local_gap = $gap;
@@ -1465,14 +1430,20 @@ foreach(@fileList){
 			
 			# Print all source data before compiling new name
 			if($debug && ($before ne $_)){
-				print 
+				print "\n".
+					"\n$ANSIblue"."Working Set: $_".$ANSInormal.
+					"\n\$match = ".$match.
 					"\n\$filePrefix = ".$filePrefix.
 					"\n\$local_gap = ".$local_gap.
 					"\n\$epNum = ".$epNum.
 					"\n\$S = ".$S.
-					"\n\$P = ".$P.
+					"\n\$fileSeason = ".$fileSeason.
+					"\n\$fileNum = ".$fileNum.
+					"\n\$fileNum2 = ".$fileNum2.
 					"\n\$dispNum = ".$dispNum.
-					"\n\$epTitle2 = ".$epTitle2
+					"\n\$epTitle2 = ".$epTitle2.
+					"\n\$group = ".$group.
+					"\n\$fileExt = ".$fileExt
 					;
 			}
 			
@@ -2129,9 +2100,5 @@ sub readURLfile #{{{
 #        special handling of filename text found between square brackets (e.g.:
 #        '[AnCo]'). This is useful when the "group" is actually the episode
 #        number (e.g.: '[3x15]')
-#
-#  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
-#        global, so although my tests show it works  for EpGuides and AniDB,
-#        things may go wrong.
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
