@@ -31,6 +31,7 @@
 #
 #  v2.45 ENHANCEMENT: EpGuides support improved by removing apostrophes from
 #        series names before looking them up
+#        ENHANCEMENT: Added --chdir=X which lets you specify the directory to rename
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -212,6 +213,8 @@ Specifying data to use:
  --series=X         Uses X as a prefix (enclose in quotes for best results)
  --exclude_series   Don't include the series name in the new filename, ever
  --include_series   Overrides the above setting, incase you set it default
+ --chdir=X          Specify a directory to rename. If specified multiple times
+                    all but last are ignored.
 
  Note: If neither of the above two settings are used, the default behaviour
  is to drop the series name when the directories are structured in a manner
@@ -308,6 +311,11 @@ if($#ARGV ne -1)
 			case /^--scheme=.*$/i    {/^--scheme=(.*)$/i; $scheme = $1;}
 			case /^--series=.*$/i    {/^--series=(.*)$/i; $series = $1;}
 			# Note that $exclude_series is 1 by factory default
+			case /^--chdir=.*$/i    {
+										/^--chdir=(.*)$/i;
+										print "Switching to directory $1\n"; chdir($1);
+										($series) = (getcwd() =~ /\/([^\/]+)$/);
+									}
 			case /^--include_series$/i {$exclude_series = 0;}
 			case /^--exclude_series$/i {$exclude_series = 2;}
 			case /^--season=.*$/i    {/^--season=(.*)$/i; $season = $1;}
