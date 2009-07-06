@@ -12,16 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
-#        global, so although my tests show it works  for EpGuides and AniDB,
-#        things may go wrong.
-#
-#  v2.42 BUGFIX: Updated TV.com parser in response to site changes
-#
-#        ENHANCEMENT: Adding --deaccent option, which strips accents from
-#        proposed filenames. E.g.: è -> e
-#        Thank you Brian Stolz for the patch!
-#
 #  v2.43 ENHANCEMENT: Filename pattern-matching reordered such that 7x01 is
 #        preferred over 8-00, which was causing problems with episodes of "24"
 #
@@ -148,7 +138,7 @@ else{
 	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.44\nReleased 03 March 2009\n"; # {{{
+my $version = "TV Series Renamer 2.45\nReleased 05 July 2009\n"; # {{{
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -2143,5 +2133,15 @@ sub readURLfile #{{{
 #        special handling of filename text found between square brackets (e.g.:
 #        '[AnCo]'). This is useful when the "group" is actually the episode
 #        number (e.g.: '[3x15]')
+#
+#  v2.41 BUGFIX: Unicode support was broken for epguides.com. Code-change is
+#        global, so although my tests show it works  for EpGuides and AniDB,
+#        things may go wrong.
+#
+#  v2.42 BUGFIX: Updated TV.com parser in response to site changes
+#
+#        ENHANCEMENT: Adding --deaccent option, which strips accents from
+#        proposed filenames. E.g.: è -> e
+#        Thank you Brian Stolz for the patch!
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
