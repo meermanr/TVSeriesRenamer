@@ -23,6 +23,11 @@
 #        series names before looking them up
 #        ENHANCEMENT: Added --chdir=X which lets you specify the directory to rename
 #
+#  v2.46 BUGFIX: Didn't properly test v2.45's --chdir support. Fixed
+#        season-detection code when used with --chdir
+#        MAINTENANCE: Updated EpGuides parser to remove "-img---a- -a-" from
+#        certain episodes, caused by the embedding of image-links.
+#
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
 #	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
@@ -128,17 +133,8 @@ my $implicit_season;
 my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect input source, 2="Hard" format - no guessing allowed
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
-# Check if current directory name ($series) is a likely sub-folder of the series. EG: "Prison Break/Season 1/"
-if(($season) = ($series =~ /^(?:Season|series)?.?(\d+)\s*$/i)){
-	($series) = (getcwd() =~ /\/([^\/]+)\/[^\/]+$/);	# Grab parent dir name, discard rest of path
-	if($exclude_series == 1){$exclude_series=2;}		# See default settings
-}
-else{
-	($series) = ($series =~ /(.*?)( \(Complete\))?$/i);         # (NB Minimal "*?") Discard " (Complete)" in series name
-	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
-}
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.45\nReleased 05 July 2009\n"; # {{{
+my $version = "TV Series Renamer 2.46\nReleased 06 July 2009\n"; # {{{
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -354,6 +350,16 @@ if($#ARGV ne -1)
 			else                    {$implicit_format = 1; $inputFile = $_; $format= Format_AutoDetect;}
 		}
 	}
+}
+
+# Check if current directory name ($series) is a likely sub-folder of the series. EG: "Prison Break/Season 1/"
+if(($season) = ($series =~ /^(?:Season|series)?.?(\d+)\s*$/i)){
+	($series) = (getcwd() =~ /\/([^\/]+)\/[^\/]+$/);	# Grab parent dir name, discard rest of path
+	if($exclude_series == 1){$exclude_series=2;}		# See default settings
+}
+else{
+	($series) = ($series =~ /(.*?)( \(Complete\))?$/i);         # (NB Minimal "*?") Discard " (Complete)" in series name
+	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
 }
 
 # Sanitize series name, incase it happens to be a valid regular expression (for
@@ -1143,6 +1149,7 @@ else
 			# NB: The air date is missing in some cases, and the production code in others
 				my ($num, $epTitle, $lastPilotNum);
 				$lastPilotNum = -1;	# i.e. none
+
 				
 				foreach(@input)
 				{
@@ -1158,6 +1165,7 @@ else
 					{
 						# Cleanup whitespace (and tags if using online version)
 						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						$epTitle =~ s@<img></a> <a>@@;
 						check_and_push($epTitle, \@name, $num);
 					}
 					# Most episodes (old parser, v2.33 and earlier)
