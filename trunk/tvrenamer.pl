@@ -12,13 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.43 ENHANCEMENT: Filename pattern-matching reordered such that 7x01 is
-#        preferred over 8-00, which was causing problems with episodes of "24"
-#
-#  v2.44 ENHANCEMENT: Pilot episode support for EpGuides vastly improved.
-#        BUGFIX: --version doesn't print the version twice anymore
-#        BUGFIX: Removed warning about $* being unsupported
-#
 #  v2.45 ENHANCEMENT: EpGuides support improved by removing apostrophes from
 #        series names before looking them up
 #        ENHANCEMENT: Added --chdir=X which lets you specify the directory to rename
@@ -27,6 +20,9 @@
 #        season-detection code when used with --chdir
 #        MAINTENANCE: Updated EpGuides parser to remove "-img---a- -a-" from
 #        certain episodes, caused by the embedding of image-links.
+#
+#  v2.47 BUGFIX: --season wasn't overriding the auto-detection. Thanks Jørn
+#        Odberg for pointing this out!
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -134,7 +130,7 @@ my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect in
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.46\nReleased 06 July 2009\n"; # {{{
+my $version = "TV Series Renamer 2.47\nReleased 02 August 2009\n"; # {{{
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -304,7 +300,7 @@ if($#ARGV ne -1)
 									}
 			case /^--include_series$/i {$exclude_series = 0;}
 			case /^--exclude_series$/i {$exclude_series = 2;}
-			case /^--season=.*$/i    {/^--season=(.*)$/i; $season = $1;}
+			case /^--season=.*$/i    {/^--season=(.*)$/i; $season = $1; $implicit_season = 2;}
 			case /^--autoseries$/i   {$autoseries = 1;}
 			case /^--noautoseries$/i {$autoseries = 0;}
 			case /^--nogroup$/i      {$nogroup = 1;}
@@ -352,14 +348,16 @@ if($#ARGV ne -1)
 	}
 }
 
-# Check if current directory name ($series) is a likely sub-folder of the series. EG: "Prison Break/Season 1/"
-if(($season) = ($series =~ /^(?:Season|series)?.?(\d+)\s*$/i)){
-	($series) = (getcwd() =~ /\/([^\/]+)\/[^\/]+$/);	# Grab parent dir name, discard rest of path
-	if($exclude_series == 1){$exclude_series=2;}		# See default settings
-}
-else{
-	($series) = ($series =~ /(.*?)( \(Complete\))?$/i);         # (NB Minimal "*?") Discard " (Complete)" in series name
-	($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
+if( ! $implicit_season ){
+	# Check if current directory name ($series) is a likely sub-folder of the series. EG: "Prison Break/Season 1/"
+	if(($season) = ($series =~ /^(?:Season|series)?.?(\d+)\s*$/i)){
+		($series) = (getcwd() =~ /\/([^\/]+)\/[^\/]+$/);	# Grab parent dir name, discard rest of path
+		if($exclude_series == 1){$exclude_series=2;}		# See default settings
+	}
+	else{
+		($series) = ($series =~ /(.*?)( \(Complete\))?$/i);         # (NB Minimal "*?") Discard " (Complete)" in series name
+		($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
+	}
 }
 
 # Sanitize series name, incase it happens to be a valid regular expression (for
@@ -562,7 +560,7 @@ else
 	}
 	unless($season){$season = 1; $implicit_season = 1;}
 	$season = $season + 0;	# Cast to numeric (removing leading zeros)
-	print " (Season $season".($implicit_season?" $ANSIred(assumed)$ANSInormal":"").")\n";
+	print " (Season $season".($implicit_season==1?" $ANSIred(assumed)$ANSInormal":"").")\n";
 
 	print "Reading input in $FormatList[$format] mode from ";
 	if($format == Format_AutoFetch){print $SiteList[$site]."\n";}
@@ -2151,5 +2149,12 @@ sub readURLfile #{{{
 #        ENHANCEMENT: Adding --deaccent option, which strips accents from
 #        proposed filenames. E.g.: è -> e
 #        Thank you Brian Stolz for the patch!
+#
+#  v2.43 ENHANCEMENT: Filename pattern-matching reordered such that 7x01 is
+#        preferred over 8-00, which was causing problems with episodes of "24"
+#
+#  v2.44 ENHANCEMENT: Pilot episode support for EpGuides vastly improved.
+#        BUGFIX: --version doesn't print the version twice anymore
+#        BUGFIX: Removed warning about $* being unsupported
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
