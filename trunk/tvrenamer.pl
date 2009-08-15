@@ -1625,7 +1625,7 @@ USERPROMPT: {
 			my ($before, $after);
 			print $ANSIgreen."y".$ANSInormal."\nRenaming in progress... ";
 			
-			# If creating undo script, read in any exisisting undo script
+			# If creating undo script, read in any existing undo script
 			# First check if this is the Win32 stand-alone version (i.e. rename.EXE)
 			my $undofile = 'unrename.pl';
 			if($0 =~ /\.exe$/i || -e 'unrename.bat'){ $undofile = 'unrename.bat'; }
