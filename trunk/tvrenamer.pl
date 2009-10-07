@@ -12,10 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.45 ENHANCEMENT: EpGuides support improved by removing apostrophes from
-#        series names before looking them up
-#        ENHANCEMENT: Added --chdir=X which lets you specify the directory to rename
-#
 #  v2.46 BUGFIX: Didn't properly test v2.45's --chdir support. Fixed
 #        season-detection code when used with --chdir
 #        MAINTENANCE: Updated EpGuides parser to remove "-img---a- -a-" from
@@ -2157,5 +2153,9 @@ sub readURLfile #{{{
 #  v2.44 ENHANCEMENT: Pilot episode support for EpGuides vastly improved.
 #        BUGFIX: --version doesn't print the version twice anymore
 #        BUGFIX: Removed warning about $* being unsupported
+#
+#  v2.45 ENHANCEMENT: EpGuides support improved by removing apostrophes from
+#        series names before looking them up
+#        ENHANCEMENT: Added --chdir=X which lets you specify the directory to rename
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
