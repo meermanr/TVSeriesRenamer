@@ -23,7 +23,7 @@
 #  v2.48 MAINTENANCE: Replace switch-statements with if..elsif..else
 #        statements, to make it easier to compile the Win32 binary
 #
-#        BUGFIX: Specifying input file / URL on command line wasn't working
+#        BUGFIX: --chdir overrode --series
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -130,7 +130,7 @@ my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect in
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.47\nReleased 02 August 2009\n"; # {{{
+my $version = "TV Series Renamer 2.48\nReleased 20 October 2009\n"; # {{{
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
