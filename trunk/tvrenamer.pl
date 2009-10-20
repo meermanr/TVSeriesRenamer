@@ -93,7 +93,7 @@ my $site         = Site_EpGuides;	# Preferred site search for title data. NB: Th
 my $search_anime = undef; 			# Search TV sites
 
 my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|mp4|mpeg4|mov|srt|sub|ssa|smi|sami|txt)$';
-my ($series)     = (getcwd() =~ /\/([^\/]+)$/);     # Grab current dir name, discard rest of path
+my ($series)     = '';
 my $exclude_series     = 1;	# 0=Always include series name, 1=Exclude if cwd is "Series X", 2=Always exclude
 my $autoseries   = 0;	# Do not automatically use scraped series name
 my $gap          = ' ';	# Comes between series name/prefix & episode number
@@ -342,7 +342,12 @@ if($#ARGV ne -1)
 			
 		elsif( $arg =~ qr/^-.+/ )           {print "Invalid option $arg!\nUse --help for list of available options\n"; exit 1;}
 		else                                {$implicit_format = 1; $inputFile = $arg; $format= Format_AutoDetect;}
-		}
+	}
+}
+
+if( $series eq "" ){
+	($series)     = (getcwd() =~ /\/([^\/]+)$/);     # Grab current dir name, discard rest of path
+	if($debug){print "\nUsing directory name as series name: $series";}
 }
 
 if( ! $implicit_season ){
