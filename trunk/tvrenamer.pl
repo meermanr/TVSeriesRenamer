@@ -2163,4 +2163,4 @@ sub readURLfile #{{{
 #        series names before looking them up
 #        ENHANCEMENT: Added --chdir=X which lets you specify the directory to rename
 #
-# vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
+# vim: set ft=perl ff=unix ts=4 sw=4 sts=4:
