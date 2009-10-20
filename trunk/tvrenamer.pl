@@ -24,6 +24,11 @@
 #  v2.47 BUGFIX: --season wasn't overriding the auto-detection. Thanks Jørn
 #        Odberg for pointing this out!
 #
+#  v2.48 MAINTENANCE: Replace switch-statements with if..elsif..else
+#        statements, to make it easier to compile the Win32 binary
+#
+#        BUGFIX: Specifying input file / URL on command line wasn't working
+#
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
 #	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
@@ -38,7 +43,6 @@
 # }}}
 #use warnings;				# I'm not that leet {{{
 use strict;					# Let's be scientific about this
-use Switch;					# Because switch statements make things more readable   
 use Term::ReadKey;			# Allows single keypresses to be detected (so no need to press <ENTER> all the time)
 use Cwd;					# Current Working Directory library
 use LWP::Simple;			# Adds get($url) function
@@ -273,79 +277,76 @@ unless($tvrenamerrc eq '')
 }
 if($#ARGV ne -1)
 {
-	foreach(@ARGV){
-		switch ($_) {
-			case /^$/                {}	# Skip empty strings, often from .tvrenamerrc files
-			case /^--autofetch$/i    {$implicit_format = 0; $format = Format_AutoFetch;}
-			case /^--autodetect$/i   {$implicit_format = 0; $format = Format_AutoDetect;}
-			case /^--anidb$/i        {$implicit_format = 0; $format = Format_AniDB;}
-			case /^--tvtorrents$/i   {$implicit_format = 0; $format = Format_TVtorrents;}
-			case /^--tvtome$/i       {$implicit_format = 0; $format = Format_TVtome;}
-			case /^--tv$/i           {$implicit_format = 0; $format = Format_TV;}
-			case /^--tv2$/i          {$implicit_format = 0; $format = Format_TV2;}
-			case /^--epguides$/i     {$implicit_format = 0; $format = Format_EpGuides;}
+	foreach my $arg (@ARGV){
+		if( $arg =~ /^$/ )                {}	# Skip empty strings, often from .tvrenamerrc files
+		if( $arg =~ /^--autofetch$/i )    {$implicit_format = 0; $format = Format_AutoFetch;}
+		if( $arg =~ /^--autodetect$/i )   {$implicit_format = 0; $format = Format_AutoDetect;}
+		if( $arg =~ /^--anidb$/i )        {$implicit_format = 0; $format = Format_AniDB;}
+		if( $arg =~ /^--tvtorrents$/i )   {$implicit_format = 0; $format = Format_TVtorrents;}
+		if( $arg =~ /^--tvtome$/i )       {$implicit_format = 0; $format = Format_TVtome;}
+		if( $arg =~ /^--tv$/i )           {$implicit_format = 0; $format = Format_TV;}
+		if( $arg =~ /^--tv2$/i )          {$implicit_format = 0; $format = Format_TV2;}
+		if( $arg =~ /^--epguides$/i )     {$implicit_format = 0; $format = Format_EpGuides;}
 
-			case /^--search=.*$/i	 { /^--search=(.*)$/i;
+		if( $arg =~ /^--search=.*$/i )	 { $arg =~ /^--search=(.*)$/i;
 										if(/anime/i){ $search_anime=1; }
 										else{ $search_anime=undef; }
 									 }
 
-			case /^--scheme=.*$/i    {/^--scheme=(.*)$/i; $scheme = $1;}
-			case /^--series=.*$/i    {/^--series=(.*)$/i; $series = $1;}
+		elsif( $arg =~ /^--scheme=.*$/i )    {$arg =~ /^--scheme=(.*)$/i; $scheme = $1;}
+		elsif( $arg =~ /^--series=.*$/i )    {$arg =~ /^--series=(.*)$/i; $series = $1;}
 			# Note that $exclude_series is 1 by factory default
-			case /^--chdir=.*$/i    {
-										/^--chdir=(.*)$/i;
+		elsif( $arg =~ /^--chdir=.*$/i )    {
+										$arg =~ /^--chdir=(.*)$/i;
 										print "Switching to directory $1\n"; chdir($1);
-										($series) = (getcwd() =~ /\/([^\/]+)$/);
 									}
-			case /^--include_series$/i {$exclude_series = 0;}
-			case /^--exclude_series$/i {$exclude_series = 2;}
-			case /^--season=.*$/i    {/^--season=(.*)$/i; $season = $1; $implicit_season = 2;}
-			case /^--autoseries$/i   {$autoseries = 1;}
-			case /^--noautoseries$/i {$autoseries = 0;}
-			case /^--nogroup$/i      {$nogroup = 1;}
-			case /^--group$/i        {$nogroup = 0;}
-			case /^--dontgroup$/i    {$dontgroup = 1;}
-			case /^--dogroup$/i      {$dontgroup = 0;}
-			case /^--nogap$/i        {$gap = undef;}
-			case /^--gap$/i          {$gap = ' ';}
-			case /^--gap=.*$/i       {/^--gap=(.*)$/i; $gap = $1;}
-			case /^--separator=.*$/i {/^--separator=(.*)$/i; $separator = $1;}
-			case /^--detailed$/i     {$detailedView = 1;}
-			case /^--interactive$/i  {$interactive = 1;}
-			case /^--unattended$/i   {$unattended = 1;}
-			case /^--cache$/i        {$nocache = 0;}
-			case /^--nocache$/i      {$nocache = 1;}
+		elsif( $arg =~ /^--include_series$/i ) {$exclude_series = 0;}
+		elsif( $arg =~ /^--exclude_series$/i ) {$exclude_series = 2;}
+		elsif( $arg =~ /^--season=.*$/i )    {$arg =~ /^--season=(.*)$/i; $season = $1; $implicit_season = 2;}
+		elsif( $arg =~ /^--autoseries$/i )   {$autoseries = 1;}
+		elsif( $arg =~ /^--noautoseries$/i ) {$autoseries = 0;}
+		elsif( $arg =~ /^--nogroup$/i )      {$nogroup = 1;}
+		elsif( $arg =~ /^--group$/i )        {$nogroup = 0;}
+		elsif( $arg =~ /^--dontgroup$/i )    {$dontgroup = 1;}
+		elsif( $arg =~ /^--dogroup$/i )      {$dontgroup = 0;}
+		elsif( $arg =~ /^--nogap$/i )        {$gap = undef;}
+		elsif( $arg =~ /^--gap$/i )          {$gap = ' ';}
+		elsif( $arg =~ /^--gap=.*$/i )       {$arg =~ /^--gap=(.*)$/i; $gap = $1;}
+		elsif( $arg =~ /^--separator=.*$/i ) {$arg =~ /^--separator=(.*)$/i; $separator = $1;}
+		elsif( $arg =~ /^--detailed$/i )     {$detailedView = 1;}
+		elsif( $arg =~ /^--interactive$/i )  {$interactive = 1;}
+		elsif( $arg =~ /^--unattended$/i )   {$unattended = 1;}
+		elsif( $arg =~ /^--cache$/i )        {$nocache = 0;}
+		elsif( $arg =~ /^--nocache$/i )      {$nocache = 1;}
 
-			case /^--dubious$/i      {$dubious = 1;}
-			case /^--nodubious$/i    {$dubious = undef;}
-			case /^--rangemin=.*$/i  {/^--rangemin=(.*)$/i; $rangemin= $1;}
-			case /^--rangemax=.*$/i  {/^--rangemax=(.*)$/i; $rangemax= $1;}
-			case /^--autoranging$/i  {$autoranging = 1;}
-			case /^--noautoranging$/i{$autoranging = 0;}
-			case /^--series$/i       {$series = undef;}
-			case /^--pad=.*$/i       {/^--pad=(.*)$/i; $pad= $1;}
-			case /^--nofilter$/i     {$filterFiles = undef;}
-			case /^--unixy$/i        {$unixy = 1;}
-			case /^--cleanup$/i      {$cleanup = 1;}
-			case /^--ansi$/i         {$ANSIcolour = 1;}
-			case /^--noansi$/i       {$ANSIcolour = 0;}
-			case /^--reversible$/i   {$reversible = 1;}
-			case /^--debug$/i        {$debug = 1;}
+		elsif( $arg =~ /^--dubious$/i )      {$dubious = 1;}
+		elsif( $arg =~ /^--nodubious$/i )    {$dubious = undef;}
+		elsif( $arg =~ /^--rangemin=.*$/i )  {$arg =~ /^--rangemin=(.*)$/i; $rangemin= $1;}
+		elsif( $arg =~ /^--rangemax=.*$/i )  {$arg =~ /^--rangemax=(.*)$/i; $rangemax= $1;}
+		elsif( $arg =~ /^--autoranging$/i )  {$autoranging = 1;}
+		elsif( $arg =~ /^--noautoranging$/i ){$autoranging = 0;}
+		elsif( $arg =~ /^--series$/i )       {$series = undef;}
+		elsif( $arg =~ /^--pad=.*$/i )       {$arg =~ /^--pad=(.*)$/i; $pad= $1;}
+		elsif( $arg =~ /^--nofilter$/i )     {$filterFiles = undef;}
+		elsif( $arg =~ /^--unixy$/i )        {$unixy = 1;}
+		elsif( $arg =~ /^--cleanup$/i )      {$cleanup = 1;}
+		elsif( $arg =~ /^--ansi$/i )         {$ANSIcolour = 1;}
+		elsif( $arg =~ /^--noansi$/i )       {$ANSIcolour = 0;}
+		elsif( $arg =~ /^--reversible$/i )   {$reversible = 1;}
+		elsif( $arg =~ /^--debug$/i )        {$debug = 1;}
 
-			case /^--preproc=.*$/i   {/^--preproc=(.*)$/i; $preproc = $1;}
-			case /^--postproc=.*$/i  {/^--postproc=(.*)$/i; $postproc = $1;}
+		elsif( $arg =~ /^--preproc=.*$/i )   {$arg =~ /^--preproc=(.*)$/i; $preproc = $1;}
+		elsif( $arg =~ /^--postproc=.*$/i )  {$arg =~ /^--postproc=(.*)$/i; $postproc = $1;}
 
-			case /^--associate-with-video-folders$/ {$do_win32_associate = 1;}
-			case /^--unassociate-with-video-folders$/ {$do_win32_associate = -1;}
+		elsif( $arg =~ /^--associate-with-video-folders$/ ) {$do_win32_associate = 1;}
+		elsif( $arg =~ /^--unassociate-with-video-folders$/ ) {$do_win32_associate = -1;}
 			
-			case /^--help$/i        {print $helpMessage; exit;}
-			case /^--version$/i     {exit;}
+		elsif( $arg =~ /^--help$/i )        {print $helpMessage; exit;}
+		elsif( $arg =~ /^--version$/i )     {exit;}
 			
-			case qr/^-.+/           {print "Invalid option $_!\nUse --help for list of available options\n"; exit 1;}
-			else                    {$implicit_format = 1; $inputFile = $_; $format= Format_AutoDetect;}
+		elsif( $arg =~ qr/^-.+/ )           {print "Invalid option $arg!\nUse --help for list of available options\n"; exit 1;}
+		else                                {$implicit_format = 1; $inputFile = $arg; $format= Format_AutoDetect;}
 		}
-	}
 }
 
 if( ! $implicit_season ){
@@ -935,9 +936,9 @@ else
 			$AutoDetect = 1;
 			$format = Format_AutoDetect + 1;  # AutoDetect/Fetch preceeds concrete formats in FormatList
 		}
-		switch ($format)
+		for my $arg ($format)
 		{
-			case Format_AniDB { # {{{
+			if( $arg == Format_AniDB ) { # {{{
 				# When you copy the AniDB table from Firefox (v1.0.1) the clipboard
 				# contents are in the following format. Note that the epname and number
 				# are on seperate lines.
@@ -964,7 +965,7 @@ else
 					}
 				}
 			} # End case Format_AniDB }}}
-			case Format_URL_AniDB { #{{{
+			elsif( $arg == Format_URL_AniDB ) { #{{{
 				# Remember that most attributes are stripped from the HTML before being passed to us. Sample data:
 				# <tr class="g_odd" id="eid_42520">
 				#     <td class="id eid"><a href="animedb.pl?show=ep&amp;eid=42520">1</a></td>
@@ -1007,7 +1008,7 @@ else
 					$offset += $+[0];   ## Append (local to substr) ending pos of last entire (mis)match
 				}
 			} # End case Format_URL_AniDB }}}
-			case Format_TVtorrents { #{{{
+			elsif( $arg == Format_TVtorrents ) { #{{{
 				# TVtorrent.com uses the following format when copied to the clipboard with
 				# Firefox (v1.0.2)
 				#
@@ -1027,7 +1028,7 @@ else
 					}
 				}
 			} # End case Format_TVtorrents }}}
-			case Format_TVtome { #{{{
+			elsif( $arg == Format_TVtome ) { #{{{
 				# TVtome.com uses the following format when copied to the clipboard with
 				# Firefox (v1.0.4)
 				#
@@ -1048,7 +1049,7 @@ else
 					$/ = $OLD_INPUT_RECORD_SEPARATOR;
 				}
 			} # End case Format_TVtome }}}
-			case Format_TV2 { #{{{
+			elsif( $arg == Format_TV2 ) { #{{{
 				# A varient of TV.com's format, as used by their "All Seasons" Episode listings
 				# NB: This format is tried before the older Format_TV
 				#
@@ -1070,7 +1071,7 @@ else
 					}
 				}
 			} # End case Format_TV2 }}}
-			case Format_URL_TV2 { #{{{
+			elsif( $arg == Format_URL_TV2 ) { #{{{
 				# Remember that all attributes are stripped before the HTML is passed to us. Sample data:
 				#
 				# <table><thead><tr><th><div>no.</div></th><th><div>episode</div></th><th><div>air date</div></th><th><div>prod #</div></th><th><div>reviews</div></th><th><div>downloads</div></th><th><div>score</div></th></tr></thead><tbody><tr><td><div>1</div></td><td><div><a>Pilot</a></div></td><td><div>1/13/2008</div></td><td><div>276022</div></td><td><div><a> Reviews</a></div></td><td><div>&nbsp;</div></td><td><div>9.09</div></td></tr>
@@ -1097,7 +1098,7 @@ else
 				}
 
 			} # End case Format_URL_TV }}}
-			case Format_TV { #{{{
+			elsif( $arg == Format_TV ) { #{{{
 				# TVtome.com has become TV.com, a new shiney version which wastes a lot of bandwidth on things
 				# I don't care about. Also, the format has changed :(
 				#
@@ -1115,7 +1116,7 @@ else
 					}
 				}
 			} # End case Format_TV }}}
-			case Format_EpGuides { #{{{
+			elsif( $arg == Format_EpGuides ) { #{{{
 			# EpGuides.com format
             #                             Original
             #   Episode #     Prod #      Air Date   Titles
@@ -1201,7 +1202,7 @@ else
 				}
 			
 			} # End Format_EpGuides }}}
-			case NumFormats { #{{{
+			elsif( $arg == NumFormats ) { #{{{
 			##
 			# Occurs when all formats have been tried
 			#
@@ -1462,13 +1463,13 @@ foreach(@fileList){
 			my $epTitle2 = $fileNum2 ? " - ".$$titles[$fileNum2] : '' ;         # Double episode's second title
 			my $epNum;
 			my $local_gap = $gap;
-			switch($scheme){
-				case 'SXXEYY' {$epNum = "S".pad($season, 2)."E".$dispNum;}
-				case 'sXXeYY' {$epNum = "s".pad($season, 2)."e".$dispNum;}
-				case 'YY'     {$epNum = $dispNum;}
-				case 'XxYY'   {$epNum = $season."x".$dispNum;}
-				case 'XYY'    {$epNum = $season.$dispNum;}
-				case undef    {$epNum = (!$implicit_season ? $season.'x' : '').$dispNum;}
+			for my $arg ($scheme){
+				   if( $arg == 'SXXEYY') {$epNum = "S".pad($season, 2)."E".$dispNum;}
+				elsif( $arg == 'sXXeYY') {$epNum = "s".pad($season, 2)."e".$dispNum;}
+				elsif( $arg == 'YY'    ) {$epNum = $dispNum;}
+				elsif( $arg == 'XxYY'  ) {$epNum = $season."x".$dispNum;}
+				elsif( $arg == 'XYY'   ) {$epNum = $season.$dispNum;}
+				elsif( $arg == undef   ) {$epNum = (!$implicit_season ? $season.'x' : '').$dispNum;}
 				else          {print "\nUnknown scheme '$scheme'! Try \"$0 --help\" for list of valid schemes.\n"; exit 1;}
 			}
 			if($filePrefix eq ''){$local_gap = undef;}
