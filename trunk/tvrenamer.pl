@@ -12,18 +12,15 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.46 BUGFIX: Didn't properly test v2.45's --chdir support. Fixed
-#        season-detection code when used with --chdir
-#        MAINTENANCE: Updated EpGuides parser to remove "-img---a- -a-" from
-#        certain episodes, caused by the embedding of image-links.
-#
 #  v2.47 BUGFIX: --season wasn't overriding the auto-detection. Thanks Jørn
 #        Odberg for pointing this out!
 #
 #  v2.48 MAINTENANCE: Replace switch-statements with if..elsif..else
 #        statements, to make it easier to compile the Win32 binary
 #
-#        BUGFIX: --chdir overrode --series
+#  v2.49 BUGFIX: Comparison of $scheme was using '==' instead of 'eq'
+#        BUGFIX: Specifying input file / URL on command line wasn't working
+#        MAINTENANCE: Removed some redundant pattern matches in command-line parser
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -93,7 +90,7 @@ my $site         = Site_EpGuides;	# Preferred site search for title data. NB: Th
 my $search_anime = undef; 			# Search TV sites
 
 my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|mp4|mpeg4|mov|srt|sub|ssa|smi|sami|txt)$';
-my ($series)     = '';
+my ($series)     = (getcwd() =~ /\/([^\/]+)$/);     # Grab current dir name, discard rest of path
 my $exclude_series     = 1;	# 0=Always include series name, 1=Exclude if cwd is "Series X", 2=Always exclude
 my $autoseries   = 0;	# Do not automatically use scraped series name
 my $gap          = ' ';	# Comes between series name/prefix & episode number
@@ -130,7 +127,7 @@ my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect in
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.48\nReleased 20 October 2009\n"; # {{{
+my $version = "TV Series Renamer 2.49\nReleased 23 November 2009\n"; # {{{
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -284,21 +281,21 @@ if($#ARGV ne -1)
 		if( $arg =~ /^--tv2$/i )          {$implicit_format = 0; $format = Format_TV2;}
 		if( $arg =~ /^--epguides$/i )     {$implicit_format = 0; $format = Format_EpGuides;}
 
-		if( $arg =~ /^--search=.*$/i )	 { $arg =~ /^--search=(.*)$/i;
-										if(/anime/i){ $search_anime=1; }
+		if( $arg =~ /^--search=(.*)$/i )	 {
+										if($1 =~ m/anime/i){ $search_anime=1; }
 										else{ $search_anime=undef; }
 									 }
 
-		elsif( $arg =~ /^--scheme=.*$/i )    {$arg =~ /^--scheme=(.*)$/i; $scheme = $1;}
-		elsif( $arg =~ /^--series=.*$/i )    {$arg =~ /^--series=(.*)$/i; $series = $1;}
+		elsif( $arg =~ /^--scheme=(.*$)/i )    {$scheme = $1;}
+		elsif( $arg =~ /^--series=(.*$)/i )    {$series = $1;}
 			# Note that $exclude_series is 1 by factory default
-		elsif( $arg =~ /^--chdir=.*$/i )    {
-										$arg =~ /^--chdir=(.*)$/i;
+		elsif( $arg =~ /^--chdir=(.*)$/i )    {
 										print "Switching to directory $1\n"; chdir($1);
+										($series) = (getcwd() =~ /\/([^\/]+)$/);
 									}
 		elsif( $arg =~ /^--include_series$/i ) {$exclude_series = 0;}
 		elsif( $arg =~ /^--exclude_series$/i ) {$exclude_series = 2;}
-		elsif( $arg =~ /^--season=.*$/i )    {$arg =~ /^--season=(.*)$/i; $season = $1; $implicit_season = 2;}
+		elsif( $arg =~ /^--season=(.*)$/i )    {$season = $1; $implicit_season = 2;}
 		elsif( $arg =~ /^--autoseries$/i )   {$autoseries = 1;}
 		elsif( $arg =~ /^--noautoseries$/i ) {$autoseries = 0;}
 		elsif( $arg =~ /^--nogroup$/i )      {$nogroup = 1;}
@@ -307,8 +304,8 @@ if($#ARGV ne -1)
 		elsif( $arg =~ /^--dogroup$/i )      {$dontgroup = 0;}
 		elsif( $arg =~ /^--nogap$/i )        {$gap = undef;}
 		elsif( $arg =~ /^--gap$/i )          {$gap = ' ';}
-		elsif( $arg =~ /^--gap=.*$/i )       {$arg =~ /^--gap=(.*)$/i; $gap = $1;}
-		elsif( $arg =~ /^--separator=.*$/i ) {$arg =~ /^--separator=(.*)$/i; $separator = $1;}
+		elsif( $arg =~ /^--gap=(.*)$/i )       {$gap = $1;}
+		elsif( $arg =~ /^--separator=(.*)$/i ) {$separator = $1;}
 		elsif( $arg =~ /^--detailed$/i )     {$detailedView = 1;}
 		elsif( $arg =~ /^--interactive$/i )  {$interactive = 1;}
 		elsif( $arg =~ /^--unattended$/i )   {$unattended = 1;}
@@ -317,12 +314,12 @@ if($#ARGV ne -1)
 
 		elsif( $arg =~ /^--dubious$/i )      {$dubious = 1;}
 		elsif( $arg =~ /^--nodubious$/i )    {$dubious = undef;}
-		elsif( $arg =~ /^--rangemin=.*$/i )  {$arg =~ /^--rangemin=(.*)$/i; $rangemin= $1;}
-		elsif( $arg =~ /^--rangemax=.*$/i )  {$arg =~ /^--rangemax=(.*)$/i; $rangemax= $1;}
+		elsif( $arg =~ /^--rangemin=(.*)$/i )  {$rangemin= $1;}
+		elsif( $arg =~ /^--rangemax=(.*)$/i )  {$rangemax= $1;}
 		elsif( $arg =~ /^--autoranging$/i )  {$autoranging = 1;}
 		elsif( $arg =~ /^--noautoranging$/i ){$autoranging = 0;}
 		elsif( $arg =~ /^--series$/i )       {$series = undef;}
-		elsif( $arg =~ /^--pad=.*$/i )       {$arg =~ /^--pad=(.*)$/i; $pad= $1;}
+		elsif( $arg =~ /^--pad=(.*)$/i )     {$pad= $1;}
 		elsif( $arg =~ /^--nofilter$/i )     {$filterFiles = undef;}
 		elsif( $arg =~ /^--unixy$/i )        {$unixy = 1;}
 		elsif( $arg =~ /^--cleanup$/i )      {$cleanup = 1;}
@@ -331,8 +328,8 @@ if($#ARGV ne -1)
 		elsif( $arg =~ /^--reversible$/i )   {$reversible = 1;}
 		elsif( $arg =~ /^--debug$/i )        {$debug = 1;}
 
-		elsif( $arg =~ /^--preproc=.*$/i )   {$arg =~ /^--preproc=(.*)$/i; $preproc = $1;}
-		elsif( $arg =~ /^--postproc=.*$/i )  {$arg =~ /^--postproc=(.*)$/i; $postproc = $1;}
+		elsif( $arg =~ /^--preproc=(.*)$/i )   {$preproc = $1;}
+		elsif( $arg =~ /^--postproc=(.*)$/i )  {$postproc = $1;}
 
 		elsif( $arg =~ /^--associate-with-video-folders$/ ) {$do_win32_associate = 1;}
 		elsif( $arg =~ /^--unassociate-with-video-folders$/ ) {$do_win32_associate = -1;}
@@ -342,12 +339,7 @@ if($#ARGV ne -1)
 			
 		elsif( $arg =~ qr/^-.+/ )           {print "Invalid option $arg!\nUse --help for list of available options\n"; exit 1;}
 		else                                {$implicit_format = 1; $inputFile = $arg; $format= Format_AutoDetect;}
-	}
-}
-
-if( $series eq "" ){
-	($series)     = (getcwd() =~ /\/([^\/]+)$/);     # Grab current dir name, discard rest of path
-	if($debug){print "\nUsing directory name as series name: $series";}
+		}
 }
 
 if( ! $implicit_season ){
@@ -1465,11 +1457,11 @@ foreach(@fileList){
 			my $epNum;
 			my $local_gap = $gap;
 			for my $arg ($scheme){
-				   if( $arg == 'SXXEYY') {$epNum = "S".pad($season, 2)."E".$dispNum;}
-				elsif( $arg == 'sXXeYY') {$epNum = "s".pad($season, 2)."e".$dispNum;}
-				elsif( $arg == 'YY'    ) {$epNum = $dispNum;}
-				elsif( $arg == 'XxYY'  ) {$epNum = $season."x".$dispNum;}
-				elsif( $arg == 'XYY'   ) {$epNum = $season.$dispNum;}
+				   if( $arg eq 'SXXEYY') {$epNum = "S".pad($season, 2)."E".$dispNum;}
+				elsif( $arg eq 'sXXeYY') {$epNum = "s".pad($season, 2)."e".$dispNum;}
+				elsif( $arg eq 'YY'    ) {$epNum = $dispNum;}
+				elsif( $arg eq 'XxYY'  ) {$epNum = $season."x".$dispNum;}
+				elsif( $arg eq 'XYY'   ) {$epNum = $season.$dispNum;}
 				elsif( $arg == undef   ) {$epNum = (!$implicit_season ? $season.'x' : '').$dispNum;}
 				else          {print "\nUnknown scheme '$scheme'! Try \"$0 --help\" for list of valid schemes.\n"; exit 1;}
 			}
@@ -2163,4 +2155,9 @@ sub readURLfile #{{{
 #        series names before looking them up
 #        ENHANCEMENT: Added --chdir=X which lets you specify the directory to rename
 #
-# vim: set ft=perl ff=unix ts=4 sw=4 sts=4:
+#  v2.46 BUGFIX: Didn't properly test v2.45's --chdir support. Fixed
+#        season-detection code when used with --chdir
+#        MAINTENANCE: Updated EpGuides parser to remove "-img---a- -a-" from
+#        certain episodes, caused by the embedding of image-links.
+#
+# vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
