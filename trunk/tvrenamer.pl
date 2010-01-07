@@ -12,15 +12,17 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.47 BUGFIX: --season wasn't overriding the auto-detection. Thanks Jørn
-#        Odberg for pointing this out!
-#
 #  v2.48 MAINTENANCE: Replace switch-statements with if..elsif..else
 #        statements, to make it easier to compile the Win32 binary
 #
 #  v2.49 BUGFIX: Comparison of $scheme was using '==' instead of 'eq'
 #        BUGFIX: Specifying input file / URL on command line wasn't working
 #        MAINTENANCE: Removed some redundant pattern matches in command-line parser
+#
+#  v2.50 MAINTENANCE: AniDB.info changed back to AniDB.net
+#        BUGFIX: AniDB.net data was always treated as compressed, even when not
+#        the case (recent version of Perl decompress fetched data
+#        automatically). Now uses proper detection.
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -127,7 +129,7 @@ my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect in
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer 2.49\nReleased 23 November 2009\n"; # {{{
+my $version = "TV Series Renamer 2.50\nReleased 07 January 2010\n"; # {{{
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -141,7 +143,7 @@ the sites listed below:
 Input options:
  --AutoFetch        Search sites automatically (no need to provide input)
  --AutoDetect       Systematically try each format below (input required)
- --AniDB            Assume input is in http://AniDB.info format
+ --AniDB            Assume input is in http://AniDB.net format
  --TVtorrents       Assume input is in http://www.TVtorrents.com format
  --TVtome           Assume input is in http://www.TVtome.com format
  --TV               Assume input is in http://www.TV.com format
@@ -596,12 +598,16 @@ else
 			# Choose group behaviour is user has not
 			if( ! defined $nogroup ){ $nogroup = 0; }
 
-			print "Searching AniDB.info for \"$search_term\"... ";
-			my $searchURL = ('http://anidb.info/perl-bin/animedb.pl?show=animelist&adb.search='.uri_escape($search_term).'&do.search=search');
+			print "Searching AniDB.net for \"$search_term\"... ";
+			my $searchURL = ('http://anidb.net/perl-bin/animedb.pl?show=animelist&adb.search='.uri_escape($search_term).'&do.search=search');
 			if($debug){print "Fetching $searchURL\n";}
 			$_ = get($searchURL);
-			$_ = Compress::Zlib::memGunzip($_);	
-			$_ = Encode::decode 'UTF-8', $_;
+			# 0x1f 0x8b = GZIP compression. C.f. http://www.gzip.org/zlib/rfc-gzip.html
+			if ( substr($_, 0, 2) eq chr(0x1f).chr(0x8b) ){
+				if($debug){print $ANSIcyan."Compressed data detected\n".$ANSInormal;}
+				$_ = Compress::Zlib::memGunzip($_);	
+			}
+			#$_ = Encode::decode 'UTF-8', $_;
 			# Save snapshot for debugging
 			if($debug){
 				print $ANSIcyan."Saving html to .search_results.full...$ANSInormal\n";
@@ -633,7 +639,7 @@ else
 				if( $rseries =~ /^$series$/i ){
 					print "Found match!\n"; 
 					$rlink =~ s/&amp;/&/;
-					$inputFile = "http://anidb.info/perl-bin/$rlink";
+					$inputFile = "http://anidb.net/perl-bin/$rlink";
 					$format = Format_URL_AniDB;
 					last;
 				}
@@ -662,7 +668,7 @@ else
 				}
 				else{
 					print "No results.\n";
-					print $ANSIred."I didn't percieve a single result from AniDB, please check www.AniDB.info\n".
+					print $ANSIred."I didn't percieve a single result from AniDB, please check www.AniDB.net\n".
 						"lists your series and try again providing a link to the series' page on\n".
 					   	"the command line.\n".
 						"\nIt is likely that AniDB's page layout has changed, if that is the case\n".
@@ -718,7 +724,7 @@ else
 				while($len==0 && $retries > 0){
 					print "Performing search...\n";
 					$page = get($url);
-					$page = Encode::decode 'UTF-8', $page;
+					#$page = Encode::decode 'UTF-8', $page;
 					$len = length($page);
 					$retries--;
 					# Note we sleep for 3 seconds between retries, but present the message AFTER the wait,
@@ -855,10 +861,11 @@ else
 					# magic number 0x1fc18b08 can be decompressed, where I'd
 					# expect that just 0x1f8b08 to be compatible becuase that's
 					# what RFC1952 says)
-					$t = Compress::Zlib::memGunzip($_);	
-					if( $t ne "" ){
+					#
+					# 0x1f 0x8b = GZIP compression. C.f. http://www.gzip.org/zlib/rfc-gzip.html
+					if ( substr($_, 0, 2) eq chr(0x1f).chr(0x8b) ){
 						if($debug){print $ANSIcyan."Compressed data detected\n".$ANSInormal;}
-						$_ = $t;
+						$_ = Compress::Zlib::memGunzip($_);	
 					}
 
 					# XXX
@@ -2159,5 +2166,8 @@ sub readURLfile #{{{
 #        season-detection code when used with --chdir
 #        MAINTENANCE: Updated EpGuides parser to remove "-img---a- -a-" from
 #        certain episodes, caused by the embedding of image-links.
+#
+#  v2.47 BUGFIX: --season wasn't overriding the auto-detection. Thanks Jørn
+#        Odberg for pointing this out!
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
