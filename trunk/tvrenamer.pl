@@ -967,21 +967,20 @@ else
 			} # End case Format_AniDB }}}
 			elsif( $arg == Format_URL_AniDB ) { #{{{
 				# Remember that most attributes are stripped from the HTML before being passed to us. Sample data:
-				# <tr class="g_odd" id="eid_42520">
-				#     <td class="id eid"><a href="animedb.pl?show=ep&amp;eid=42520">1</a></td>
-				#     <td class="title">
-				#         <span class="icons">
-				# 
-				#         </span>
-				#         <label>The Green Seat <span class="aka">( 緑の座 / Midori no za )</span></label>
-				#     </td>
-				#     <td class="duration">24m</td>
-				#     <td class="date airdate">23.10.2005</td>
-				# </tr>
-
-				#		<label>Speedy Lady <span>( つっぱしる女 / Tsuppashiru Onna )</span></label>
-				#						  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-				#						           Optional, may not be present
+                #
+		        # <tr class="g_odd newtype" id="eid_42520">
+		        # 	<td class="id eid">
+		        # 		<a href="animedb.pl?show=ep&amp;eid=42520">1</a>
+		        # 	</td>
+		        # 	<td class="title">
+		        # 		<label title="緑の座 / Midori no za">The Green Seat
+		        # 		</label>
+		        # 	</td>
+		        # 	<td class="duration">24m
+		        # 	</td>
+		        # 	<td class="date airdate">23.10.2005
+		        # 	</td>
+		        # </tr>
 
 				my $offset = 0;
 				my ($num, $snum, $epTitle, $japEpTitle);
@@ -992,20 +991,32 @@ else
 					}
 				}
 
-				while($offset < length($_)){
-					if ( ($num, $epTitle) = (substr($_, $offset) =~ /<tr[^>]*>\s*<td[^>]*><a[^>]*>(S?\d+)<\/a><\/td>.*?<label>([^<]*).*?<\/label>.*?<\/tr>/ms) ){
-
-					# Remove optional <span> if present
-					($epTitle) = $epTitle =~ /(^[^<]*)/;
-
-						if(($snum) = ($num =~ /S(\d+)/i)){              # Detect Special
-							check_and_push($epTitle, \@sname, $snum);
-						}else{
-							check_and_push($epTitle, \@name, $num);
-						}
-
-					}
-					$offset += $+[0];   ## Append (local to substr) ending pos of last entire (mis)match
+                while( $_ =~ m{
+                    # <tr>
+                    #     <th>EP</th>
+                    #     <th>Title</th>
+                    #     <th>Duration</th>
+                    #     <th>Air Date</th>
+                    # </tr>
+                    <tr>\s*
+                        <td>\s*
+                            <a\shref="animedb.pl\?show=ep&amp;eid=\d+">\s*(?P<num>[sS]?\d+)\s*</a>\s*
+                        </td>\s*
+                        <td>\s*
+                            <label\s*title="(?P<altTitle>[^"]*)">(?P<epTitle>[^<]*)
+                            </label>\s*
+                        </td>\s*
+                        <td>[^<]*
+                        </td>\s*
+                        <td>[^<]*
+                        </td>\s*
+                    </tr>
+                }xg ){
+                    if(($snum) = ($+{num} =~ /S(\d+)/i)){              # Detect Special
+                        check_and_push($+{epTitle}, \@sname, $snum);
+                    }else{
+                        check_and_push($+{epTitle}, \@name, $+{num});
+                    }
 				}
 			} # End case Format_URL_AniDB }}}
 			elsif( $arg == Format_TVtorrents ) { #{{{
