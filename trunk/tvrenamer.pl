@@ -12,9 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.48 MAINTENANCE: Replace switch-statements with if..elsif..else
-#        statements, to make it easier to compile the Win32 binary
-#
 #  v2.49 BUGFIX: Comparison of $scheme was using '==' instead of 'eq'
 #        BUGFIX: Specifying input file / URL on command line wasn't working
 #        MAINTENANCE: Removed some redundant pattern matches in command-line parser
@@ -23,6 +20,16 @@
 #        BUGFIX: AniDB.net data was always treated as compressed, even when not
 #        the case (recent version of Perl decompress fetched data
 #        automatically). Now uses proper detection.
+#
+#  v2.51 MAINTENANCE: AniDB scraper updated in sympathy with site changes
+#        ENHANCEMENT: Season number detection now supports following directory 
+#        name / layouts:
+#
+#          SeriesName/2
+#          SeriesName/Series 2
+#          SeriesName/Season 2
+#          SeriesName 2x
+#          SeriesName (2)
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -124,7 +131,7 @@ my $cleanup      = undef; # Disabled
 if($ANSIcolour && $ENV{'TERM'} eq '' && $INC{'Win32/Console/ANSI.pm'} eq ''){print "You appear to be using MS-DOS without the Win32::Console::ANSI module, colour disabled!\n (See script header for a workaround)\n\n"; $ANSIcolour = 0;}
 
 # Internal Flags
-my $implicit_season;
+my $implicit_season = 0;    # 0=Autodetect season, 1=Script has guessed, 2=User has provided season
 my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect input source, 2="Hard" format - no guessing allowed
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
@@ -344,16 +351,45 @@ if($#ARGV ne -1)
 		}
 }
 
-if( ! $implicit_season ){
-	# Check if current directory name ($series) is a likely sub-folder of the series. EG: "Prison Break/Season 1/"
-	if(($season) = ($series =~ /^(?:Season|series)?.?(\d+)\s*$/i)){
-		($series) = (getcwd() =~ /\/([^\/]+)\/[^\/]+$/);	# Grab parent dir name, discard rest of path
-		if($exclude_series == 1){$exclude_series=2;}		# See default settings
-	}
-	else{
-		($series) = ($series =~ /(.*?)( \(Complete\))?$/i);         # (NB Minimal "*?") Discard " (Complete)" in series name
-		($series, $season) = ($series =~ /(.+?)(?:\s+(\d+)x)?$/i);  # Extract season number (NB Minimal "+?" and non-capturing parenthesis)
-	}
+if( $implicit_season != 2 ){
+    # Try to deduce the season from the current folder name.
+    #
+    # Examples:
+    #
+    #   "2" -> season 2, get series name from parent directory
+    #   "Season 2" -> season 2, get series name from parent directory
+    #   "Series 2" -> season 2, get series name from parent directory
+    #
+    #   "Survivor (20)" -> season 20 of "Survivor"
+    #   "Survivor 20x" -> season 20 of "Survivor"
+    #
+    if( $series =~ m{^(?P<prefix>.*)(?:season|series)\s*(?P<season>\d+)\s*$}i 
+            or $series =~ m{^\s*(?P<season>\d+)\s*$}i ){
+
+        $season = $+{season};
+
+        if( $+{prefix} =~ m/^\s*$/ ){
+            # No prefix, get series names from parent directory
+            ($series) = (getcwd() =~ m{/([^/]+)/[^/]+/?$});
+        }else{
+            $series = $+{prefix};
+        }
+
+        if( $exclude_series == 1 ){
+            # 1=Exclude if cwd is "Season X", 2=Exclude always
+            $exclude_series=2;
+        }
+    }
+    elsif( $series =~ m{^(?P<series>.*)\((?P<season>\d+)\)\s*$}i ){
+        $series = $+{series};
+        $season = $+{season};
+    }
+    elsif( $series =~ m{^(?P<series>.+?)(?P<season>\d+)x\s*$}i ){
+        $series = $+{series};
+        $season = $+{season};
+    }else{
+        print "Autodetecting season number failed\n";
+    }
 }
 
 # Sanitize series name, incase it happens to be a valid regular expression (for
@@ -2180,5 +2216,8 @@ sub readURLfile #{{{
 #
 #  v2.47 BUGFIX: --season wasn't overriding the auto-detection. Thanks Jørn
 #        Odberg for pointing this out!
+#
+#  v2.48 MAINTENANCE: Replace switch-statements with if..elsif..else
+#        statements, to make it easier to compile the Win32 binary
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
