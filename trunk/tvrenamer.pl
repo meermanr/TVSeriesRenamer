@@ -595,7 +595,7 @@ else
 		{
 			print $ANSIcyan."Current directory detected as anime.\n".$ANSInormal;
 
-			# Choose group behaviour is user has not
+			# Choose group behaviour if user has not
 			if( ! defined $nogroup ){ $nogroup = 0; }
 
 			print "Searching AniDB.net for \"$search_term\"... ";
@@ -618,7 +618,7 @@ else
 			}
 
 			# Strip attributes from non-<a> tags
-			s/<(?!a)([^ >]*)[^>]*\/?>/<\1>/g;
+            s/(?<=<)(?!label|a)([^ >]*)[^>]*/\1/g;
 	
 			# Save snapshot for debugging
 			if($debug){
@@ -662,9 +662,9 @@ else
 					print "Unique hit!\n";	
 					$raw_input = $rcache;	# Configure script to use $raw_input
 
-					# Strip attributes from tags, making format detection
+					# Strip attributes from non-a and non-labal tags, making format detection
 					# slightly more resistant to change
-					$raw_input =~ s/<([^ >]*)[^>]*\/?>/<\1>/g;
+			        $raw_input =~ s/(?<=<)(?!label|a)([^ >]*)[^>]*/\1/g;
 				}
 				else{
 					print "No results.\n";
