@@ -39,7 +39,7 @@ print "Updating --version info to %s (%s)" % (release, today)
 # escaped *in addition to* being a 'raw' string
 script, changes = re.subn(
     r'my \$version \= \"TV Series Renamer \d+\.\d+\\nReleased [^"]+\\n\"\; \# \{\{\{',
-    r"""my $version = "TV Series Renamer %s\\nReleased %s\\n; # {{{""" % (
+    r"""my $version = "TV Series Renamer %s\\nReleased %s\\n"; # {{{""" % (
             release,
             today,
             ),
