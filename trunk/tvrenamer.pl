@@ -1387,6 +1387,8 @@ my ($before, $after, $fileExt, $filePrefix, $fileSeason, $fileNum, $sfileNum, $f
 
 print $ANSIred;             # Set text colour to red
 
+my @missing = @name;
+
 foreach(@fileList){
 	$titles = \@name;       # Reference normal episode to begin with
 	$fileSeason = undef;	# Reset grabbed season, not all file names have this
@@ -1549,6 +1551,20 @@ foreach(@fileList){
 
 	if($postproc){eval $postproc;}
 
+	my $index = 0;
+	my $cnt = 0;
+	foreach(@missing)
+	{
+		if($$titles[$fileNum] eq $_)
+		{
+			$index = $cnt;
+		}
+
+		$cnt++;
+	}
+
+	delete $missing[$index];
+
 	$after = $_;
 	#End CONSTRUCT NEW FILENLAME }}}
 	##[ Interactive ]####################################################{{{
@@ -1585,6 +1601,32 @@ foreach(@fileList){
 	} #}}}
 } # End foreach(@fileList) (near top of FILENAME PARSER)
 ##[ CHECK NAME TRANSITIONS ]####################################################{{{
+
+{
+	$titles = \@name;       # Reference normal episode to begin with
+	foreach(@missing)
+	{
+		if($_ ne undef)
+		{
+			my $title = $_;
+
+			my $index = 0;
+			my $cnt = 0;
+			foreach(@$titles)
+			{
+				if($title eq $_)
+				{
+					$index = $cnt;
+				}
+
+				$cnt++;
+			}
+
+			print "\nWarning: Missing item - $season" . "x$index - $title";
+		}
+	}
+	print "\n";
+}
 
 print $ANSIred;             # Set text colour to red
 # Check if target file already exists or if duplicate target names exist, and take action
