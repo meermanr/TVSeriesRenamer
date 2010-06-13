@@ -12,10 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.49 BUGFIX: Comparison of $scheme was using '==' instead of 'eq'
-#        BUGFIX: Specifying input file / URL on command line wasn't working
-#        MAINTENANCE: Removed some redundant pattern matches in command-line parser
-#
 #  v2.50 MAINTENANCE: AniDB.info changed back to AniDB.net
 #        BUGFIX: AniDB.net data was always treated as compressed, even when not
 #        the case (recent version of Perl decompress fetched data
@@ -30,6 +26,9 @@
 #          SeriesName/Season 2
 #          SeriesName 2x
 #          SeriesName (2)
+#
+#  v2.52 FEATURE: List episodes missing from the user's collection with 
+#  --show-missing. (Thanks Baldur Karlsson!)
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -127,6 +126,7 @@ my $reversible   = undef; # Disabled
 my $debug        = undef; # Disabled
 my $ANSIcolour   = 1;     # Use colour
 my $cleanup      = undef; # Disabled
+my $show_missing = 0;     # 0: Don't show, 1: List missing episodes
 
 if($ANSIcolour && $ENV{'TERM'} eq '' && $INC{'Win32/Console/ANSI.pm'} eq ''){print "You appear to be using MS-DOS without the Win32::Console::ANSI module, colour disabled!\n (See script header for a workaround)\n\n"; $ANSIcolour = 0;}
 
@@ -225,6 +225,7 @@ Specifying data to use:
 
 Choosing how to interact:
  --detailed         Show 'before -> after' (not just 'after') in proposal
+ --show-missing     List episodes not present in your collection
  --interactive      Manually select each change to be applied
  --unattended       Assume NO for all user prompts except \"Make changes?\"
  --nofilter         Don't filter file extensions by
@@ -316,6 +317,7 @@ if($#ARGV ne -1)
 		elsif( $arg =~ /^--gap=(.*)$/i )       {$gap = $1;}
 		elsif( $arg =~ /^--separator=(.*)$/i ) {$separator = $1;}
 		elsif( $arg =~ /^--detailed$/i )     {$detailedView = 1;}
+		elsif( $arg =~ /^--show-missing$/i ) {$show_missing = 1;}
 		elsif( $arg =~ /^--interactive$/i )  {$interactive = 1;}
 		elsif( $arg =~ /^--unattended$/i )   {$unattended = 1;}
 		elsif( $arg =~ /^--cache$/i )        {$nocache = 0;}
@@ -1387,7 +1389,11 @@ my ($before, $after, $fileExt, $filePrefix, $fileSeason, $fileNum, $sfileNum, $f
 
 print $ANSIred;             # Set text colour to red
 
-my @missing = @name;
+# Assume we are missing all episodes until proven otherwise
+# %missing{$epNum} -> $title
+my %missing = ();
+my $i = 0;
+foreach (@name) { $missing{$i++} = $_; }
 
 foreach(@fileList){
 	$titles = \@name;       # Reference normal episode to begin with
@@ -1551,19 +1557,9 @@ foreach(@fileList){
 
 	if($postproc){eval $postproc;}
 
-	my $index = 0;
-	my $cnt = 0;
-	foreach(@missing)
-	{
-		if($$titles[$fileNum] eq $_)
-		{
-			$index = $cnt;
-		}
-
-		$cnt++;
-	}
-
-	delete $missing[$index];
+    # Remove current episode(s) from list of missing episodes
+    delete $missing{$fileNum};
+    delete $missing{$fileNum2};
 
 	$after = $_;
 	#End CONSTRUCT NEW FILENLAME }}}
@@ -1602,32 +1598,6 @@ foreach(@fileList){
 } # End foreach(@fileList) (near top of FILENAME PARSER)
 ##[ CHECK NAME TRANSITIONS ]####################################################{{{
 
-{
-	$titles = \@name;       # Reference normal episode to begin with
-	foreach(@missing)
-	{
-		if($_ ne undef)
-		{
-			my $title = $_;
-
-			my $index = 0;
-			my $cnt = 0;
-			foreach(@$titles)
-			{
-				if($title eq $_)
-				{
-					$index = $cnt;
-				}
-
-				$cnt++;
-			}
-
-			print "\nWarning: Missing item - $season" . "x$index - $title";
-		}
-	}
-	print "\n";
-}
-
 print $ANSIred;             # Set text colour to red
 # Check if target file already exists or if duplicate target names exist, and take action
 for( my $i = 0; $i < @a; $i++ )
@@ -1657,9 +1627,23 @@ for( my $i = 0; $i < @a; $i++ )
 
 print $ANSInormal;      # Reset text colour
 
-if ($warnings eq 0){ print "[Done]"; } else{ print "\n$warnings warning(s)"; }
+if ($warnings eq 0){ print "[Done]\n"; } else{ print "\n$warnings warning(s)"; }
 if ($dubious_count ne 0 ){ print "\n$dubious_count dubious name extraction(s)"; }
 # End CHECK NAME TRANSITIONS }}}
+
+if($show_missing){
+    # Gotta catch 'em all!
+    print $ANSIcyan;
+    print "\n";
+    foreach my $epNum ( sort {$a <=> $b} keys %missing ) {
+        my $title = $missing{$epNum};
+        if ($title){
+            print "Info: Your collection is missing episode $epNum: $title\n";
+        }
+    }
+    print $ANSInormal;
+}
+
 
 # Sort proposed changes by destination name for an improved user-experience
 my %changes = @a;
@@ -2261,5 +2245,9 @@ sub readURLfile #{{{
 #
 #  v2.48 MAINTENANCE: Replace switch-statements with if..elsif..else
 #        statements, to make it easier to compile the Win32 binary
+#
+#  v2.49 BUGFIX: Comparison of $scheme was using '==' instead of 'eq'
+#        BUGFIX: Specifying input file / URL on command line wasn't working
+#        MAINTENANCE: Removed some redundant pattern matches in command-line parser
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
