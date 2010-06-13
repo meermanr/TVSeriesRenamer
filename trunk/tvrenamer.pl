@@ -27,8 +27,12 @@
 #          SeriesName 2x
 #          SeriesName (2)
 #
-#  v2.52 FEATURE: List episodes missing from the user's collection with 
-#  --show-missing. (Thanks Baldur Karlsson!)
+#  v2.52 FEATURE: List episodes missing from the user's collection with
+#        --show-missing. (Thanks Baldur Karlsson!)
+#        MAINTENANCE: --include_series and --exclude_series became 
+#        --include-series and --exclude-series (underscore became hyphen). Old 
+#        option names are still accepted (for compatibility with .tvrenamerrc 
+#        files)
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -199,8 +203,8 @@ Formatting options:
 Specifying data to use:
  --season=X         Override season detection
  --series=X         Uses X as a prefix (enclose in quotes for best results)
- --exclude_series   Don't include the series name in the new filename, ever
- --include_series   Overrides the above setting, incase you set it default
+ --exclude-series   Don't include the series name in the new filename, ever
+ --include-series   Overrides the above setting, incase you set it default
  --chdir=X          Specify a directory to rename. If specified multiple times
                     all but last are ignored.
 
@@ -303,8 +307,8 @@ if($#ARGV ne -1)
 										print "Switching to directory $1\n"; chdir($1);
 										($series) = (getcwd() =~ /\/([^\/]+)$/);
 									}
-		elsif( $arg =~ /^--include_series$/i ) {$exclude_series = 0;}
-		elsif( $arg =~ /^--exclude_series$/i ) {$exclude_series = 2;}
+		elsif( $arg =~ /^--include[-_]series$/i ) {$exclude_series = 0;}
+		elsif( $arg =~ /^--exclude[-_]series$/i ) {$exclude_series = 2;}
 		elsif( $arg =~ /^--season=(.*)$/i )    {$season = $1; $implicit_season = 2;}
 		elsif( $arg =~ /^--autoseries$/i )   {$autoseries = 1;}
 		elsif( $arg =~ /^--noautoseries$/i ) {$autoseries = 0;}
