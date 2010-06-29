@@ -1205,6 +1205,14 @@ else
 				
 				foreach(@input)
 				{
+					# First remove any <span> tags and anything they contain 
+					# (links to Trailers etc)
+					s!<span[^>]*>.*?</span>!!g;
+
+					# Then remove the <a> tags themselves (but *not* their 
+					# contents!)
+					s!</?a[^>]*>!!g;
+
 					# Episodes with airdates
 					if( ($num, $epTitle) = ($_ =~ /\s+$season-(..).*\d+ [A-Z][a-z]+ \d+ \s*(.*)$/) )
 					{
