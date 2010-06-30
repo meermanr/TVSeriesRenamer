@@ -12,14 +12,14 @@ if "--beta" in sys.argv[1:]:
     beta_release = True
 
 
-p = os.popen("bash -c 'pushd .. >/dev/null; git ls-files -m trunk/tvrenamer.pl; popd >/dev/null'")
+p = os.popen("git ls-files -m tvrenamer.pl")
 output = p.read()
 p.close()
 if len(output) > 0:
     print "tvrenamer.pl has uncommitted modifications!"
     exit(1);
 
-with file("../trunk/tvrenamer.pl", "r") as fh:
+with file("tvrenamer.pl", "r") as fh:
     script = fh.read()
 
 versions = []
@@ -54,7 +54,7 @@ if changes > 1:
     print "Release script got confused by multiple '$version' lines in tvrenamer.pl, please update it."
     exit(3)
 
-with file("../trunk/tvrenamer.pl", "w") as fh:
+with file("tvrenamer.pl", "w") as fh:
     fh.write(script)
 
 if beta_release:
@@ -63,12 +63,12 @@ else:
     dst = "tvrenamer.pl"
 
 print "Uploading %s..." % dst
-retval = os.system("rsync -P ../trunk/tvrenamer.pl robmeerman.co.uk:public_html/downloads/%s" % dst)
+retval = os.system("rsync -P tvrenamer.pl robmeerman.co.uk:public_html/downloads/%s" % dst)
 print "Done"
 
 if retval == 0:
     print "Upload successful, tagging release"
-    os.system("git add -u ../trunk/tvrenamer.pl")
+    os.system("git add -u tvrenamer.pl")
     if beta_release:
         os.system("git commit -m 'Beta %s'" % release)
         os.system("git tag -f %s" % release)
