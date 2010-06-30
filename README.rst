@@ -56,7 +56,7 @@ your command line to get results as follows::
     S04E02 - Six of One (2).mkv
     S04E03 - The Ties That Bind.mkv
 
-And if you hate spaces in filenames because you're a Unix/Solaris vetern, you 
+And if you hate spaces in filenames because you're a Unix/Solaris veteran, you 
 can use ``--unixy`` and ``--separator=_`` to get the following::
 
     S04E02_Six_of_One_(2).mkv
