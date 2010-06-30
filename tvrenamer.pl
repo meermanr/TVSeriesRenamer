@@ -12,11 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.50 MAINTENANCE: AniDB.info changed back to AniDB.net
-#        BUGFIX: AniDB.net data was always treated as compressed, even when not
-#        the case (recent version of Perl decompress fetched data
-#        automatically). Now uses proper detection.
-#
 #  v2.51 MAINTENANCE: AniDB scraper updated in sympathy with site changes
 #        ENHANCEMENT: Season number detection now supports following directory 
 #        name / layouts:
@@ -33,6 +28,13 @@
 #        --include-series and --exclude-series (underscore became hyphen). Old 
 #        option names are still accepted (for compatibility with .tvrenamerrc 
 #        files)
+#
+#  v2.53 MAINTENANCE:
+#            EpGuides support updated to cope with annoying links to trailers / 
+#            recaps etc which now appear as <spans> within the episode titles.  
+#            Thanks to Frederic and Jasper for bringing this to my attention.
+#        MAINTENANCE:
+#            Added m4v to the filename filter (thanks Frederic!)
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -2261,5 +2263,10 @@ sub readURLfile #{{{
 #  v2.49 BUGFIX: Comparison of $scheme was using '==' instead of 'eq'
 #        BUGFIX: Specifying input file / URL on command line wasn't working
 #        MAINTENANCE: Removed some redundant pattern matches in command-line parser
+#
+#  v2.50 MAINTENANCE: AniDB.info changed back to AniDB.net
+#        BUGFIX: AniDB.net data was always treated as compressed, even when not
+#        the case (recent version of Perl decompress fetched data
+#        automatically). Now uses proper detection.
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
