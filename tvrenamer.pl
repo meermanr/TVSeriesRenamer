@@ -12,16 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.51 MAINTENANCE: AniDB scraper updated in sympathy with site changes
-#        ENHANCEMENT: Season number detection now supports following directory 
-#        name / layouts:
-#
-#          SeriesName/2
-#          SeriesName/Series 2
-#          SeriesName/Season 2
-#          SeriesName 2x
-#          SeriesName (2)
-#
 #  v2.52 FEATURE: List episodes missing from the user's collection with
 #        --show-missing. (Thanks Baldur Karlsson!)
 #        MAINTENANCE: --include_series and --exclude_series became 
@@ -35,6 +25,10 @@
 #            Thanks to Frederic and Jasper for bringing this to my attention.
 #        MAINTENANCE:
 #            Added m4v to the filename filter (thanks Frederic!)
+#
+#  v2.54 MAINTENANCE:
+#            Fix EpGuides.com scraper - it sometimes missed the first character 
+#            of episode titles (bad regexp)
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -911,12 +905,6 @@ else
 						if($debug){print $ANSIcyan."Compressed data detected\n".$ANSInormal;}
 						$_ = Compress::Zlib::memGunzip($_);	
 					}
-
-					# XXX
-					# Removed in v2.41, was causing problems with epguides.com, but didn't seem to preclude correct use
-					# of AniDB...
-					# Probably obsolete since "binmode(STDOUT, ':utf8')" was added to the top of the script...
-					#$_ = Encode::decode 'UTF-8', $_;
 				}
 				else{
 					print $ANSIred."Can't fetch \"$inputFile\", please check this URL in a browser\n$ANSIyellow Consider specifying an URL on the command-line. Error was: $!".$ANSInormal."\n";
@@ -1211,12 +1199,12 @@ else
 					# (links to Trailers etc)
 					s!<span[^>]*>.*?</span>!!g;
 
-					# Then remove the <a> tags themselves (but *not* their 
-					# contents!)
-					s!</?a[^>]*>!!g;
-
-					# Episodes with airdates
-					if( ($num, $epTitle) = ($_ =~ /\s+$season-(..).*\d+ [A-Z][a-z]+ \d+ \s*(.*)$/) )
+                    if( ($num, $epTitle) = ($_ =~ /^\d+\s+$season-(\d+)\s+.*<a[^>]*>(.*?)<\/a>/) )
+                    {
+                        check_and_push($epTitle, \@name, $num);
+                    }
+                    # Episodes with airdates
+					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..).*\d+ [A-Z][a-z]+ \d+ \s*(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
 						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
@@ -2268,5 +2256,15 @@ sub readURLfile #{{{
 #        BUGFIX: AniDB.net data was always treated as compressed, even when not
 #        the case (recent version of Perl decompress fetched data
 #        automatically). Now uses proper detection.
+#
+#  v2.51 MAINTENANCE: AniDB scraper updated in sympathy with site changes
+#        ENHANCEMENT: Season number detection now supports following directory 
+#        name / layouts:
+#
+#          SeriesName/2
+#          SeriesName/Series 2
+#          SeriesName/Season 2
+#          SeriesName 2x
+#          SeriesName (2)
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
