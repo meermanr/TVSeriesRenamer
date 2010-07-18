@@ -20,13 +20,27 @@ grBaseDir = os.path.abspath( os.path.dirname( __file__ ) )
 grTVRenamer = os.path.abspath( os.path.join( grBaseDir, "..", "tvrenamer.pl" ) )
 
 def iter_tests():
-    for rDir, lDirs, lFiles in os.walk(grBaseDir):
-        if "EXPECTED_RESULT" in lFiles:
-            yield rDir
+    import sys
+
+    if sys.argv[1:]:
+        lSearchDirs = list()
+        for rArg in sys.argv[1:]:
+            rDir = os.path.abspath( rArg )
+            if not os.path.exists( rDir ):
+                print "WARNING: Ignoring non-existant directory %r" % rDir
+                continue
+            lSearchDirs.append( rDir )
+    else:
+        lSearchDirs = [grBaseDir]
+
+    for rSearchDir in lSearchDirs:
+        for rDir, lDirs, lFiles in os.walk(rSearchDir):
+            if "EXPECTED_RESULT" in lFiles:
+                yield rDir
 
 def run_test(rTestDir):
     sPH = sp.Popen(
-            grTVRenamer,
+            "%s --cache" % grTVRenamer,
             shell=True,
             stdin=sp.PIPE,
             stdout=sp.PIPE,
@@ -53,8 +67,11 @@ def run_test(rTestDir):
 
     if iChecks == iPasses:
         print "    OK"
+    else:
+        print "    %s" % ("#" * 70)
+        print "    %s" % rSTDOUT.replace("\n", "\n    ")
 
 if __name__ == "__main__":
     for rTestDir in iter_tests():
-        print os.path.basename(rTestDir)
+        print rTestDir[len(grBaseDir):]
         run_test(rTestDir)
