@@ -37,8 +37,15 @@ print "Updating --version info to %s (%s)" % (release, today)
 
 # Note that the replacement string is processed by re.subn, and so must be 
 # escaped *in addition to* being a 'raw' string
+pattern = '^%s\d+\.\d+%s[^"]+%s$' % (
+    re.escape(r"""my $version = "TV Series Renamer v"""),
+    re.escape(r"""\nReleased """),
+    re.escape(r"""\n"; # {{{"""),
+    )
+pattern = re.compile(pattern, re.MULTILINE)
+
 script, changes = re.subn(
-    r'my \$version \= \"TV Series Renamer \d+\.\d+\\nReleased [^"]+\\n\"\; \# \{\{\{',
+    pattern,
     r"""my $version = "TV Series Renamer %s\\nReleased %s\\n"; # {{{""" % (
             release,
             today,
