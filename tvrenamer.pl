@@ -2267,4 +2267,4 @@ sub readURLfile #{{{
 #          SeriesName 2x
 #          SeriesName (2)
 #
-# vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4:
+# vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4 noet:
