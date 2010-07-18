@@ -29,6 +29,21 @@
 #  v2.54 MAINTENANCE:
 #            Fix EpGuides.com scraper - it sometimes missed the first character 
 #            of episode titles (bad regexp)
+#        FEATURE:
+#            Double episodes' titles are merged so that their common prefix 
+#            does not appear. For instance, the following two episodes:
+#
+#              Camdenites: Part 1
+#              Camdenites: Part 2
+#
+#            Used to become:
+#
+#              Camdenites: Part 1 - Camdenites: Part 2
+#
+#            Now it becomes:
+#
+#              Camdenites: Part 1 and 2
+#
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
@@ -1519,7 +1534,8 @@ foreach(@fileList){
 			my $S = ($titles == \@sname) ? 'S' : '' ;                           # "Special episode" prefix
 			my $P = ($titles == \@pname) ? 'P' : '' ;                           # "Pilot episode" prefix
 			my $dispNum = $S.$P.$dispNum . ($fileNum2 ? "-".$S.$fileNum2 : ''); # Compound file number (special prefix & double episode)
-			my $epTitle2 = $fileNum2 ? " - ".$$titles[$fileNum2] : '' ;         # Double episode's second title
+			my $epTitle1 = $$titles[$fileNum];									# Episode title, or first of two titles in a double episode
+			my $epTitle2 = $fileNum2 ? $$titles[$fileNum2] : '' ;				# Double episode's second title
 			my $epNum;
 			my $local_gap = $gap;
 			for my $arg ($scheme){
@@ -1532,6 +1548,33 @@ foreach(@fileList){
 				else          {print "\nUnknown scheme '$scheme'! Try \"$0 --help\" for list of valid schemes.\n"; exit 1;}
 			}
 			if($filePrefix eq ''){$local_gap = undef;}
+
+			# Merge double-episode titles
+			my $epTitle = $epTitle1;
+			if($epTitle2){
+				my $max = 0;
+
+				# Convert string to arrays of characters
+				my @first = split //, $epTitle1;
+				my @second = split //, $epTitle2;
+
+				if( length $epTitle2 > length $epTitle1 ){
+					$max = length $epTitle2;
+				}else{
+					$max = length $epTitle1;
+				}
+
+				my $common = 0;
+				for my $i (0..$max){
+					if( @first[$i] eq @second[$i] ){
+						$common = $i;
+					}else{
+						last;
+					}
+				}
+
+				$epTitle = $epTitle1 . " and " . substr($epTitle2, $common+1);
+			}
 			
 			# Print all source data before compiling new name
 			if($debug && ($before ne $_)){
@@ -1547,7 +1590,7 @@ foreach(@fileList){
 			}
 			
 			# Compile new name
-			$_ = "$filePrefix$local_gap$epNum$separator$$titles[$fileNum]$epTitle2$group.$fileExt";
+			$_ = "$filePrefix$local_gap$epNum$separator$epTitle$group.$fileExt";
 
 		}else{
 			print "$ANSIred\nNo input corresponds to $ANSIbold\"$before\"$ANSInormal $ANSIred(treated as ep ", $titles==\@sname ? "S" : "", "$fileNum), ignoring.$ANSInormal";

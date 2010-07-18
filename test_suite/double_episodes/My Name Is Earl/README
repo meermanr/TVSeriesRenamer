@@ -1,0 +1,24 @@
+Some series have special double-length episodes, or two episodes are broadcast 
+back-to-back. These are often encoded as a single file covering both episodes.
+
+This tests that double-episode numbers are detected by the script, and that any 
+common prefix only appears once in the proposed filename.
+
+Consider the following entries taken from EpGuides.com/MyNameIsEarl:
+
+    48     3-01      301       27/Sep/07   My Name Is Inmate 28301-016, Part 1
+    49     3-02      302       27/Sep/07   My Name Is Inmate 28301-016, Part 2
+
+A file which represents both of these episodes should probably be titled as:
+
+    My Name Is Inmate 28301-016, Part 1 and 2
+
+Note that numeric suffixes must not be assumed:
+
+    34     2-10      2ALJ10    07/Dec/06   South Of The Border, Part Uno
+    35     2-11      2ALJ11    07/Dec/06   South Of The Border, Part Dos
+
+Which ought to create the title:
+
+    South Of The Border, Part Uno and Dos
+
