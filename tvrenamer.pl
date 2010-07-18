@@ -29,6 +29,10 @@
 #  v2.54 MAINTENANCE:
 #            Fix EpGuides.com scraper - it sometimes missed the first character 
 #            of episode titles (bad regexp)
+#        MAINTENANCE:
+#            Better compatability with EpGuides.com - they remove "The" and "A" 
+#            from series titles when creating their URLs. This script did not 
+#            know about "A" until now.
 #        FEATURE:
 #            Double episodes' titles are merged so that their common prefix 
 #            does not appear. For instance, the following two episodes:
