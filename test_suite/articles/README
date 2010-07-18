@@ -1,0 +1,5 @@
+These tests assert that articles, such as "A" and "The" are:
+
+    * Optional
+    * Removed from the beginnig of series titles
+    * Removed from the end of series title

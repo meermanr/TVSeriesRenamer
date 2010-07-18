@@ -739,7 +739,9 @@ else
 			if($site eq Site_EpGuides)
 			{
 				$format = Format_EpGuides;
-				my  ($shortSeries) = ($search_term =~ /^(?:The\s+)?(.*?)\s*(?:, The)?$/i);
+				# Strip articles, such as "A" and "The" from series titles, as 
+				# this is what EpGuides does.
+				my  ($shortSeries) = ($search_term =~ /^(?:(?:A|The)\s+)?(.*?)\s*(?:, (?:A|The))?$/i);
 				$shortSeries =~ tr/'//d;
 				$shortSeries =~ s/\s+//g;
 				$inputFile = "http://epguides.com/$shortSeries/";
