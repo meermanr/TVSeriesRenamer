@@ -1665,7 +1665,7 @@ for( my $i = 0; $i < @a; $i++ )
 		if($a[$i] eq $a[$j] && $b[$i] ne $b[$j])
 		{
 			# Warn user, and delete both entries
-			print "\nDuplicate target \"$a[$i]\" for files \n     \"$b[$i]\" and \n     \"$b[$j]\", not renmaing either!\n";
+			print "\nDuplicate target \"$a[$i]\" for files \n     \"$b[$i]\" and \n     \"$b[$j]\", not renaming either!\n";
 			$warnings++;
 			$b[$i] = undef;
 			$a[$i] = undef;
