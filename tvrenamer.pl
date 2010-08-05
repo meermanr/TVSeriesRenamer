@@ -12,13 +12,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.52 FEATURE: List episodes missing from the user's collection with
-#        --show-missing. (Thanks Baldur Karlsson!)
-#        MAINTENANCE: --include_series and --exclude_series became 
-#        --include-series and --exclude-series (underscore became hyphen). Old 
-#        option names are still accepted (for compatibility with .tvrenamerrc 
-#        files)
-#
 #  v2.53 MAINTENANCE:
 #            EpGuides support updated to cope with annoying links to trailers / 
 #            recaps etc which now appear as <spans> within the episode titles.  
@@ -47,6 +40,11 @@
 #            Now it becomes:
 #
 #              Camdenites: Part 1 and 2
+#
+#  v2.55 MAINTENANCE:
+#			 Fixed typo in user-facing message.
+#		 MAINTENANCE:
+#			 Added *.divx to supported extensions
 #
 #
 # TODO: {{{1
@@ -116,7 +114,7 @@ my $format       = Format_AutoFetch;
 my $site         = Site_EpGuides;	# Preferred site search for title data. NB: These are tried in the order they are listed above
 my $search_anime = undef; 			# Search TV sites
 
-my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|m4v|mp4|mpeg4|mov|srt|sub|ssa|smi|sami|txt)$';
+my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|m4v|mp4|mpeg4|mov|divx|srt|sub|ssa|smi|sami|txt)$';
 my ($series)     = (getcwd() =~ /\/([^\/]+)$/);     # Grab current dir name, discard rest of path
 my $exclude_series     = 1;	# 0=Always include series name, 1=Exclude if cwd is "Series X", 2=Always exclude
 my $autoseries   = 0;	# Do not automatically use scraped series name
@@ -2315,5 +2313,13 @@ sub readURLfile #{{{
 #          SeriesName/Season 2
 #          SeriesName 2x
 #          SeriesName (2)
+#
+#
+#  v2.52 FEATURE: List episodes missing from the user's collection with
+#        --show-missing. (Thanks Baldur Karlsson!)
+#        MAINTENANCE: --include_series and --exclude_series became 
+#        --include-series and --exclude-series (underscore became hyphen). Old 
+#        option names are still accepted (for compatibility with .tvrenamerrc 
+#        files)
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4 noet:
