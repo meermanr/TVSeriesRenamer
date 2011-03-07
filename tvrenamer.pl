@@ -382,16 +382,16 @@ if( $implicit_season != 2 ){
     #   "Survivor (20)" -> season 20 of "Survivor"
     #   "Survivor 20x" -> season 20 of "Survivor"
     #
-    if( $series =~ m{^(?P<prefix>.*)(?:season|series)\s*(?P<season>\d+)\s*$}i 
-            or $series =~ m{^\s*(?P<season>\d+)\s*$}i ){
+    if( $series =~ m{^(.*)(?:season|series)\s*(\d+)\s*$}i 
+            or $series =~ m{^()\s*(\d+)\s*$}i ){
 
-        $season = $+{season};
+        $season = $2;
 
-        if( $+{prefix} =~ m/^\s*$/ ){
+        if( $1 =~ m/^\s*$/ ){
             # No prefix, get series names from parent directory
             ($series) = (getcwd() =~ m{/([^/]+)/[^/]+/?$});
         }else{
-            $series = $+{prefix};
+            $series = $1;
         }
 
         if( $exclude_series == 1 ){
@@ -399,13 +399,13 @@ if( $implicit_season != 2 ){
             $exclude_series=2;
         }
     }
-    elsif( $series =~ m{^(?P<series>.*)\((?P<season>\d+)\)\s*$}i ){
-        $series = $+{series};
-        $season = $+{season};
+    elsif( $series =~ m{^(.*)\((\d+)\)\s*$}i ){
+        $series = $1;
+        $season = $2;
     }
-    elsif( $series =~ m{^(?P<series>.+?)(?P<season>\d+)x\s*$}i ){
-        $series = $+{series};
-        $season = $+{season};
+    elsif( $series =~ m{^(.+?)(\d+)x\s*$}i ){
+        $series = $1;
+        $season = $2;
     }else{
         print "Autodetecting season number failed\n";
     }
@@ -1051,10 +1051,10 @@ else
                     # </tr>
                     <tr>\s*
                         <td>\s*
-                            <a\shref="animedb.pl\?show=ep&amp;eid=\d+">\s*(?P<num>[sS]?\d+)\s*</a>\s*
+                            <a\shref="animedb.pl\?show=ep&amp;eid=\d+">\s*([sS]?\d+)\s*</a>\s*
                         </td>\s*
                         <td>\s*
-                            <label\s*title="(?P<altTitle>[^"]*)">(?P<epTitle>[^<]*)
+                            <label\s*title="([^"]*)">([^<]*)
                             </label>\s*
                         </td>\s*
                         <td>[^<]*
@@ -1063,10 +1063,10 @@ else
                         </td>\s*
                     </tr>
                 }xg ){
-                    if(($snum) = ($+{num} =~ /S(\d+)/i)){              # Detect Special
-                        check_and_push($+{epTitle}, \@sname, $snum);
+                    if(($snum) = ($1 =~ /S(\d+)/i)){              # Detect Special
+                        check_and_push($3, \@sname, $snum);
                     }else{
-                        check_and_push($+{epTitle}, \@name, $+{num});
+                        check_and_push($3, \@name, $1);
                     }
 				}
 			} # End case Format_URL_AniDB }}}
