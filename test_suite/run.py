@@ -19,7 +19,15 @@ import subprocess as sp
 grBaseDir = os.path.abspath( os.path.dirname( __file__ ) )
 grTVRenamer = os.path.abspath( os.path.join( grBaseDir, "..", "tvrenamer.pl" ) )
 
+# -----------------------------------------------------------------------------
 def iter_tests():
+    """
+    Find tests in directories adjacent to this script, or specified as script 
+    arguments.
+
+    Any directory containing an EXPECTED_RESULT file (which contains the STDOUT 
+    a successful run of the test will produce).
+    """
     import sys
 
     if sys.argv[1:]:
@@ -38,9 +46,29 @@ def iter_tests():
             if "EXPECTED_RESULT" in lFiles:
                 yield rDir
 
+# -----------------------------------------------------------------------------
 def run_test(rTestDir):
+    """
+    Run tvrenamer.pl within ``rTestDir`` (which is assumed to be in a clean 
+    state) and checkout the STDOUT produced matches that of EXPECTED_RESULT.
+
+    Files used:
+
+        * EXPECTED_RESULT: Contents are compared against STDOUT, test has 
+          failed if they differ.
+
+        * OPTIONS: Text-file containing tvrenamer.pl options, as they would be 
+          specified on a command line.
+    """
+    rOptsFile = os.path.join( rTestDir, "OPTIONS" )
+    rOpts = ""
+
+    if os.path.exists( rOptsFile ):
+        with file( rOptsFile ) as sFH:
+            rOpts = sFH.read().strip()
+
     sPH = sp.Popen(
-            "%s --cache" % grTVRenamer,
+            "%s --cache %s" % (grTVRenamer, rOpts),
             shell=True,
             stdin=sp.PIPE,
             stdout=sp.PIPE,
@@ -71,6 +99,7 @@ def run_test(rTestDir):
         print "    %s" % ("#" * 70)
         print "    %s" % rSTDOUT.replace("\n", "\n    ")
 
+# -----------------------------------------------------------------------------
 if __name__ == "__main__":
     for rTestDir in iter_tests():
         print rTestDir[len(grBaseDir):]

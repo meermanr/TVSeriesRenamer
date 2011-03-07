@@ -1607,8 +1607,8 @@ foreach(@fileList){
 	if($postproc){eval $postproc;}
 
     # Remove current episode(s) from list of missing episodes
-    delete $missing{$fileNum};
-    delete $missing{$fileNum2};
+    delete $missing{int $fileNum};
+    delete $missing{int $fileNum2};
 
 	$after = $_;
 	#End CONSTRUCT NEW FILENLAME }}}
