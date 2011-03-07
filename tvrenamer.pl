@@ -628,7 +628,7 @@ else
 
 		# First check if we have a fresh .cache file we can use instead
 		if( -e ".cache" && -M ".cache" < (15/60/24)){
-			open(CACHE, "< .cache");
+			open(CACHE, "<:utf8", ".cache");
 			$_ = <CACHE>;
 			close(CACHE);
 			($inputFile) = ($_ =~ /(^.*$)/m);	# First line contains URL
@@ -871,7 +871,7 @@ else
 				print "Checking freshness of .cache... ";
 				if($debug){print "\nCache is " . (-M ".cache") . " days old. (15min = " . 15/60/24 . ")\n";}
 				if(-M ".cache" < (15/60/24)){       # Check if cache is 15min old or fresher (measured in days)
-					open(CACHE, "< .cache");
+					open(CACHE, "<:utf8", ".cache");
 					$_ = <CACHE>;
 					close(CACHE);
 					
@@ -930,8 +930,8 @@ else
 				}
 
 				unless($nocache){
-					open(CACHE, "> .cache");
-					print CACHE $inputFile."\n";
+					open(CACHE, ">:utf8", ".cache");
+					print CACHE $inputFile, "\n";
 					print CACHE $_;
 					close(CACHE);
 				}
@@ -963,7 +963,7 @@ else
 	else	#{{{
 	{
 		my $stdin;
-		binmode(STDIN, "utf8");
+		binmode(STDIN, ":utf8");
 		while(<STDIN>){$stdin .= $_}
 		$_ = $stdin;
 	}	#}}}
