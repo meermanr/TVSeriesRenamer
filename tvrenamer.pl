@@ -761,6 +761,8 @@ else
 				my  ($shortSeries) = ($search_term =~ /^(?:(?:A|The)\s+)?(.*?)\s*(?:, (?:A|The))?$/i);
 				$shortSeries =~ tr/'//d;
 				$shortSeries =~ s/\s+//g;
+				$shortSeries =~ tr/,//d;
+				$shortSeries =~ tr/!//d;
 				$inputFile = "http://epguides.com/$shortSeries/";
 			}    
 			# }}}
