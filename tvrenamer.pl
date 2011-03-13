@@ -42,14 +42,19 @@
 #              Camdenites: Part 1 and 2
 #
 #  v2.55 MAINTENANCE:
-#			 Fixed typo in user-facing message.
-#		 MAINTENANCE:
-#			 Added *.divx to supported extensions
+#            Fixed typo in user-facing message.
+#            Added *.divx to supported extensions
+#            Fixed #2, #5, and #6 on 
+#            https://github.com/meermanr/TVSeriesRenamer/issues
+#
+#              #2: Script is not compatible with Perl v5.8.8
+#              #5: UTF-8 issues
+#              #6: Need to strip commas from show name when querying epguides
 #
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
-#	* Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
+#   * Hellsing 2006 doesn't parse properly: http://anidb.net/perl-bin/animedb.pl?show=anime&aid=3296
 #   * Update Default Settings section to explain the use of a preferences file,
 #     the preferred way of setting defaults (pardon the pun)
 #   * Test Unicode support properly, and see if a workaround for Win32 source
@@ -2156,9 +2161,9 @@ sub readURLfile #{{{
 #   - Added "--search=X" argument. Can be either "anime" or "tv", and defines which
 #     set of sites to search.
 #   - Extended AutoFetch to search AniDB.info
-#	- Added Unicode support, *even for windows*, which was a non-trivial task as google will
-#	  assert. So now HTML Entities are represented as Unicode (EG: "&#9829;" -> "♥"). Tested
-#	  with ASCII containing HTML Entities and UTF-8 containing Kanji.
+#   - Added Unicode support, *even for windows*, which was a non-trivial task as google will
+#     assert. So now HTML Entities are represented as Unicode (EG: "&#9829;" -> "♥"). Tested
+#     with ASCII containing HTML Entities and UTF-8 containing Kanji.
 #
 #  v2.21 Fixed bug AutoFetch mode which caused many searches to fail with AniDB {{{2 
 #  (spaces were not being converted to %20 when sending data to the website).
@@ -2200,44 +2205,44 @@ sub readURLfile #{{{
 #         production code.
 #
 #  v2.30 COMPATABILITY: Heirarchical paths (EG "24/Season 6") are now a bit {{{2
-#		 fuzzier, allowing "24/Season.6" and the like
+#        fuzzier, allowing "24/Season.6" and the like
 #
 #  v2.31 FLEXABILITY: --preproc evaluation moved earlier, to allow it to {{{2
-#		 manipulate the filename _before_ file extensions are detected.
-#		 BUGFIX: Now prints "Reading preferences" message when doing so
-#		 MAINTENANCE: Updated AniDB parser in sympathy with AniDB.info's
-#		 changes. AniDB search facility also updated.
+#        manipulate the filename _before_ file extensions are detected.
+#        BUGFIX: Now prints "Reading preferences" message when doing so
+#        MAINTENANCE: Updated AniDB parser in sympathy with AniDB.info's
+#        changes. AniDB search facility also updated.
 #
 #  v2.32 BUGFIX: Now prints newlines at end of messages {{{2
-#		 BUGFIX: Re-worked AniDB parser so that alternative episode titles are
-#		 optional- this was causing some pages to be percieved as blank by the
-#		 script.
-#		 BUGFIX: Updated AniDB parsers in sympathy with changes to AniDB.info
-#		 layout changes
-#		 FEATURE: Added new scheme: XYY. This creates output suitable for the
-#		 --dubious option. E.g. S01E08 -> 108
+#        BUGFIX: Re-worked AniDB parser so that alternative episode titles are
+#        optional- this was causing some pages to be percieved as blank by the
+#        script.
+#        BUGFIX: Updated AniDB parsers in sympathy with changes to AniDB.info
+#        layout changes
+#        FEATURE: Added new scheme: XYY. This creates output suitable for the
+#        --dubious option. E.g. S01E08 -> 108
 #
 #  v2.33 FEATURE: Added new --scheme variant: SXXEYY. I.e. an upper-case
-#		 alternative to the existing sXXeYY
+#        alternative to the existing sXXeYY
 #
 #  v2.34 BUGFIX: Series names which contained punctuation would confuse (or
-#		  crash!) the script if they happened to resemble a regular expression.
-#		  This also prevented it from being able to differentiate between
-#		  numbers in the series title and a file's episode number.
-#		  BUGFIX: Empty lines in config files no longer upset the script
-#		  BUGFIX: TV.com search fixed - the site's HTML layout changed a bit too
-#		  much
-#		  BUGFIX: Shortcut finding is now case-insensitive, so fixed for
-#		  MacOS/Linux/BSD
-#		  FEATURE: Now understands double-episode filenames of the form
-#		  s01.e08-e09 (note the second "e")
-#		  BUGFIX: EpGuides.com parser improved - entries do not have to have
-#		  been aired to be parsed correctly - thanks to Tony White for his patch!
-#		  BUGFIX: "Specials" name extraction didn't check if the "s" in front of
-#		  the episode number was "alone". If it was part of a word, strange
-#		  things happened.
-#		  BUGFIX: Filename extensions defined in the file filter (see --help) is
-#		  no-longer case-sensitive
+#         crash!) the script if they happened to resemble a regular expression.
+#         This also prevented it from being able to differentiate between
+#         numbers in the series title and a file's episode number.
+#         BUGFIX: Empty lines in config files no longer upset the script
+#         BUGFIX: TV.com search fixed - the site's HTML layout changed a bit too
+#         much
+#         BUGFIX: Shortcut finding is now case-insensitive, so fixed for
+#         MacOS/Linux/BSD
+#         FEATURE: Now understands double-episode filenames of the form
+#         s01.e08-e09 (note the second "e")
+#         BUGFIX: EpGuides.com parser improved - entries do not have to have
+#         been aired to be parsed correctly - thanks to Tony White for his patch!
+#         BUGFIX: "Specials" name extraction didn't check if the "s" in front of
+#         the episode number was "alone". If it was part of a word, strange
+#         things happened.
+#         BUGFIX: Filename extensions defined in the file filter (see --help) is
+#         no-longer case-sensitive
 #
 #  v2.35 BUGFIX: SXXEYY parsing had a couple of new bugs from v2.34 - either a
 #        leading space was included with the SXXEYY snippet, or the "S" was
