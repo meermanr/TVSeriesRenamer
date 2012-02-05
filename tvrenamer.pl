@@ -793,7 +793,7 @@ else
 			elsif($site eq Site_TV)
 			{
 				my $page;
-				my $url = "http://www.tv.com/search.php?type=11&stype=program&qs=".uri_escape($search_term);
+				my $url = "http://www.tv.com/index.php?type=Search&stype=ajax_search&qs=".uri_escape($search_term)."&search_type=program&pg_results=0&sort=";
 				my $link;
 				my $len = 0;
 				my $retries = 3;
@@ -815,17 +815,16 @@ else
 				}
 				die ($ANSIred."Unable to perform search on TV.com! (Fetched $len bytes of data) Please try the following in a browser:\n  $url\n".$ANSInormal) unless length($page) > 0;
 
-				#EG: <span class="f-18">Show: <a class="f-bold f-C30" href="http://www.tv.com/human-weapon/show/74629/summary.html?q=Human Weapon&tag=search_results;title;1">Human Weapon</a></span>
-				($link) = ($page =~ m@<a class="[^"]+" href="(http://www.tv.com/[^/]+/show/\d+/summary.html[^"]+)">$escaped_series</a>@i);
-				die("I did the search but I couldn't find \"$series\" in the response!") unless defined $link;
+				# E.g.  <a href="http://www.tv.com/shows/the-big-bang-theory/?q=Big%252520Bang%252520Theory"><img style="background: url(http://image.com.com/tv/images/processed/thumb/8f/15/281201.jpg) no-repeat center top;" src="http://images.tvtome.com/tv/images/b.gif" alt="Image of The Big Bang Theory" width="120" height="80" /></a>
+				($inputFile) = ($page =~ m@<a href="(http://www.tv.com/shows/[^"]+?)(\?q=.*)?"><img [^>]+ alt="Image of .*?$escaped_series"[^>]*></a>@i);
+				$inputFile .= "season-$season/";
+				die("I did the search but I couldn't find \"$series\" in the response!") unless defined $inputFile;
 
 				# Peform adaptation. Eg:
 				# /-  http://www.tv.com/24/show/3866/summary.html&q=24
 				# \-> http://www.tv.com/24/show/3866/episode_listings.html&season=0
 				print $ANSIgreen."Found match!\n".$ANSInormal;
 				if($debug){print $ANSIcyan."Hit link is: $link\n".$ANSInormal;}
-				($inputFile) = ($link =~ /^(.*?)summary.html/);
-				$inputFile .= "episode_listings.html&season=$season";
 
 				print $ANSIyellow."Creating link file in current directory to avoid repeating search...\n".$ANSInormal;
 				open(URI, "> $series (Season $season) [$SiteList[$site]].URL");
