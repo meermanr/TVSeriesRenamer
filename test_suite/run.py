@@ -1,17 +1,23 @@
 #!/usr/bin/env python
-# Run tvrenamer.pl's test-suite
+"""
+Run all test-suites for `tvrenamer.pl`.
 
-# This script uses the following hungarian notation (because it's what the 
-# author is forced to use at work, call it habit):
-#
-#   g = global
-#   r = str
-#   l = list
-#   d = dict
-#   i = int
-#   f = float
-#   s = instance of type not listed above
-#   m = multiple types (i.e. changes depending on context / time)
+This script uses the following hungarian notation (because it's what the 
+author is forced to use at work, call it habit)::
+
+  g = global
+  r = str
+  l = list
+  d = dict
+  i = int
+  f = float
+  s = instance of type not listed above
+  m = multiple types (i.e. changes depending on context / time)
+  cls = Class object
+  fnc = Function (more generally, anything callable)
+  si = Iterable (typically a generator)
+"""
+__docformat__ = "restructuredtext en"
 
 import os
 import subprocess as sp
@@ -49,7 +55,7 @@ def iter_tests():
 # -----------------------------------------------------------------------------
 def run_test(rTestDir):
     """
-    Run tvrenamer.pl within ``rTestDir`` (which is assumed to be in a clean 
+    Run `tvrenamer.pl` within ``rTestDir`` (which is assumed to be in a clean 
     state) and checkout the STDOUT produced matches that of EXPECTED_RESULT.
 
     Files used:
@@ -57,8 +63,8 @@ def run_test(rTestDir):
         * EXPECTED_RESULT: Contents are compared against STDOUT, test has 
           failed if they differ.
 
-        * OPTIONS: Text-file containing tvrenamer.pl options, as they would be 
-          specified on a command line.
+        * OPTIONS: Text-file containing `tvrenamer.pl` options, as they would 
+          be specified on a command line.
     """
     rOptsFile = os.path.join( rTestDir, "OPTIONS" )
     rOpts = ""
