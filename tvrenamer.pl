@@ -13,13 +13,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.53 MAINTENANCE:
-#			 EpGuides support updated to cope with annoying links to trailers / 
-#			 recaps etc which now appear as <spans> within the episode titles.	
-#			 Thanks to Frederic and Jasper for bringing this to my attention.
-#		 MAINTENANCE:
-#			 Added m4v to the filename filter (thanks Frederic!)
-#
 #  v2.54 MAINTENANCE:
 #			 Fix EpGuides.com scraper - it sometimes missed the first character 
 #			 of episode titles (bad regexp)
@@ -51,6 +44,8 @@
 #			   #2: Script is not compatible with Perl v5.8.8
 #			   #5: UTF-8 issues
 #			   #6: Need to strip commas from show name when querying epguides
+#
+#  v2.56 BUGFIX: TV.com support
 #
 #------------------------------------------------------------------------------
 # SYSTEM REQUIREMENTS
@@ -2351,5 +2346,12 @@ sub readURLfile #{{{
 #		 --include-series and --exclude-series (underscore became hyphen). Old 
 #		 option names are still accepted (for compatibility with .tvrenamerrc 
 #		 files)
+#
+#  v2.53 MAINTENANCE:
+#			 EpGuides support updated to cope with annoying links to trailers / 
+#			 recaps etc which now appear as <spans> within the episode titles.	
+#			 Thanks to Frederic and Jasper for bringing this to my attention.
+#		 MAINTENANCE:
+#			 Added m4v to the filename filter (thanks Frederic!)
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4 noet:
