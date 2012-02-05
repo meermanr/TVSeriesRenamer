@@ -5,6 +5,7 @@
 #------------------------------------------------------------------------------
 # Written by: Robert Meerman (robert.meerman@gmail.com, ICQ# 37099562)
 # Website: http://www.robmeerman.co.uk/coding/file_renamer
+# Project: https://github.com/meermanr/TVSeriesRenamer
 #
 # Please send comments, feature requests, bugs, etc to the address above.
 # If you find this useful, I'd love to hear from you - I love the attention :)
@@ -51,6 +52,22 @@
 #              #5: UTF-8 issues
 #              #6: Need to strip commas from show name when querying epguides
 #
+#------------------------------------------------------------------------------
+# SYSTEM REQUIREMENTS
+#------------------------------------------------------------------------------
+#
+# You need the following Perl modules (all are available through CPAN):
+#
+#   Switch
+#   Term::ReadKey
+#   Cwd
+#   URI::Escape
+#   Compress::Zlib
+#   (Windows users only) Win32API::File
+#   (Windows users only) Encode
+#
+# This script was last tested on Perl v5.12.4 built for 
+# x86_64-linux-gnu-thread-multi
 #
 # TODO: {{{1
 #  (Note most of this list is being ignored due to work on the v3 rewrite of this script in Python)
