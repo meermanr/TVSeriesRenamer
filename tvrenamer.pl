@@ -962,6 +962,7 @@ else
 
 			## Strip attributes from tags, making format detection slightly more resistant to change
 			s/<([^ >]*)[^>]*\/?>/<\1>/g;
+			s/\015//g;	# Strip windows-style newlines
 			
 			#print; # Print stripped page to aid parser development
 
@@ -1159,24 +1160,22 @@ else
 			elsif( $arg == Format_URL_TV2 ) { #{{{
 				# Remember that all attributes are stripped before the HTML is passed to us. Sample data:
 				#
-				# <table><thead><tr><th><div>no.</div></th><th><div>episode</div></th><th><div>air date</div></th><th><div>prod #</div></th><th><div>reviews</div></th><th><div>downloads</div></th><th><div>score</div></th></tr></thead><tbody><tr><td><div>1</div></td><td><div><a>Pilot</a></div></td><td><div>1/13/2008</div></td><td><div>276022</div></td><td><div><a> Reviews</a></div></td><td><div>&nbsp;</div></td><td><div>9.09</div></td></tr>
-
+				# <li>
+				# 	<div>Ep 16</div>
+				# 	<a>The Peanut Reaction</a>
 				my $offset = 0;
 				my ($epSeason, $epNum, $epTitle, $epOffset);
 
 				if($autoseries){
-					# Parse "<title>Scrubs Episode List  - TV.com  </title>" into a series name
-					if(($series) = $_ =~ /^\s*<title>\s*(.*)\s+Episode List\s*-\s*TV.com.*<\/title>\s*$/ms){
+					# Parse "<title>The Big Bang Theory Episodes - TV.com</title>" into a series name
+					if(($series) = $_ =~ /^\s*<title>\s*(.*)\s+Episodes\s*-\s*TV.com.*<\/title>\s*$/ms){
 						$autoseries_successful = 1;
 					}
 				}
 
 				while($offset < length($_)){
-					if(($epNum, $epTitle) = (substr($_, $offset) =~ /<tr>\s*<td>\s*<div>\s*(\d+|Pilot)\s*<\/div>\s*<\/td>\s*<td>\s*<div>\s*<a>(.*?)<\/a>\s*<\/div>\s*<\/td>/ms)){
+					if(($epNum, $epTitle) = (substr($_, $offset) =~ /<li>\s*<div>Ep (\d+)<\/div>\s*<a>([^<]+)<\/a>/ms)){
 					if($debug){print "epNum = $epNum & epTitle = $epTitle\n";}
-					if($epNum == "Pilot"){$epNum = 1;}
-					if(!defined $epOffset){$epOffset = ($epNum-1);} # "-1" to ensure that epNum-epOffset = 1 for the first epTitle (Note epNum="Pilot" can make epNum= -1)
-					$epNum = $epNum - $epOffset;
 					check_and_push($epTitle, \@name, $epNum);
 					}
 					$offset += $+[0];	## Append (local to substr) ending pos of last entire (mis)match
