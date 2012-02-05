@@ -1236,6 +1236,14 @@ else
 						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
 						check_and_push($epTitle, \@name, $num);
 					}
+					# Chip'n'Dale Rescue Rangers, maybe others
+					elsif( ($num, $epTitle) = ($_ =~ /^<li>\s+$season-(..)(.*)$/) )
+					{
+						# Cleanup whitespace (and tags if using online version)
+						($epTitle) = ($epTitle =~ /^.{24}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						$epTitle =~ s@<img></a> <a>@@;
+						check_and_push($epTitle, \@name, $num);
+					}
 					# Most episodes (new parser, v2.34)
 					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..)(.*)$/) )
 					{
