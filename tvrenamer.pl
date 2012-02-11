@@ -52,6 +52,9 @@
 #			   #5: UTF-8 issues
 #			   #6: Need to strip commas from show name when querying epguides
 #
+#  v2.56 MAINTENANCE:
+#			 Added support for season numbering with underscores as well as spaces
+#
 #------------------------------------------------------------------------------
 # SYSTEM REQUIREMENTS
 #------------------------------------------------------------------------------
@@ -400,11 +403,12 @@ if( $implicit_season != 2 ){
 	#	"2" -> season 2, get series name from parent directory
 	#	"Season 2" -> season 2, get series name from parent directory
 	#	"Series 2" -> season 2, get series name from parent directory
+	#	"Series_2" -> season 2, get series name from parent directory
 	#
 	#	"Survivor (20)" -> season 20 of "Survivor"
 	#	"Survivor 20x" -> season 20 of "Survivor"
 	#
-	if( $series =~ m{^(.*)(?:season|series)\s*(\d+)\s*$}i 
+	if( $series =~ m{^(.*)(?:season|series)[\s_]*(\d+)\s*$}i 
 			or $series =~ m{^()\s*(\d+)\s*$}i ){
 
 		$season = $2;
@@ -666,6 +670,7 @@ else
 		{
 			$search_term = $series;
 		}
+		$search_term =~ s/[_\-:]/ /g;
 
 		# Detect Anime and use AniDB{{{
 		if($search_anime || getcwd() =~ /anime/i)
@@ -816,8 +821,9 @@ else
 				die ($ANSIred."Unable to perform search on TV.com! (Fetched $len bytes of data) Please try the following in a browser:\n  $url\n".$ANSInormal) unless length($page) > 0;
 
 				# E.g.  <a href="http://www.tv.com/shows/the-big-bang-theory/?q=Big%252520Bang%252520Theory"><img style="background: url(http://image.com.com/tv/images/processed/thumb/8f/15/281201.jpg) no-repeat center top;" src="http://images.tvtome.com/tv/images/b.gif" alt="Image of The Big Bang Theory" width="120" height="80" /></a>
-				($inputFile) = ($page =~ m@<a href="(http://www.tv.com/shows/[^"]+?)(\?q=.*)?"><img [^>]+ alt="Image of .*?$escaped_series"[^>]*></a>@i);
+				($inputFile) = ($page =~ m@<h2><a href="(http://www.tv.com/shows/[^"]+?)(\?q=.*)?">[^<]*</a></h2>@i);
 				$inputFile .= "season-$season/";
+				print "Match = ".$inputFile;
 				die("I did the search but I couldn't find \"$series\" in the response!") unless defined $inputFile;
 
 				# Peform adaptation. Eg:
