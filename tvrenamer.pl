@@ -45,7 +45,10 @@
 #			   #5: UTF-8 issues
 #			   #6: Need to strip commas from show name when querying epguides
 #
-#  v2.56 BUGFIX: TV.com support
+#  v2.56 BUGFIX:
+#             TV.com support
+#        MAINTENANCE:
+#			 Added support for season numbering with underscores as well as spaces
 #
 #------------------------------------------------------------------------------
 # SYSTEM REQUIREMENTS
@@ -395,11 +398,12 @@ if( $implicit_season != 2 ){
 	#	"2" -> season 2, get series name from parent directory
 	#	"Season 2" -> season 2, get series name from parent directory
 	#	"Series 2" -> season 2, get series name from parent directory
+	#	"Series_2" -> season 2, get series name from parent directory
 	#
 	#	"Survivor (20)" -> season 20 of "Survivor"
 	#	"Survivor 20x" -> season 20 of "Survivor"
 	#
-	if( $series =~ m{^(.*)(?:season|series)\s*(\d+)\s*$}i 
+	if( $series =~ m{^(.*)(?:season|series)[\s_]*(\d+)\s*$}i 
 			or $series =~ m{^()\s*(\d+)\s*$}i ){
 
 		$season = $2;
