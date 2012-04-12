@@ -665,7 +665,6 @@ else
 		{
 			$search_term = $series;
 		}
-		$search_term =~ s/[_\-:]/ /g;
 
 		# Detect Anime and use AniDB{{{
 		if($search_anime || getcwd() =~ /anime/i)
