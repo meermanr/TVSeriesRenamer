@@ -56,7 +56,8 @@ def iter_tests():
 def run_test(rTestDir):
     """
     Run `tvrenamer.pl` within ``rTestDir`` (which is assumed to be in a clean 
-    state) and checkout the STDOUT produced matches that of EXPECTED_RESULT.
+    state) and verify that every line that appears in EXPECTED_RESULT also 
+    appears in STDOUT. (STDOUT may contain lines not in EXPECTED_RESULT.)
 
     Files used:
 
