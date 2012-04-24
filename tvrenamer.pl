@@ -13,42 +13,26 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-#  v2.54 MAINTENANCE:
-#			 Fix EpGuides.com scraper - it sometimes missed the first character 
-#			 of episode titles (bad regexp)
-#		 MAINTENANCE:
-#			 Better compatability with EpGuides.com - they remove "The" and "A" 
-#			 from series titles when creating their URLs. This script did not 
-#			 know about "A" until now.
-#		 FEATURE:
-#			 Double episodes' titles are merged so that their common prefix 
-#			 does not appear. For instance, the following two episodes:
+# v2.55 MAINTENANCE:
+#   Typo in user-facing message corrected.
+#   Adding *.divx to supported extensions.
+#   Fixing --show-missing (thanks Jørn for pointing this out)
+#   Removing all Perl v5.10 uses of (?P<NAME>pattern) constructs.
+#   Housekeeping: Ignore test_suite/*/.cache
+#   Fixing IO text encoding (UTF8).
+#   Strip commas from series titles when querying EpGuides.com
+#   Updating change history comments
 #
-#			   Camdenites: Part 1
-#			   Camdenites: Part 2
-#
-#			 Used to become:
-#
-#			   Camdenites: Part 1 - Camdenites: Part 2
-#
-#			 Now it becomes:
-#
-#			   Camdenites: Part 1 and 2
-#
-#  v2.55 MAINTENANCE:
-#			 Fixed typo in user-facing message.
-#			 Added *.divx to supported extensions
-#			 Fixed #2, #5, and #6 on 
-#			 https://github.com/meermanr/TVSeriesRenamer/issues
-#
-#			   #2: Script is not compatible with Perl v5.8.8
-#			   #5: UTF-8 issues
-#			   #6: Need to strip commas from show name when querying epguides
-#
-#  v2.56 BUGFIX:
-#             TV.com support
-#        MAINTENANCE:
-#			 Added support for season numbering with underscores as well as spaces
+# v2.56 MAINTENANCE:
+#   (Maintenance) Updated the TV.com matching which seemed to be a little out of date
+#   (Feature) Added support for season numbering with underscores for unixey people.
+#   (Issue #7) Fix TV.com episode list parser
+#   (Issue #7) Fix TV.com search parser
+#   (Maintenance) Retabbing indentation
+#   (Maintenance) Adding project page and system requirements to script header
+#   (Maintenance) Update docs in test-suite's run.py
+#   (Maintenance) EpGuides: Another format (seen on Chip'n'Dale Rescue Rangers)
+#   (Issue #9) Removing the offending line (didn't affect my test-cases)
 #
 #------------------------------------------------------------------------------
 # SYSTEM REQUIREMENTS
@@ -173,7 +157,7 @@ my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect in
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer v2.55\nReleased 13 March 2011\n"; # {{{
+my $version = "TV Series Renamer v2.56\nReleased 24 April 2012\n"; # {{{
 print $version;
 my $helpMessage = 
 "Usage: $0 [OPTIONS] [FILE|URL|-]
@@ -2358,5 +2342,42 @@ sub readURLfile #{{{
 #			 Thanks to Frederic and Jasper for bringing this to my attention.
 #		 MAINTENANCE:
 #			 Added m4v to the filename filter (thanks Frederic!)
+#
+#  v2.55 MAINTENANCE:
+#			 Fixed typo in user-facing message.
+#			 Added *.divx to supported extensions
+#			 Fixed #2, #5, and #6 on 
+#			 https://github.com/meermanr/TVSeriesRenamer/issues
+#
+#			   #2: Script is not compatible with Perl v5.8.8
+#			   #5: UTF-8 issues
+#			   #6: Need to strip commas from show name when querying epguides
+#
+#  v2.56 BUGFIX:
+#             TV.com support
+#        MAINTENANCE:
+#			 Added support for season numbering with underscores as well as spaces
+#
+#  v2.54 MAINTENANCE:
+#			 Fix EpGuides.com scraper - it sometimes missed the first character 
+#			 of episode titles (bad regexp)
+#		 MAINTENANCE:
+#			 Better compatability with EpGuides.com - they remove "The" and "A" 
+#			 from series titles when creating their URLs. This script did not 
+#			 know about "A" until now.
+#		 FEATURE:
+#			 Double episodes' titles are merged so that their common prefix 
+#			 does not appear. For instance, the following two episodes:
+#
+#			   Camdenites: Part 1
+#			   Camdenites: Part 2
+#
+#			 Used to become:
+#
+#			   Camdenites: Part 1 - Camdenites: Part 2
+#
+#			 Now it becomes:
+#
+#			   Camdenites: Part 1 and 2
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4 noet:
