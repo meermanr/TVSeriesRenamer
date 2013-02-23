@@ -13,16 +13,6 @@
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
 #
-# v2.55 MAINTENANCE:
-#   Typo in user-facing message corrected.
-#   Adding *.divx to supported extensions.
-#   Fixing --show-missing (thanks Jørn for pointing this out)
-#   Removing all Perl v5.10 uses of (?P<NAME>pattern) constructs.
-#   Housekeeping: Ignore test_suite/*/.cache
-#   Fixing IO text encoding (UTF8).
-#   Strip commas from series titles when querying EpGuides.com
-#   Updating change history comments
-#
 # v2.56 MAINTENANCE:
 #   (Maintenance) Updated the TV.com matching which seemed to be a little out of date
 #   (Feature) Added support for season numbering with underscores for unixey people.
@@ -33,6 +23,10 @@
 #   (Maintenance) Update docs in test-suite's run.py
 #   (Maintenance) EpGuides: Another format (seen on Chip'n'Dale Rescue Rangers)
 #   (Issue #9) Removing the offending line (didn't affect my test-cases)
+#
+# v2.57 FEATURE:
+#   Added *.nfo and *.tbn to files considered for renaming
+#   (Maintenance) Cleaned-up test-suite (thanks fwenzel!)
 #
 #------------------------------------------------------------------------------
 # SYSTEM REQUIREMENTS
@@ -118,7 +112,7 @@ my $format		 = Format_AutoFetch;
 my $site		 = Site_EpGuides;	# Preferred site search for title data. NB: These are tried in the order they are listed above
 my $search_anime = undef;			# Search TV sites
 
-my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|m4v|mp4|mpeg4|mov|divx|srt|sub|ssa|smi|sami|txt)$';
+my $filterFiles  = '\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|m4v|mp4|mpeg4|mov|divx|srt|sub|ssa|smi|sami|txt|nfo|tbn)$';
 my ($series)	 = (getcwd() =~ /\/([^\/]+)$/);		# Grab current dir name, discard rest of path
 my $exclude_series	   = 1;	# 0=Always include series name, 1=Exclude if cwd is "Series X", 2=Always exclude
 my $autoseries	 = 0;	# Do not automatically use scraped series name
@@ -2380,4 +2374,14 @@ sub readURLfile #{{{
 #
 #			   Camdenites: Part 1 and 2
 #
+#
+# v2.55 MAINTENANCE:
+#   Typo in user-facing message corrected.
+#   Adding *.divx to supported extensions.
+#   Fixing --show-missing (thanks Jørn for pointing this out)
+#   Removing all Perl v5.10 uses of (?P<NAME>pattern) constructs.
+#   Housekeeping: Ignore test_suite/*/.cache
+#   Fixing IO text encoding (UTF8).
+#   Strip commas from series titles when querying EpGuides.com
+#   Updating change history comments
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4 noet:
