@@ -100,7 +100,8 @@ def run_test(test_dir):
 
 if __name__ == "__main__":
     try:
-        for test_dir in find_test_dirs():
+        siDirs = sys.argv[1:] or find_test_dirs()
+        for test_dir in siDirs:
             to_stderr(test_dir[len(BASE_DIR):])
             run_test(test_dir)
     except KeyboardInterrupt:
