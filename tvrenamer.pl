@@ -28,6 +28,12 @@
 #   Added *.nfo and *.tbn to files considered for renaming
 #   (Maintenance) Cleaned-up test-suite (thanks fwenzel!)
 #
+# v2.58:
+#   (Maintenance) Remove AniDB.net support, since they now insta-ban screen
+#       scrapers like this script. TheTVDB.com provides episode titles for most 
+#       Anime, so this shouldn't be a big problem. If someone wants to add 
+#       support for AniDB API to the script, I welcome pull requests.
+#
 #------------------------------------------------------------------------------
 # SYSTEM REQUIREMENTS
 #------------------------------------------------------------------------------
@@ -82,18 +88,16 @@ binmode(STDOUT, ":utf8");	# Suppress warnings about Unicode characters in output
 # Alternatively, set "ANSIcolour = 0" in the default settings bit to supress the warning
 #use Win32::Console::ANSI;	# Hack to fix up Win32 console to support ANSI	(http://www.bribes.org/perl/wANSIConsole.html#dl)
 
-my @FormatList = ("AutoFetch", "AutoDetect", "AniDB (fetched)", "TV.com (monotonic)", "EpGuides", "AniDB", "TVtorrents", "TVtome", "TV.com \"All Seasons\"", "TV.com");
+my @FormatList = ("AutoFetch", "AutoDetect", "TV.com (monotonic)", "EpGuides", "TVtorrents", "TVtome", "TV.com \"All Seasons\"", "TV.com");
 use constant Format_AutoFetch	=> 0;
 use constant Format_AutoDetect	=> 1;
-use constant Format_URL_AniDB	=> 2;
-use constant Format_URL_TV2		=> 3;	# i.e. "All Seasons" episode list
-use constant Format_EpGuides	=> 4;
-use constant Format_AniDB		=> 5;
-use constant Format_TVtorrents	=> 6;
-use constant Format_TVtome		=> 7;
-use constant Format_TV2			=> 8;	# Preferred over older Format_TV
-use constant Format_TV			=> 9;
-use constant NumFormats			=> 10;
+use constant Format_URL_TV2		=> 2;	# i.e. "All Seasons" episode list
+use constant Format_EpGuides	=> 3;
+use constant Format_TVtorrents	=> 4;
+use constant Format_TVtome		=> 5;
+use constant Format_TV2			=> 6;	# Preferred over older Format_TV
+use constant Format_TV			=> 7;
+use constant NumFormats			=> 8;
 
 my @SiteList = ("EpGuides.com", "TV.com");
 use constant Site_EpGuides	=> 0;
@@ -165,7 +169,6 @@ the sites listed below:
 Input options:
  --AutoFetch		Search sites automatically (no need to provide input)
  --AutoDetect		Systematically try each format below (input required)
- --AniDB			Assume input is in http://AniDB.net format
  --TVtorrents		Assume input is in http://www.TVtorrents.com format
  --TVtome			Assume input is in http://www.TVtome.com format
  --TV				Assume input is in http://www.TV.com format
@@ -173,7 +176,7 @@ Input options:
  --EpGuides			Assume input is in http://www.EpGuides.com format
 
  Note: If you don't specify an input source, text files with names derived from
- the above will be tried in turn (AniDB.txt, TVtorrents.txt, ...). Failing this
+ the above will be tried in turn (TVtorrents.txt, ...). Failing this
  any .url or .desktop files will be scanned and the first URL found will be
  used. Hence you can put an internet shortcut in the current directory as a
  convenience.
@@ -299,7 +302,6 @@ if($#ARGV ne -1)
 		if( $arg =~ /^$/ )				  {}	# Skip empty strings, often from .tvrenamerrc files
 		if( $arg =~ /^--autofetch$/i )	  {$implicit_format = 0; $format = Format_AutoFetch;}
 		if( $arg =~ /^--autodetect$/i )   {$implicit_format = 0; $format = Format_AutoDetect;}
-		if( $arg =~ /^--anidb$/i )		  {$implicit_format = 0; $format = Format_AniDB;}
 		if( $arg =~ /^--tvtorrents$/i )   {$implicit_format = 0; $format = Format_TVtorrents;}
 		if( $arg =~ /^--tvtome$/i )		  {$implicit_format = 0; $format = Format_TVtome;}
 		if( $arg =~ /^--tv$/i )			  {$implicit_format = 0; $format = Format_TV;}
@@ -570,9 +572,6 @@ if($do_win32_associate == 1)
 # Look for input {{{
 #------------------------------------------------------------------------------
 
-my $expect_epName = 0;	# FIXME: Hack used by AniDB multi-line parser (should
-						# be removed once backward compatability with the old
-						# parser is removed)
 my @input;
 my $raw_input;	# Sometimes searching a website results in a series' page
 				# instead of a results page, using this variable we can simply
@@ -591,7 +590,6 @@ else
 	if ( $implicit_format ){
 		if ( !defined $inputFile )
 		{
-			if ( -e 'AniDB.txt')								{$site = NumSites-1; $format = Format_AniDB;		$inputFile = 'AniDB.txt';		}
 			if ( -e 'TVtorrents.txt')							{$site = NumSites-1; $format = Format_TVtorrents;	$inputFile = 'TVtorrents.txt';	}
 			if ( -e 'TVtome.txt')								{$site = NumSites-1; $format = Format_TVtome;		$inputFile = 'TVtome.txt';		}
 			if ( -e 'TV.txt')									{$site = NumSites-1; $format = Format_TV;			$inputFile = 'TV.txt';			}
@@ -644,174 +642,70 @@ else
 			$search_term = $series;
 		}
 
-		# Detect Anime and use AniDB{{{
-		if($search_anime || getcwd() =~ /anime/i)
+		# Choose group behaviour is user has not
+		if(! defined $nogroup){ $nogroup = 1; }
+
+		# Guess an URL for epGuides.com an use it (no need to save an URL shortcut) {{{
+		#
+		if($site eq Site_EpGuides)
 		{
-			print $ANSIcyan."Current directory detected as anime.\n".$ANSInormal;
-
-			# Choose group behaviour if user has not
-			if( ! defined $nogroup ){ $nogroup = 0; }
-
-			print "Searching AniDB.net for \"$search_term\"... ";
-			my $searchURL = ('http://anidb.net/perl-bin/animedb.pl?show=animelist&adb.search='.uri_escape($search_term).'&do.search=search');
-			if($debug){print "Fetching $searchURL\n";}
-			$_ = get($searchURL);
-			# 0x1f 0x8b = GZIP compression. C.f. http://www.gzip.org/zlib/rfc-gzip.html
-			if ( substr($_, 0, 2) eq chr(0x1f).chr(0x8b) ){
-				if($debug){print $ANSIcyan."Compressed data detected\n".$ANSInormal;}
-				$_ = Compress::Zlib::memGunzip($_);	
-			}
-			#$_ = Encode::decode 'UTF-8', $_;
-			# Save snapshot for debugging
-			if($debug){
-				print $ANSIcyan."Saving html to .search_results.full...$ANSInormal\n";
-				open(RESULTS, '> .search_results.full');
-				binmode(RESULTS, ":raw");
-				print RESULTS $_;
-				close RESULTS;
-			}
-
-			# Strip attributes from non-<a> tags
-			s/(?<=<)(?!label|a)([^ >]*)[^>]*/\1/g;
-	
-			# Save snapshot for debugging
-			if($debug){
-				print $ANSIcyan."Saving (simplified) html to .search_results...$ANSInormal\n";
-				binmode(RESULTS, ":raw");
-				open(RESULTS, '> .search_results');
-				print RESULTS $_;
-				close RESULTS;
-			}
-
-			# Now to parse the results page
-			my ($rcache, $rlink, $rseries, $rresults);
-			$rcache = $_;
-			$rresults = 0;	# Count number of results returned by AniDB
-			while(($rlink, $rseries) = /<a href="(animedb\.pl\?show=anime&amp;aid=\d+)">([^<]+)<\/a>/m){
-				if($debug){print "$ANSIcyan"."Considering result: '$rseries' and link '$rlink'$ANSInormal\n";}
-				$rresults++;
-				if( $rseries =~ /^$series$/i ){
-					print "Found match!\n"; 
-					$rlink =~ s/&amp;/&/;
-					$inputFile = "http://anidb.net/perl-bin/$rlink";
-					$format = Format_URL_AniDB;
-					last;
-				}
-				else{
-					# Try remaining input
-					$_ = substr($_, $+[0]);
-				}
-			}
-
-			# No results? Could be that AniDB transparently redirected to the
-			# series page, if the series name is a unique hit in the database.
-			if($rresults == 0){
-				# Give up the search after AniDB is exhausted for possibilities
-				$inputFile = undef;
-				$site = NumSites-1;
-
-				# Search result pages are titled "Anime List", while series
-				# page's are titled "Anime - SERIESNAME"
-				if($rcache =~ /::AniDB.net:: Anime - /i ){
-					print "Unique hit!\n";	
-					$raw_input = $rcache;	# Configure script to use $raw_input
-
-					# Strip attributes from non-a and non-labal tags, making format detection
-					# slightly more resistant to change
-					$raw_input =~ s/(?<=<)(?!label|a)([^ >]*)[^>]*/\1/g;
-				}
-				else{
-					print "No results.\n";
-					print $ANSIred."I didn't percieve a single result from AniDB, please check www.AniDB.net\n".
-						"lists your series and try again providing a link to the series' page on\n".
-						"the command line.\n".
-						"\nIt is likely that AniDB's page layout has changed, if that is the case\n".
-						"please notify my author (see end of \"$0 --help\")\n".$ANSInormal;
-					print $ANSIcyan."Search URL was: $searchURL\n".$ANSInormal;
-					exit 1;
-				}
-			}
-			else{
-				# FIXME: Detect non-empty results set which didn't contain an
-				# exact match, and prompt user to select a result. (This will
-				# require constructing a result list)
-				$site = NumSites-1;	# Don't bother to search other sites
-			}
-
-			# Free up memory
-			undef $rcache;
-			undef $rlink;
-			undef $rseries;
-			undef $rresults;
-		}
-		# End detect anime }}}
-		else
+			$format = Format_EpGuides;
+			# Strip articles, such as "A" and "The" from series titles, as 
+			# this is what EpGuides does.
+			my	($shortSeries) = ($search_term =~ /^(?:(?:A|The)\s+)?(.*?)\s*(?:, (?:A|The))?$/i);
+			$shortSeries =~ tr/'//d;
+			$shortSeries =~ s/\s+//g;
+			$shortSeries =~ tr/,//d;
+			$shortSeries =~ tr/!//d;
+			$inputFile = "http://epguides.com/$shortSeries/";
+		}	 
+		# }}}
+		# Search TV.com and pass the final URL to the usual TV.com parser {{{
+		#
+		elsif($site eq Site_TV)
 		{
-			# Choose group behaviour is user has not
-			if(! defined $nogroup){ $nogroup = 1; }
+			my $page;
+			my $url = "http://www.tv.com/index.php?type=Search&stype=ajax_search&qs=".uri_escape($search_term)."&search_type=program&pg_results=0&sort=";
+			my $link;
+			my $len = 0;
+			my $retries = 3;
+			$format = Format_URL_TV2;
+			
+			if($debug){print $ANSImagenta."Search URL: $url\n".$ANSInormal;}
 
-			# Guess an URL for epGuides.com an use it (no need to save an URL shortcut) {{{
-			#
-			if($site eq Site_EpGuides)
-			{
-				$format = Format_EpGuides;
-				# Strip articles, such as "A" and "The" from series titles, as 
-				# this is what EpGuides does.
-				my	($shortSeries) = ($search_term =~ /^(?:(?:A|The)\s+)?(.*?)\s*(?:, (?:A|The))?$/i);
-				$shortSeries =~ tr/'//d;
-				$shortSeries =~ s/\s+//g;
-				$shortSeries =~ tr/,//d;
-				$shortSeries =~ tr/!//d;
-				$inputFile = "http://epguides.com/$shortSeries/";
-			}	 
-			# }}}
-			# Search TV.com and pass the final URL to the usual TV.com parser {{{
-			#
-			elsif($site eq Site_TV)
-			{
-				my $page;
-				my $url = "http://www.tv.com/index.php?type=Search&stype=ajax_search&qs=".uri_escape($search_term)."&search_type=program&pg_results=0&sort=";
-				my $link;
-				my $len = 0;
-				my $retries = 3;
-				$format = Format_URL_TV2;
-				
-				if($debug){print $ANSImagenta."Search URL: $url\n".$ANSInormal;}
-
-				# Peform search on TV.com for programme ("program" to those in the U.S.A.)
-				while($len==0 && $retries > 0){
-					print "Performing search...\n";
-					$page = get($url);
-					#$page = Encode::decode 'UTF-8', $page;
-					$len = length($page);
-					$retries--;
-					# Note we sleep for 3 seconds between retries, but present the message AFTER the wait,
-					# this way the user doesn't get annoyed after the last retry when they're made to wait 3 seconds
-					# before the script quits.
-					if($len==0){sleep(3); print $ANSIyellow."Problem with server (received 0 bytes)...\n".$ANSInormal;}
-				}
-				die ($ANSIred."Unable to perform search on TV.com! (Fetched $len bytes of data) Please try the following in a browser:\n  $url\n".$ANSInormal) unless length($page) > 0;
-
-				# E.g.  <a href="http://www.tv.com/shows/the-big-bang-theory/?q=Big%252520Bang%252520Theory"><img style="background: url(http://image.com.com/tv/images/processed/thumb/8f/15/281201.jpg) no-repeat center top;" src="http://images.tvtome.com/tv/images/b.gif" alt="Image of The Big Bang Theory" width="120" height="80" /></a>
-				($inputFile) = ($page =~ m@<h2><a href="(http://www.tv.com/shows/[^"]+?)(\?q=.*)?">[^<]*</a></h2>@i);
-				$inputFile .= "season-$season/";
-				print "Match = ".$inputFile;
-				die("I did the search but I couldn't find \"$series\" in the response!") unless defined $inputFile;
-
-				# Peform adaptation. Eg:
-				# /-  http://www.tv.com/24/show/3866/summary.html&q=24
-				# \-> http://www.tv.com/24/show/3866/episode_listings.html&season=0
-				print $ANSIgreen."Found match!\n".$ANSInormal;
-				if($debug){print $ANSIcyan."Hit link is: $link\n".$ANSInormal;}
-
-				print $ANSIyellow."Creating link file in current directory to avoid repeating search...\n".$ANSInormal;
-				open(URI, "> $series (Season $season) [$SiteList[$site]].URL");
-				print URI "[InternetShortcut]\nURL=".$inputFile."\n";
-				close(URI);
+			# Peform search on TV.com for programme ("program" to those in the U.S.A.)
+			while($len==0 && $retries > 0){
+				print "Performing search...\n";
+				$page = get($url);
+				#$page = Encode::decode 'UTF-8', $page;
+				$len = length($page);
+				$retries--;
+				# Note we sleep for 3 seconds between retries, but present the message AFTER the wait,
+				# this way the user doesn't get annoyed after the last retry when they're made to wait 3 seconds
+				# before the script quits.
+				if($len==0){sleep(3); print $ANSIyellow."Problem with server (received 0 bytes)...\n".$ANSInormal;}
 			}
-			# End Site_TV }}}
-			undef $search_term;
+			die ($ANSIred."Unable to perform search on TV.com! (Fetched $len bytes of data) Please try the following in a browser:\n  $url\n".$ANSInormal) unless length($page) > 0;
+
+			# E.g.  <a href="http://www.tv.com/shows/the-big-bang-theory/?q=Big%252520Bang%252520Theory"><img style="background: url(http://image.com.com/tv/images/processed/thumb/8f/15/281201.jpg) no-repeat center top;" src="http://images.tvtome.com/tv/images/b.gif" alt="Image of The Big Bang Theory" width="120" height="80" /></a>
+			($inputFile) = ($page =~ m@<h2><a href="(http://www.tv.com/shows/[^"]+?)(\?q=.*)?">[^<]*</a></h2>@i);
+			$inputFile .= "season-$season/";
+			print "Match = ".$inputFile;
+			die("I did the search but I couldn't find \"$series\" in the response!") unless defined $inputFile;
+
+			# Peform adaptation. Eg:
+			# /-  http://www.tv.com/24/show/3866/summary.html&q=24
+			# \-> http://www.tv.com/24/show/3866/episode_listings.html&season=0
+			print $ANSIgreen."Found match!\n".$ANSInormal;
+			if($debug){print $ANSIcyan."Hit link is: $link\n".$ANSInormal;}
+
+			print $ANSIyellow."Creating link file in current directory to avoid repeating search...\n".$ANSInormal;
+			open(URI, "> $series (Season $season) [$SiteList[$site]].URL");
+			print URI "[InternetShortcut]\nURL=".$inputFile."\n";
+			close(URI);
 		}
+		# End Site_TV }}}
+		undef $search_term;
 	}	# End Format_AutoFetch }}}
 
 	# Got some input {{{
@@ -991,88 +885,7 @@ else
 		}
 		for my $arg ($format)
 		{
-			if( $arg == Format_AniDB ) { # {{{
-				# When you copy the AniDB table from Firefox (v1.0.1) the clipboard
-				# contents are in the following format. Note that the epname and number
-				# are on seperate lines.
-				#
-				#  [epNumber] [tab] [epName] [tab]
-				#  Noting that epName may be made up of [English ( Kanji / Romanji )]
-
-				my ($num, $snum);
-
-				# Parse input data
-				foreach(@input){
-					my $epTitle;
-					my $strippedEpTitle;
-
-					($num, $epTitle) = ($_ =~ /^\s*(S?\d+)\s+(.*?)\s+\d+m/);
-					if ( ($strippedEpTitle) = ($epTitle =~ /^(.*)\([^\/]+\/[^)]+\)/) ) {
-						$epTitle = $strippedEpTitle;
-					}
-
-					if(($snum) = ($num =~ /S(\d+)/)){			   # Detect Special
-						check_and_push($epTitle, \@sname, $snum);
-					}else{
-						check_and_push($epTitle, \@name, $num);
-					}
-				}
-			} # End case Format_AniDB }}}
-			elsif( $arg == Format_URL_AniDB ) { #{{{
-				# Remember that most attributes are stripped from the HTML before being passed to us. Sample data:
-				#
-				# <tr class="g_odd newtype" id="eid_42520">
-				#	<td class="id eid">
-				#		<a href="animedb.pl?show=ep&amp;eid=42520">1</a>
-				#	</td>
-				#	<td class="title">
-				#		<label title="緑の座 / Midori no za">The Green Seat
-				#		</label>
-				#	</td>
-				#	<td class="duration">24m
-				#	</td>
-				#	<td class="date airdate">23.10.2005
-				#	</td>
-				# </tr>
-
-				my $offset = 0;
-				my ($num, $snum, $epTitle, $japEpTitle);
-				
-				if($autoseries){
-					if(($series) = $_ =~ /^\s*<title>::AniDB.net:: Anime - \s*(.*?)\s*::<\/title>\s*$/ms){
-						$autoseries_successful = 1;
-					}
-				}
-
-				while( $_ =~ m{
-					# <tr>
-					#	  <th>EP</th>
-					#	  <th>Title</th>
-					#	  <th>Duration</th>
-					#	  <th>Air Date</th>
-					# </tr>
-					<tr>\s*
-						<td>\s*
-							<a\shref="animedb.pl\?show=ep&amp;eid=\d+">\s*([sS]?\d+)\s*</a>\s*
-						</td>\s*
-						<td>\s*
-							<label\s*title="([^"]*)">([^<]*)
-							</label>\s*
-						</td>\s*
-						<td>[^<]*
-						</td>\s*
-						<td>[^<]*
-						</td>\s*
-					</tr>
-				}xg ){
-					if(($snum) = ($1 =~ /S(\d+)/i)){			  # Detect Special
-						check_and_push($3, \@sname, $snum);
-					}else{
-						check_and_push($3, \@name, $1);
-					}
-				}
-			} # End case Format_URL_AniDB }}}
-			elsif( $arg == Format_TVtorrents ) { #{{{
+			if( $arg == Format_TVtorrents ) { #{{{
 				# TVtorrent.com uses the following format when copied to the clipboard with
 				# Firefox (v1.0.2)
 				#
@@ -2337,21 +2150,6 @@ sub readURLfile #{{{
 #		 MAINTENANCE:
 #			 Added m4v to the filename filter (thanks Frederic!)
 #
-#  v2.55 MAINTENANCE:
-#			 Fixed typo in user-facing message.
-#			 Added *.divx to supported extensions
-#			 Fixed #2, #5, and #6 on 
-#			 https://github.com/meermanr/TVSeriesRenamer/issues
-#
-#			   #2: Script is not compatible with Perl v5.8.8
-#			   #5: UTF-8 issues
-#			   #6: Need to strip commas from show name when querying epguides
-#
-#  v2.56 BUGFIX:
-#             TV.com support
-#        MAINTENANCE:
-#			 Added support for season numbering with underscores as well as spaces
-#
 #  v2.54 MAINTENANCE:
 #			 Fix EpGuides.com scraper - it sometimes missed the first character 
 #			 of episode titles (bad regexp)
@@ -2384,4 +2182,5 @@ sub readURLfile #{{{
 #   Fixing IO text encoding (UTF8).
 #   Strip commas from series titles when querying EpGuides.com
 #   Updating change history comments
+#
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4 noet:
