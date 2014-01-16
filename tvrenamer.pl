@@ -116,7 +116,7 @@ my $format		 = Format_AutoFetch;
 my $site		 = Site_EpGuides;	# Preferred site search for title data. NB: These are tried in the order they are listed above
 my $search_anime = undef;			# Search TV sites
 
-my $filterFiles  = '^[^.].*.(avi|mkv|ogm|mpg|mpeg|rm|wmv|m4v|mp4|mpeg4|mov|divx|srt|sub|ssa|smi|sami|txt|nfo|tbn)$';
+my $filterFiles  = '^[^.].*\.(avi|mkv|ogm|mpg|mpeg|rm|wmv|m4v|mp4|mpeg4|mov|divx|srt|sub|ssa|smi|sami|txt|nfo|tbn)$';
 my ($series)	 = (getcwd() =~ /\/([^\/]+)$/);		# Grab current dir name, discard rest of path
 my $exclude_series	   = 1;	# 0=Always include series name, 1=Exclude if cwd is "Series X", 2=Always exclude
 my $autoseries	 = 0;	# Do not automatically use scraped series name
