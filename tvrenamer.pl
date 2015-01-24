@@ -658,6 +658,9 @@ else
 			$shortSeries =~ tr/,//d;
 			$shortSeries =~ tr/!//d;
 			$inputFile = "http://epguides.com/$shortSeries/";
+			# 2015-Jan: EpGuides now delimit the series name from the date by 
+			# an underscore. E.g. DoctorWho_2005, not DoctorWho2005
+			$inputFile =~ s!_*(\d+/)$!_\1!;
 		}	 
 		# }}}
 		# Search TV.com and pass the final URL to the usual TV.com parser {{{
