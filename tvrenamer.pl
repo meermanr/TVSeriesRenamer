@@ -692,9 +692,9 @@ else
 
 			# E.g.  <a href="http://www.tv.com/shows/the-big-bang-theory/?q=Big%252520Bang%252520Theory"><img style="background: url(http://image.com.com/tv/images/processed/thumb/8f/15/281201.jpg) no-repeat center top;" src="http://images.tvtome.com/tv/images/b.gif" alt="Image of The Big Bang Theory" width="120" height="80" /></a>
 			($inputFile) = ($page =~ m@<h2><a href="(http://www.tv.com/shows/[^"]+?)(\?q=.*)?">[^<]*</a></h2>@i);
+			die("I did the search but I couldn't find \"$series\" in the response!") unless defined $inputFile;
 			$inputFile .= "season-$season/";
 			print "Match = ".$inputFile;
-			die("I did the search but I couldn't find \"$series\" in the response!") unless defined $inputFile;
 
 			# Peform adaptation. Eg:
 			# /-  http://www.tv.com/24/show/3866/summary.html&q=24
