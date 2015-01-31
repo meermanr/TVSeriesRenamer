@@ -1087,10 +1087,10 @@ else
 						check_and_push($epTitle, \@pname, $num);
 					}
 					# Special episodes
-					elsif( ($num, $epTitle) = ($_ =~ /\s+S-\s*(\d+).{26}(.*$)/) )
+					elsif( ($num, $epTitle) = ($_ =~ /\s+S-?\s*(\d+).{26}(.*$)/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
+						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?\s*$/);
 						check_and_push($epTitle, \@sname, $num);
 					}
 				}
