@@ -300,15 +300,15 @@ if($#ARGV ne -1)
 {
 	foreach my $arg (@ARGV){
 		if( $arg =~ /^$/ )				  {}	# Skip empty strings, often from .tvrenamerrc files
-		if( $arg =~ /^--autofetch$/i )	  {$implicit_format = 0; $format = Format_AutoFetch;}
-		if( $arg =~ /^--autodetect$/i )   {$implicit_format = 0; $format = Format_AutoDetect;}
-		if( $arg =~ /^--tvtorrents$/i )   {$implicit_format = 0; $format = Format_TVtorrents;}
-		if( $arg =~ /^--tvtome$/i )		  {$implicit_format = 0; $format = Format_TVtome;}
-		if( $arg =~ /^--tv$/i )			  {$implicit_format = 0; $format = Format_TV;}
-		if( $arg =~ /^--tv2$/i )		  {$implicit_format = 0; $format = Format_TV2;}
-		if( $arg =~ /^--epguides$/i )	  {$implicit_format = 0; $format = Format_EpGuides;}
+		elsif( $arg =~ /^--autofetch$/i )	  {$implicit_format = 0; $format = Format_AutoFetch;}
+		elsif( $arg =~ /^--autodetect$/i )   {$implicit_format = 0; $format = Format_AutoDetect;}
+		elsif( $arg =~ /^--tvtorrents$/i )   {$implicit_format = 0; $format = Format_TVtorrents;}
+		elsif( $arg =~ /^--tvtome$/i )		  {$implicit_format = 0; $format = Format_TVtome;}
+		elsif( $arg =~ /^--tv$/i )			  {$implicit_format = 0; $format = Format_TV;}
+		elsif( $arg =~ /^--tv2$/i )		  {$implicit_format = 0; $format = Format_TV2;}
+		elsif( $arg =~ /^--epguides$/i )	  {$implicit_format = 0; $format = Format_EpGuides;}
 
-		if( $arg =~ /^--search=(.*)$/i )	 {
+		elsif( $arg =~ /^--search=(.*)$/i )	 {
 										if($1 =~ m/anime/i){ $search_anime=1; }
 										else{ $search_anime=undef; }
 									 }
