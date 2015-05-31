@@ -1111,8 +1111,8 @@ else
 			} #}}}
 		}
 
-		@name = clean_up(@name);
-		@sname = clean_up(@sname);
+		@name = clean_up(\@name);
+		@sname = clean_up(\@sname);
 
 		# Check if any data was extracted {{{
 		if ($#name eq -1 && $#sname eq -1)
@@ -1743,10 +1743,11 @@ sub check_and_push #{{{
 	}
 } # }}} End sub
 
-sub clean_up #{{{
+sub clean_up (\@) #{{{
 {
 # Prepare arguments for filesystem, and do some tidying
-	foreach(@_){
+	my $names = shift;
+	foreach(@$names){
 		tr/\\/-/;					# Replace invalid char \ with -
 		tr/\//-/;					# Replace invalid char / with -
 		tr/\*/-/;					# Replace invalid char * with -
@@ -1757,7 +1758,7 @@ sub clean_up #{{{
 		tr/\x22/\x27/;				# Replace " with '
 		tr/\x3F//d;					# Delete invalid char '?'
 	}
-	return @_;
+	return @$names;
 } #}}} End sub
 
 sub check_group #{{{
