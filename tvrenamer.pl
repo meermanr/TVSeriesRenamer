@@ -1044,14 +1044,14 @@ else
 					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..).*\d+ [A-Z][a-z]+ \d+ \s*(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
 						check_and_push($epTitle, \@name, $num);
 					}
 					# Chip'n'Dale Rescue Rangers, maybe others
 					elsif( ($num, $epTitle) = ($_ =~ /^<li>\s+$season-(..)(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^.{24}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						($epTitle) = ($epTitle =~ /^.{24}(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
 						$epTitle =~ s@<img></a> <a>@@;
 						check_and_push($epTitle, \@name, $num);
 					}
@@ -1059,7 +1059,7 @@ else
 					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..)(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
 						$epTitle =~ s@<img></a> <a>@@;
 						check_and_push($epTitle, \@name, $num);
 					}
@@ -1067,7 +1067,7 @@ else
 					elsif( ($num, $epTitle) = ($_ =~ /\s*\d+\.\s+$season-(..).*? \w{3} \d{2}(.*$)/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
+						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>.*)?$/);
 						check_and_push($epTitle, \@name, $num);
 					}
 					# Pilot episodes (c.f. "Lost" & "24" season 1)
