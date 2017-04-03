@@ -30,8 +30,8 @@
 #
 # v2.58:
 #   (Maintenance) Remove AniDB.net support, since they now insta-ban screen
-#       scrapers like this script. TheTVDB.com provides episode titles for most 
-#       Anime, so this shouldn't be a big problem. If someone wants to add 
+#       scrapers like this script. TheTVDB.com provides episode titles for most
+#       Anime, so this shouldn't be a big problem. If someone wants to add
 #       support for AniDB API to the script, I welcome pull requests.
 #
 #------------------------------------------------------------------------------
@@ -48,7 +48,7 @@
 #	(Windows users only) Win32API::File
 #	(Windows users only) Encode
 #
-# This script was last tested on Perl v5.12.4 built for 
+# This script was last tested on Perl v5.12.4 built for
 # x86_64-linux-gnu-thread-multi
 #
 # TODO: {{{1
@@ -157,7 +157,7 @@ my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 #------------------------------------------------------------------------------}}}
 my $version = "TV Series Renamer v2.56\nReleased 24 April 2012\n"; # {{{
 print $version;
-my $helpMessage = 
+my $helpMessage =
 "Usage: $0 [OPTIONS] [FILE|URL|-]
 
 Renames files in the current directory using data provided, or attempts a
@@ -184,7 +184,7 @@ Input options:
  --search=TV	  | Which group of sites to search? TV is the default unless
  --search=anime   | the word \"anime\" appears somewhere in the current path
  -					Use STDIN (don't look for URL shortcuts or input files)
-  
+
 Formatting options:
  --scheme=X			Episode number format. One of: SXXEYY, sXXeYY, XxYY, XYY,
 					YY
@@ -361,10 +361,10 @@ if($#ARGV ne -1)
 
 		elsif( $arg =~ /^--associate-with-video-folders$/ ) {$do_win32_associate = 1;}
 		elsif( $arg =~ /^--unassociate-with-video-folders$/ ) {$do_win32_associate = -1;}
-			
+
 		elsif( $arg =~ /^--help$/i )		{print $helpMessage; exit;}
 		elsif( $arg =~ /^--version$/i )		{exit;}
-			
+
 		elsif( $arg =~ qr/^-.+/ )			{print "Invalid option $arg!\nUse --help for list of available options\n"; exit 1;}
 		else								{$implicit_format = 1; $inputFile = $arg; $format= Format_AutoDetect;}
 		}
@@ -383,7 +383,7 @@ if( $implicit_season != 2 ){
 	#	"Survivor (20)" -> season 20 of "Survivor"
 	#	"Survivor 20x" -> season 20 of "Survivor"
 	#
-	if( $series =~ m{^(.*)(?:season|series)[\s_]*(\d+)\s*$}i 
+	if( $series =~ m{^(.*)(?:season|series)[\s_]*(\d+)\s*$}i
 			or $series =~ m{^()\s*(\d+)\s*$}i ){
 
 		$season = $2;
@@ -515,7 +515,7 @@ if($do_win32_associate == 1)
 		ReadMode "cbreak";
 		$_ = ReadKey();
 		ReadMode "normal";
-		
+
 		if($_ =~ /y| |\xa|\.|>/i){	  # 'Y', space, enter or the '>|.' key
 			print $ANSIgreen."y\n".$ANSInormal;
 			print "\nOK then, hotshot, here are my guesses as to how you run this script:\n";
@@ -613,7 +613,7 @@ else
 	print "Reading input in $FormatList[$format] mode from ";
 	if($format == Format_AutoFetch){print $SiteList[$site]."\n";}
 	else{print $inputFile ? $inputFile."...\n" : "STDIN (Press ^D to end):\n";}
-	
+
 	# AutoFetch mode {{{
 	###
 	# Label this point to allow re-entry if parsing fails.
@@ -650,7 +650,7 @@ else
 		if($site eq Site_EpGuides)
 		{
 			$format = Format_EpGuides;
-			# Strip articles, such as "A" and "The" from series titles, as 
+			# Strip articles, such as "A" and "The" from series titles, as
 			# this is what EpGuides does.
 			my	($shortSeries) = ($search_term =~ /^(?:(?:A|The)\s+)?(.*?)\s*(?:, (?:A|The))?$/i);
 			$shortSeries =~ tr/'//d;
@@ -658,12 +658,12 @@ else
 			$shortSeries =~ tr/,//d;
 			$shortSeries =~ tr/!//d;
 			$inputFile = "http://epguides.com/$shortSeries/";
-			# 2015-Jan: EpGuides now delimit the series name from the date by 
-			# an underscore. E.g. DoctorWho_2005, not DoctorWho2005 or 
+			# 2015-Jan: EpGuides now delimit the series name from the date by
+			# an underscore. E.g. DoctorWho_2005, not DoctorWho2005 or
 			# DoctorWho(2005)
 			$inputFile =~ s!\((\d+)\)/$!\1/!;    # Strip parenthesis
 			$inputFile =~ s!_*(\d+/)$!_\1!;     # Insert underscore (collapsing runs of underscores)
-		}	 
+		}
 		# }}}
 		# Search TV.com and pass the final URL to the usual TV.com parser {{{
 		#
@@ -675,7 +675,7 @@ else
 			my $len = 0;
 			my $retries = 3;
 			$format = Format_URL_TV2;
-			
+
 			if($debug){print $ANSImagenta."Search URL: $url\n".$ANSInormal;}
 
 			# Peform search on TV.com for programme ("program" to those in the U.S.A.)
@@ -730,7 +730,7 @@ else
 			my $doFetch = 1;
 
 			if($inputFile =~ /^http:\/\/(www.)?tv.com\/.*?&season=0$/){
-			
+
 				# Check for use of deprecated "TV.com All Seasons mode", and convert to normal mode
 				print $ANSIyellow."TV.com \"All Seasons\" mode is deprecated\n$ANSInormal  (They removed some data this script relied on)\n".$ANSInormal;
 				($inputFile) = ($inputFile =~ /^(.*)0/);
@@ -747,7 +747,7 @@ else
 						$_ = ReadKey();
 						ReadMode "normal";
 					}
-					
+
 					if($_ =~ /y| |\xa|\.|>/i){	  # 'Y', space, enter or the '>|.' key
 						print $ANSIgreen."y\n".$ANSInormal;
 						print "Please enter new season number, and press Enter: ";
@@ -757,7 +757,7 @@ else
 					}else{
 						print $ANSIred."n\n".$ANSInormal;
 					}
-					
+
 				}
 
 				$inputFile .= $season;
@@ -767,17 +767,17 @@ else
 			}
 
 			if($debug){print "Input is URL: $inputFile\n";}
-			if(-e ".cache" && !$nocache){	  
+			if(-e ".cache" && !$nocache){
 				print "Checking freshness of .cache... ";
 				if($debug){print "\nCache is " . (-M ".cache") . " days old. (15min = " . 15/60/24 . ")\n";}
 				if(-M ".cache" < (15/60/24)){		# Check if cache is 15min old or fresher (measured in days)
 					open(CACHE, "<:utf8", ".cache");
 					$_ = <CACHE>;
 					close(CACHE);
-					
+
 					my $fline;
 					($fline) = ($_ =~ /(^.*$)/m);
-					
+
 					if($debug){print "First line of .cache is \"" . $fline ."\"\n";}
 					if($fline eq $inputFile){
 						print "smells good!\n";
@@ -788,14 +788,14 @@ else
 				}else{
 					print "could be fresher\n";
 				}
-				
+
 			}
-			
+
 			if($debug && $nocache){print "Will not look for cache file\n";}
 			if($doFetch){
 				# Note about ANSI: {{{ We're going to use a trick so that if an error message is produced during the
 				# fetch it will NOT be displayed after the "..." but instead on it's own line underneath.
-				#	
+				#
 				#	To do this we first ensure there's a blank line below us (this is not always the case if the screen
 				#	is scrolling on each new line we create) and then pop back up onto our line, write out "Fetching
 				#	document..." and save the cursor position on the screen. Send a newline, safe in the knowledge that
@@ -803,7 +803,7 @@ else
 				#	an error occurs it's displayed on its own line and we won't print "[Done], so we don't have to clean
 				#	up the cursor position. If there's no error we simply restore the cursor position and write out
 				#	"[Done]".
-				#	
+				#
 				#	Nifty eh? }}}
 				my $message = "\n".$ANSIup."Fetching document ".($debug?$inputFile:'')."... $ANSIsave$ANSIred\n";
 				print $message ;
@@ -822,7 +822,7 @@ else
 					# 0x1f 0x8b = GZIP compression. C.f. http://www.gzip.org/zlib/rfc-gzip.html
 					if ( substr($_, 0, 2) eq chr(0x1f).chr(0x8b) ){
 						if($debug){print $ANSIcyan."Compressed data detected\n".$ANSInormal;}
-						$_ = Compress::Zlib::memGunzip($_);	
+						$_ = Compress::Zlib::memGunzip($_);
 					}
 				}
 				else{
@@ -840,7 +840,7 @@ else
 			## Strip attributes from tags, making format detection slightly more resistant to change
 			s/<([^ >]*)[^>]*\/?>/<\1>/g;
 			s/\015//g;	# Strip windows-style newlines
-			
+
 			#print; # Print stripped page to aid parser development
 
 		} # Close if($inputFile) }}}
@@ -870,13 +870,13 @@ else
 	}	#}}}
 	tr /\015/\n/; # Convert ^M to newlines in input. Fixes some weirdness from epGuides.com
 	#}}}
-	
+
 	# Quick hack for backwards compatability (FIXME - remove this)
 	@input = split($/);
-	
+
 	#}}}
 	##[ EPISODE DATA PARSER ]#######################################################{{{
-	
+
 	my $continueParsing = 1;
 	my $autoseries_successful = 0;
 	while ($continueParsing) #{{{
@@ -940,9 +940,9 @@ else
 				# 3: Curious George		7/11/2003	102		1 - 3
 				#
 				# ["Pilot"|epNum]:[epTitle] {TAB} [AirDate] {TAB} [Prod#] {TAB} [season] - [epnum]
-				
+
 				my ($epNum, $epTitle);
-				
+
 				# Parse input data
 				foreach(@input){
 					if( ($epTitle, $epNum) = ($_ =~ /[^:]+:\s+([^\t]+)\t[^\t]*\t[^\t]*\t\s*$season\s*-\s*(\d+)/) ){
@@ -984,9 +984,9 @@ else
 				#
 				# 1: Rose		 3/26/2005				 1 review		 8.4
 				# 2: The End of the World	4/2/2005			8.4
-				
+
 				my ($num, $epTitle);
-				
+
 				# Parse input data
 				foreach(@input){
 					if( ($num, $epTitle) = ($_ =~ /\s*(\d+|Pilot):\s+([^\t]+)\t/) ){
@@ -1001,20 +1001,20 @@ else
 			#							  Original
 			#	Episode #	  Prod #	  Air Date	 Titles
 			# _____ ______ ___________	___________ ___________________________________________
-			# 
-			# 
+			#
+			#
 			# Pilot
-			# 
+			#
 			#		 P- 0		1992				 The Spirit of Christmas (Jesus vs. Frosty)
 			#		 P- 0		 101				 Pilot
 			#		 P- 0		1995				 The Spirit of Christmas (Jesus vs. Santa)
-			# 
+			#
 			# Special
-			# 
+			#
 			#		 S- 0		 301	  4 Jul 99	 Oh Holy Night
-			# 
+			#
 			# Season 1
-			# 
+			#
 			#	1.	 1- 1		 101	 13 Aug 97	 Cartman Gets an Anal Probe
 			#	2.	 1- 2		 103	 20 Aug 97	 Volcano
 			#	3.	 1- 3		 102	 27 Aug 97	 Weight Gain 4000
@@ -1029,10 +1029,10 @@ else
 				my ($num, $epTitle, $lastPilotNum);
 				$lastPilotNum = -1;	# i.e. none
 
-				
+
 				foreach(@input)
 				{
-					# First remove any <span> tags and anything they contain 
+					# First remove any <span> tags and anything they contain
 					# (links to Trailers etc)
 					s!<span[^>]*>.*?</span>!!g;
 
@@ -1044,14 +1044,14 @@ else
 					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..).*\d+ [A-Z][a-z]+ \d+ \s*(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
 						check_and_push($epTitle, \@name, $num);
 					}
 					# Chip'n'Dale Rescue Rangers, maybe others
 					elsif( ($num, $epTitle) = ($_ =~ /^<li>\s+$season-(..)(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^.{24}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						($epTitle) = ($epTitle =~ /^.{24}(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
 						$epTitle =~ s@<img></a> <a>@@;
 						check_and_push($epTitle, \@name, $num);
 					}
@@ -1059,7 +1059,7 @@ else
 					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..)(.*)$/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>)?$/);
+						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
 						$epTitle =~ s@<img></a> <a>@@;
 						check_and_push($epTitle, \@name, $num);
 					}
@@ -1067,7 +1067,7 @@ else
 					elsif( ($num, $epTitle) = ($_ =~ /\s*\d+\.\s+$season-(..).*? \w{3} \d{2}(.*$)/) )
 					{
 						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
+						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>.*)?$/);
 						check_and_push($epTitle, \@name, $num);
 					}
 					# Pilot episodes (c.f. "Lost" & "24" season 1)
@@ -1096,7 +1096,7 @@ else
 						check_and_push($epTitle, \@sname, $num);
 					}
 				}
-			
+
 			} # End Format_EpGuides }}}
 			elsif( $arg == NumFormats ) { #{{{
 			##
@@ -1128,13 +1128,13 @@ else
 				if($implicit_format && $site ne NumSites)
 				{
 					print $ANSIyellow."No useable results. Trying: $SiteList[$site]$ANSInormal\n";
-					
+
 					# Reset detection
 					$format = Format_AutoFetch;
 					@name = undef;
 					@sname = undef;
 					@pname = undef;
-					
+
 					# Try next site
 					goto AUTOFETCH;
 				}
@@ -1167,7 +1167,7 @@ else
 	} #}}}
 
 	if($warnings){print $ANSIred."\a$warnings warning(s) during input\n".$ANSInormal; $warnings = 0}
-	
+
 	if($autoranging) #{{{
 	{
 		my $firstBlank = undef;
@@ -1190,7 +1190,7 @@ else
 			$rangemax = ($firstBlank - 1);
 		}
 	} #}}}
-	
+
 	if($rangemin or $rangemax){
 		if( ! $rangemax){ $rangemax = $#name; }
 		@name  =  @name[0..$rangemax];
@@ -1246,13 +1246,13 @@ foreach(@fileList){
 	$titles = \@name;		# Reference normal episode to begin with
 	$fileSeason = undef;	# Reset grabbed season, not all file names have this
 	$fileNum2 = undef;		# Reset double file number (i.e. '09' in episode 08-09)
-	
+
 	# Chomp newline characters off the end of our file list entries
-	# Check for certain file names which we'll ignore.. 
-	
+	# Check for certain file names which we'll ignore..
+
 	chomp($_);
 	if($_ eq $0 or $_ eq $inputFile){next;}
-	
+
 	$before = $_;
 
 	# Note To Self: tr/a-zA-Z0-9_-//dc Will delete all characters NOT matched
@@ -1261,7 +1261,7 @@ foreach(@fileList){
 
 	($fileExt) = ($_ =~ /.*\.(.*?$)/);	# Put file extension into a variable
 	($_) = ($_ =~ /(.*)\..*?$/);		# Strip file extension
-	
+
 	s/%5b/[/g;							# %5b -> [	(avoids bad epNumber extraction)
 	s/%5d/]/g;							# %5b -> ]	(avoids bad epNumber extraction)
 	tr/\_/ /;							# Replace _ with " "
@@ -1292,11 +1292,11 @@ foreach(@fileList){
 		# number cannot be extracted
 
 		if( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /season\D?(\d+)\D?episode\D?(\d+)[-&](\d+)/i) ){$match='Match "Season $$ Episode @@-@@"';}
-		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){$match='Match "S$$.E@@-E@@"';} 
+		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&]e(\d+)/i) ){$match='Match "S$$.E@@-E@@"';}
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)[-&](\d+)/i) ){$match='Match "S$$.E@@-@@"';}
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /s(\d+)\D?e(\d+)e(\d+)/i) ){$match='Match "S$$.E@@E@@"';}
 		elsif( ($fileSeason, $fileNum, $fileNum2) = ($_ =~ /(\d+)x(\d+)[-&](\d+)/i) ){$match='Match "$x@@-@@"';}
-		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$match='Match "S@@-@@" (Special)'; $titles=\@sname;}			
+		elsif( ($fileNum, $fileNum2) = ($_ =~ /S(\d+)[-&](\d+)/i)){$match='Match "S@@-@@" (Special)'; $titles=\@sname;}
 		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?P(\d+)/i) ){$match='Match "Season $$ Episode P@@" (Pilot)'; $titles=\@pname;}
 		elsif( ($fileNum) = ($_ =~ /season\D?\d+.?episode\D?(\d+)/i) ){$match='Match "Season $$ Episode @@"';}
 		elsif( ($fileSeason, $fileNum) = ($_ =~ /s(\d+)\D?ep(\d+)/i) ){$match='Match "S$$EP@@" (Pilot)'; $titles=\@pname;}
@@ -1323,7 +1323,7 @@ foreach(@fileList){
 
 		# If flagged, treat numbers greater than 2 digits as shorthand for "1x08" / "01x08" / "001x08" etc
 		if( $dubious  ) { ($fileNum) = ($fileNum =~ /\d*(\d{2})/); }
-		
+
 		if($fileSeason ne '' && $fileSeason != $season){
 			if($debug){
 				print $ANSIcyan."\nFiltering due to wrong season ($fileSeason): $before".
@@ -1403,10 +1403,10 @@ foreach(@fileList){
 
 				$epTitle = $epTitle1 . " and " . substr($epTitle2, $common+1);
 			}
-			
+
 			# Print all source data before compiling new name
 			if($debug && ($before ne $_)){
-				print 
+				print
 					"\n\$filePrefix = ".$filePrefix.
 					"\n\$local_gap = ".$local_gap.
 					"\n\$epNum = ".$epNum.
@@ -1416,7 +1416,7 @@ foreach(@fileList){
 					"\n\$epTitle2 = ".$epTitle2
 					;
 			}
-			
+
 			# Compile new name
 			$_ = "$filePrefix$local_gap$epNum$separator$epTitle$group.$fileExt";
 
@@ -1448,7 +1448,7 @@ foreach(@fileList){
 
 			print "/--	$before\n\\->  $after\n\n";
 			print "Make this change? [".$ANSIbold."Y".$ANSInormal."|n]: ";
-			
+
 			if($unattended){
 				$key = 'Y';
 			}
@@ -1457,7 +1457,7 @@ foreach(@fileList){
 				$key = ReadKey();
 				ReadMode "normal";
 			}
-			
+
 			if($key =~ /y| |\xa|\.|>/i){	# 'Y', space, enter or the '>' key
 				print $ANSIgreen."y\n".$ANSInormal;
 				push(@b, $before);
@@ -1468,7 +1468,7 @@ foreach(@fileList){
 		}else{
 			push(@b, $before);
 			push(@a, $after);
-		}		 
+		}
 	} #}}}
 } # End foreach(@fileList) (near top of FILENAME PARSER)
 ##[ CHECK NAME TRANSITIONS ]####################################################{{{
@@ -1493,7 +1493,7 @@ for( my $i = 0; $i < @a; $i++ )
 			$warnings++;
 			$b[$i] = undef;
 			$a[$i] = undef;
-			
+
 			$b[$j] = undef;
 			$a[$j] = undef;
 		}
@@ -1553,9 +1553,9 @@ USERPROMPT: {
 		}
 	}
 
-	if ($count eq 0) {print "No changes necessary.\n";} 
+	if ($count eq 0) {print "No changes necessary.\n";}
 	else {
-		print 
+		print
 		"____________________________________\n\n",
 		"Would you like to proceed with renaming? [y/".$ANSIbold."N".$ANSInormal."/?]: ";
 
@@ -1567,12 +1567,12 @@ USERPROMPT: {
 			$_ = ReadKey();
 			ReadMode "normal";
 		}
-		
+
 		if($_ eq '?'){print "?\n"; $detailedView = 1; goto USERPROMPT;}
 		if(lc $_ eq 'y'){
 			my ($before, $after);
 			print $ANSIgreen."y".$ANSInormal."\nRenaming in progress... ";
-			
+
 			# If creating undo script, read in any existing undo script
 			# First check if this is the Win32 stand-alone version (i.e. rename.EXE)
 			my $undofile = 'unrename.pl';
@@ -1581,10 +1581,10 @@ USERPROMPT: {
 			open(UNDO, $undofile);
 			my @undo = <UNDO>; # Slurp in entire file, breaking lines into elements
 			close(UNDO);
-			
+
 			@undo = @undo[4 .. $#undo]; # Discard header
 			foreach(@undo){chop;} # Clean up line endings
-			
+
 			my ($before_is_unicode, $after_is_unicode, $teststring, $success, $warned_w32);
 			until ($#a==-1)
 			{
@@ -1646,13 +1646,13 @@ USERPROMPT: {
 								my ($w_before, $w_after);
 								$w_before	= Encode::encode("UTF16-LE", $before);
 								$w_after	= Encode::encode("UTF16-LE", $after);
-								$success= Win32API::File::MoveFileW($w_before, $w_after) 
+								$success= Win32API::File::MoveFileW($w_before, $w_after)
 									or print $ANSIred,"\nError renaming $before: ",Win32API::File::fileLastError(),$ANSInormal;
 
 									# Deprecated method ("hack") to achieve the above
 									#
 									# NB: elsif($after_is_unicode && -e "$ENV{WINDIR}\\SYSTEM32\\WSCRIPT.EXE")
-									# We use an intermediate VB script to do the renaming	
+									# We use an intermediate VB script to do the renaming
 									#print "\n$ANSIgreen","Dealing with unicode target name...",$ANSInormal;
 									#
 									#open(FH, ">tmp20060804.vbs");
@@ -1670,7 +1670,7 @@ USERPROMPT: {
 								$success = rename($before, $after);
 							} #}}}
 						}
- 
+
 					if($success && $reversible){ #{{{
 						# Create undo information if requested and rename was successfull
 						if($undofile eq 'unrename.bat'){
@@ -1701,7 +1701,7 @@ USERPROMPT: {
 				else{
 					unshift(@undo, "# Renaming completed at $_");
 				}
-				
+
 				# Prepend header
 				if($undofile eq 'unrename.bat'){
 					unshift(@undo, "\@ECHO OFF\nREM TV Renamer undo script\nREM Generated by $0\nECHO Remember to remove this script before using the TV renamer again!\n\n");
@@ -1709,7 +1709,7 @@ USERPROMPT: {
 				else{
 					unshift(@undo, "#!/usr/bin/perl\n# TV Renamer undo script\n# Generated by $0\nprint \"Remember to remove this script before using the TV renamer again!\\n\";\n\n");
 				}
-				
+
 				# Write to file
 				print "\n\n".$ANSIup."Writing undo infomation into $undofile... ".$ANSIsave;
 				open(UNDO, '> '.$undofile) || die $ANSIred."Can't open undo script: $!".$ANSInormal;
@@ -1765,7 +1765,7 @@ sub check_group #{{{
 {
 # Check if our supposed 'group' is actually nothing more than part of the episode title
 	if($group){
-		$group = ($$titles[$fileNum] =~ /$group/) ? undef : ' ['.$group.']';		
+		$group = ($$titles[$fileNum] =~ /$group/) ? undef : ' ['.$group.']';
 	}
 } #}}} End sub
 
@@ -1778,7 +1778,7 @@ sub pad #{{{
 	($string) = ($string =~ /^0*(\d+)$/);	  # Trim leading zeros
 	until(length $string  >= $length)		  # NB the '>=' allowing renaming without padding zeros
 		{$string = '0'.$string; }			  # Pad for normals
-	
+
 	return ($string);
 } #}}} End sub
 
@@ -1788,9 +1788,9 @@ sub readURLfile #{{{
 	my ($file) = @_;
 	my $url_season;
 	my $answer;
-	
+
 	print "Parsing internet shortcut: $file\n";
-	
+
 	# Temporarily disable our record seperator. This is rest automatically at the end of the block
 	local(*FH, $/);
 	open(FH, $file) || die "Can't open URL shortcut: $!";
@@ -1922,7 +1922,7 @@ sub readURLfile #{{{
 #	- Improved autodetect code, now it's a bit easier to understand when adding / updating parsers
 #
 #  v2.12 Added parser for "TV.com All Seasons (fetched)" format. {{{2
-#	- Scans for any *.URL or *.desktop file and grabs the link from it (.URL being a standard Windows internet 
+#	- Scans for any *.URL or *.desktop file and grabs the link from it (.URL being a standard Windows internet
 #	  shortcut, while .desktop is the standard KDE / Gnome one), although any text file named something.URL with
 #	  an URL in it works.
 #	- Changed default behavious with regards to dubious file number extraction
@@ -1939,7 +1939,7 @@ sub readURLfile #{{{
 #	  "Win32::Console::ANSI" (which you can comment in at the top of the script).
 #
 #  v2.16 Rewrote TVTorrents (pasted) parser {{{2
-#	- Converted "TV.com "All Seasons" (fetched)" mode -> "TV.com (monotonic)" mode and worked around TV.com's nasty decisions to 
+#	- Converted "TV.com "All Seasons" (fetched)" mode -> "TV.com (monotonic)" mode and worked around TV.com's nasty decisions to
 #	  discard season/episode information in their all seasons listings. >.<
 #	- Fixed oversight: Specifying an input format / source has priority over auto-detected choice now.
 #	- Added "--autofetch" mode, which searches TV.com for the episode listing, and saves a link to avoid repeating the search
@@ -1985,7 +1985,7 @@ sub readURLfile #{{{
 #	  assert. So now HTML Entities are represented as Unicode (EG: "&#9829;" -> "♥"). Tested
 #	  with ASCII containing HTML Entities and UTF-8 containing Kanji.
 #
-#  v2.21 Fixed bug AutoFetch mode which caused many searches to fail with AniDB {{{2 
+#  v2.21 Fixed bug AutoFetch mode which caused many searches to fail with AniDB {{{2
 #  (spaces were not being converted to %20 when sending data to the website).
 #
 #  v2.22 BUGFIX: --reversible didn't log non-Unicode name changes in Windows / Cygwin {{{2
@@ -2132,7 +2132,7 @@ sub readURLfile #{{{
 #		 automatically). Now uses proper detection.
 #
 #  v2.51 MAINTENANCE: AniDB scraper updated in sympathy with site changes
-#		 ENHANCEMENT: Season number detection now supports following directory 
+#		 ENHANCEMENT: Season number detection now supports following directory
 #		 name / layouts:
 #
 #		   SeriesName/2
@@ -2144,27 +2144,27 @@ sub readURLfile #{{{
 #
 #  v2.52 FEATURE: List episodes missing from the user's collection with
 #		 --show-missing. (Thanks Baldur Karlsson!)
-#		 MAINTENANCE: --include_series and --exclude_series became 
-#		 --include-series and --exclude-series (underscore became hyphen). Old 
-#		 option names are still accepted (for compatibility with .tvrenamerrc 
+#		 MAINTENANCE: --include_series and --exclude_series became
+#		 --include-series and --exclude-series (underscore became hyphen). Old
+#		 option names are still accepted (for compatibility with .tvrenamerrc
 #		 files)
 #
 #  v2.53 MAINTENANCE:
-#			 EpGuides support updated to cope with annoying links to trailers / 
-#			 recaps etc which now appear as <spans> within the episode titles.	
+#			 EpGuides support updated to cope with annoying links to trailers /
+#			 recaps etc which now appear as <spans> within the episode titles.
 #			 Thanks to Frederic and Jasper for bringing this to my attention.
 #		 MAINTENANCE:
 #			 Added m4v to the filename filter (thanks Frederic!)
 #
 #  v2.54 MAINTENANCE:
-#			 Fix EpGuides.com scraper - it sometimes missed the first character 
+#			 Fix EpGuides.com scraper - it sometimes missed the first character
 #			 of episode titles (bad regexp)
 #		 MAINTENANCE:
-#			 Better compatability with EpGuides.com - they remove "The" and "A" 
-#			 from series titles when creating their URLs. This script did not 
+#			 Better compatability with EpGuides.com - they remove "The" and "A"
+#			 from series titles when creating their URLs. This script did not
 #			 know about "A" until now.
 #		 FEATURE:
-#			 Double episodes' titles are merged so that their common prefix 
+#			 Double episodes' titles are merged so that their common prefix
 #			 does not appear. For instance, the following two episodes:
 #
 #			   Camdenites: Part 1
