@@ -72,6 +72,7 @@ use URI::Escape;			# Convenient translation of " " <-> %20 etc in URIs
 use Compress::Zlib;			# AniDB sends us gzip'd data, and I can't persuade it not to!
 use File::Glob ':glob';		# Avoids using "perlglob(.exe)" which makes for neater Win32 stand-alone versions
 use Encode;					# Allow importing of UTF-8 data and generation of UTF-16LE names for Win32API::File
+use HTML::Entities;			# Allows decoding of HTML entities (e.g. &amp) often found on EPGuides
 
 if($^O eq "MSWin32" || $^O eq "cygwin"){
 	require Win32API::File;	# Low-level calls to circumvent windows Unicode hell
@@ -1437,6 +1438,8 @@ foreach(@fileList){
 	delete $missing{int $fileNum2};
 
 	$after = $_;
+	$after = decode_entities($after);
+	
 	#End CONSTRUCT NEW FILENLAME }}}
 	##[ Interactive ]####################################################{{{
 	if($before ne $after)
