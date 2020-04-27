@@ -1032,71 +1032,62 @@ else
 				my ($num, $epTitle, $lastPilotNum);
 				$lastPilotNum = -1;	# i.e. none
 
+				# Remove tr and td opening / closing tags, but leave <a>, as
+				# this delimites the episode title from metadata like "(30
+				# min)"
+				# From:
+				#    <tr><td>S06.</td><td>6-0&nbsp;</td><td>02 Oct 11</td><td><a>Big Changes</a> (30 min)</td></tr>
+				# 
+				#    <tr><td>S06.</td><td>6-0&nbsp;</td><td>11 Dec 11</td><td><a>Holiday Surprise</a> (30 min)</td></tr>
+				# to
+				#    S06.  6-0&nbsp;  02 Oct 11  <a>Big Changes</a> (30 min)
 
-				foreach(@input)
+				#    S06.  6-0&nbsp;  11 Dec 11  <a>Holiday Surprise</a> (30 min)
+				s|</?t[^>]*>| |g;
+
+				# Remove non-breaking space to arrive at:
+				#    S06.  6-0  02 Oct 11  <a>Big Changes</a> (30 min)
+				#
+                #    S06.  6-0  11 Dec 11  <a>Holiday Surprise</a> (30 min)
+				s|&nbsp;||g;
+
+				# Remove leading whitespace, to get to:
+				# S06.  6-0  02 Oct 11  <a>Big Changes</a> (30 min)
+				# S06.  6-0  11 Dec 11  <a>Holiday Surprise</a> (30 min)
+				s|^\s\s*||gm;  # m: multiline
+
+				
+				foreach(split($/))
 				{
 					# Debugging
 					#print;
 					#print "\n";
 
-					if( ($num, $epTitle) = ($_ =~ /^\d+\s+$season-(\d+)\s+.*<a[^>]*>(.*?)<\/a>/) )
+                    # Generic format
+					if( ($num, $epTitle) = ($_ =~ /^\d+\.\s+$season-\s?(\d+)\s+.*<a[^>]*>(.*?)<\/a>/) )
 					{
 						check_and_push($epTitle, \@name, $num);
 					}
-					# Episodes with airdates
-					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..).*\d+ [A-Z][a-z]+ \d+ \s*(.*)$/) )
+					# Specials (i.e. Episode 0), so capture "Sx" from start of line
+					elsif( ($num, $epTitle) = ($_ =~ /^S(\d+)\.\s+\d+-\s?0\s+.*<a[^>]*>(.*?)<\/a>/) )
 					{
-						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
-						check_and_push($epTitle, \@name, $num);
+						check_and_push($epTitle, \@sname, $num);
 					}
-					# Chip'n'Dale Rescue Rangers, maybe others
-					elsif( ($num, $epTitle) = ($_ =~ /^<li>\s+$season-(..)(.*)$/) )
+					# Old "TVRage" listing (plain text, so <a>...</a> doesn't match):
+                    # Episode #     Prod #      Air Date   Titles
+                    # _____ ______ ___________  ___________ ___________________________________________
+                    # &bull; Season 1
+                    # 1      1-01      101       10/Mar/10   Garry & Star Lynn
+                    # 2      1-02      102       17/Mar/10   Chris & Pam
+                    # 3      1-03      103       24/Mar/10   Shane & Angela
+                    # 4      1-04      104       31/Mar/10   Chris & Hollis
+                    # 5      1-05      105       07/Apr/10   John & Deanna
+                    # 6      1-06      106       14/Apr/10   Chris & Breanne
+					elsif( ($num, $epTitle) = ($_ =~ /^\d+\s+$season\s?-\s?0?(\d+)\s+\d+\s+\S+\s+(.*)$/) )
 					{
-						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^.{24}(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
-						$epTitle =~ s@<img></a> <a>@@;
-						check_and_push($epTitle, \@name, $num);
-					}
-					# Most episodes (new parser, v2.34)
-					elsif( ($num, $epTitle) = ($_ =~ /\s+$season-(..)(.*)$/) )
-					{
-						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^.{28}(?:<a[^>]*>)?(.*?)(?:<\/a>.*)?$/);
-						$epTitle =~ s@<img></a> <a>@@;
-						check_and_push($epTitle, \@name, $num);
-					}
-					# Most episodes (old parser, v2.33 and earlier)
-					elsif( ($num, $epTitle) = ($_ =~ /\s*\d+\.\s+$season-(..).*? \w{3} \d{2}(.*$)/) )
-					{
-						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>.*)?$/);
-						check_and_push($epTitle, \@name, $num);
-					}
-					# Pilot episodes (c.f. "Lost" & "24" season 1)
-					elsif( ($num, $epTitle) = ($_ =~ /\s+P-\s*(\d+).{26}(.*$)/) )
-					{
-						# Often a series has multiple P-0 entries, but people like to order then by release date.
-						# So we assume pilots are listed chronologically
-						if( $num == 0 && $lastPilotNum != -1 )
-						{
-							$lastPilotNum += 1;
-							$num = $lastPilotNum;
-						}
-						else
-						{
-							$lastPilotNum = $num;
-						}
 						# Cleanup whitespace (and tags if using online version)
 						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?$/);
-						check_and_push($epTitle, \@pname, $num);
-					}
-					# Special episodes
-					elsif( ($num, $epTitle) = ($_ =~ /\s+S-?\s*(\d+).{26}(.*$)/) )
-					{
-						# Cleanup whitespace (and tags if using online version)
-						($epTitle) = ($epTitle =~ /^\s*(?:\<a\>)?(.*?)(?:\<\/a\>)?\s*$/);
-						check_and_push($epTitle, \@sname, $num);
+						check_and_push($epTitle, \@name, $num);
 					}
 				}
 
