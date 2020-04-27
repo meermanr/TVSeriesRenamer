@@ -849,7 +849,7 @@ else
 		} # Close if($inputFile) }}}
 		elsif($inputFile =~ /\.txt$/)	#{{{
 		{
-			open(FH, $inputFile) || die "Can't open intput file: $!";
+			open(FH, $inputFile) || die "Can't open input file: $!";
 			$_ = <FH>;
 			close(FH);
 		}	# }}}
