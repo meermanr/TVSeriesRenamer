@@ -65,7 +65,6 @@
 # }}}
 #use warnings;				# I'm not that leet {{{
 use strict;					# Let's be scientific about this
-use Term::ReadKey;			# Allows single keypresses to be detected (so no need to press <ENTER> all the time)
 use Cwd;					# Current Working Directory library
 use LWP::Simple;			# Adds get($url) function
 use URI::Escape;			# Convenient translation of " " <-> %20 etc in URIs
@@ -512,9 +511,7 @@ if($do_win32_associate == 1)
 		print "if you think you know better, you can try anyways.\n";
 		print "Take a stand? [y/${ANSIbold}N${ANSInormal}]: ";
 
-		ReadMode "cbreak";
-		$_ = ReadKey();
-		ReadMode "normal";
+		$_ = <STDIN>; chomp;
 
 		if($_ =~ /y| |\xa|\.|>/i){	  # 'Y', space, enter or the '>|.' key
 			print $ANSIgreen."y\n".$ANSInormal;
@@ -523,9 +520,7 @@ if($do_win32_associate == 1)
 			print "Script: $0\n";
 			print "Anything about that strike you as odd? [y/${ANSIbold}N${ANSInormal}]: ";
 
-			ReadMode "cbreak";
-			$_ = ReadKey();
-			ReadMode "normal";
+			$_ = <STDIN>; chomp;
 
 			if($_ =~ /y| |\xa|\.|>/i){	  # 'Y', space, enter or the '>|.' key
 				print $ANSIgreen."y\n".$ANSInormal;
@@ -743,9 +738,7 @@ else
 						$_ = 'N';
 					}
 					else{
-						ReadMode "cbreak";
-						$_ = ReadKey();
-						ReadMode "normal";
+						$_ = <STDIN>; chomp;
 					}
 
 					if($_ =~ /y| |\xa|\.|>/i){	  # 'Y', space, enter or the '>|.' key
@@ -1456,9 +1449,7 @@ foreach(@fileList){
 				$key = 'Y';
 			}
 			else{
-				ReadMode "cbreak";
-				$key = ReadKey();
-				ReadMode "normal";
+				$key = <STDIN>; chomp;
 			}
 
 			if($key =~ /y| |\xa|\.|>/i){	# 'Y', space, enter or the '>' key
@@ -1566,9 +1557,7 @@ USERPROMPT: {
 			$_ = 'Y';
 		}
 		else{
-			ReadMode "cbreak";
-			$_ = ReadKey();
-			ReadMode "normal";
+			$_ = <STDIN>; chomp;
 		}
 
 		if($_ eq '?'){print "?\n"; $detailedView = 1; goto USERPROMPT;}
@@ -1825,9 +1814,7 @@ sub readURLfile #{{{
 			$answer = 'N';
 		}
 		else{
-			ReadMode "cbreak";
-			$answer = ReadKey();
-			ReadMode "normal";
+			$answer = <STDIN>; chomp;
 		}
 
 		if($answer =~ /y|\.|>/i){	 # 'Y', space, enter or the '>'/'.' key
