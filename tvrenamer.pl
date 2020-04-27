@@ -154,7 +154,7 @@ my $implicit_format = 1;  # 1="Soft" format, use internal algorithm to detect in
 my $do_win32_associate = 0;	# 0=Do nothing, 1=associate, -1=unassociate
 
 #------------------------------------------------------------------------------}}}
-my $version = "TV Series Renamer v2.56\nReleased 24 April 2012\n"; # {{{
+my $version = "TV Series Renamer v2.57\nReleased 27 April 2020\n"; # {{{
 print $version;
 my $helpMessage =
 "Usage: $0 [OPTIONS] [FILE|URL|-]
