@@ -1731,6 +1731,8 @@ USERPROMPT: {
 sub check_and_push #{{{
 {
 # Checks array destination is not defined before assigning value
+	use HTML::Entities;
+
 	my ($data, $array_ref, $index) = @_;
 
 	# Debugging to see which regex brought us here
@@ -1739,6 +1741,15 @@ sub check_and_push #{{{
 
 	$data =~  s/^\s+//;				# Trim leading whitespace
 	$data =~  s/\s+$//;				# Trim trailing whitespace
+
+	# EpGuides seems to have double-encoded some of their title, e.g.
+	# http://epguides.com/Simpsons/
+	# 22.	2-9 	20 Dec 90	Itchy &amp; Scratchy &amp; Marge
+	decode_entities($data);
+	decode_entities($data);
+
+	# Decode HTML entities
+
 	if($array_ref->[$index]){
 		if($array_ref->[$index] == $data){return}
 		print $ANSIred."  Duplicate input: Ep ",$array_ref == \@sname ? 'S' : '' ,$index,
