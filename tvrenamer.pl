@@ -1384,27 +1384,27 @@ foreach(@fileList){
 			my $epTitle = $epTitle1;
 			if($epTitle2){
 				my $max = 0;
+				my $epTitle2suffix = "";
 
-				# Convert string to arrays of characters
-				my @first = split //, $epTitle1;
-				my @second = split //, $epTitle2;
+				# Convert string to arrays of words
+				my @first = split /\s+/, $epTitle1;
+				my @second = split /\s+/, $epTitle2;
 
-				if( length $epTitle2 > length $epTitle1 ){
-					$max = length $epTitle2;
+				if( scalar @first > scalar @second ){
+					$max = scalar @second;
 				}else{
-					$max = length $epTitle1;
+					$max = scalar @first;
 				}
 
-				my $common = 0;
 				for my $i (0..$max){
-					if( @first[$i] eq @second[$i] ){
-						$common = $i;
-					}else{
+					if( @first[$i] ne @second[$i] ){
+						$epTitle2suffix = join " ", splice @second, $i;
+						$epTitle2suffix =~ s|\s\s*$||;  # Strip trailing whitespace
 						last;
 					}
 				}
 
-				$epTitle = $epTitle1 . " and " . substr($epTitle2, $common+1);
+				$epTitle = $epTitle1 . " and " . $epTitle2suffix;
 			}
 
 			# Print all source data before compiling new name
