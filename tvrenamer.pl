@@ -1215,6 +1215,15 @@ else
 } # end else clause of if($cleanup)
 # End Look for input }}}
 
+if( scalar @name eq 1
+and scalar @sname eq 1
+and scalar @pname eq 1
+){
+	print $ANSIred, "ERROR: After all that, still no usable episode listings!\n";
+	exit(1 >> 8);
+
+}
+
 ##[ FILENAME PARSER ]###########################################################{{{
 
 print "Generating changes...";
