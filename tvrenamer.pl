@@ -842,8 +842,8 @@ else
 
 			## Strip attributes from tags, making format detection slightly more resistant to change
 			s/<([^ >]*)[^>]*\/?>/<\1>/g;
-			s/\015//g;	# Strip windows-style newlines
-
+			s/\015/\n/g;	# Strip windows-style newlines
+			
 			#print; # Print stripped page to aid parser development
 
 		} # Close if($inputFile) }}}
