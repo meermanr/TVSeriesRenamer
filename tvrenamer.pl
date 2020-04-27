@@ -807,6 +807,9 @@ else
 				#	Nifty eh? }}}
 				my $message = "\n".$ANSIup."Fetching document ".($debug?$inputFile:'')."... $ANSIsave$ANSIred\n";
 				print $message ;
+				# Debugging: Show URL being fetched
+				#print $inputFile;
+				#print "\n";
 				if($_ = get($inputFile)){
 					my $t;
 					print $ANSIrestore.$ANSInormal."[Done]\n";
@@ -1032,9 +1035,9 @@ else
 
 				foreach(@input)
 				{
-					# First remove any <span> tags and anything they contain
-					# (links to Trailers etc)
-					s!<span[^>]*>.*?</span>!!g;
+					# Debugging
+					#print;
+					#print "\n";
 
 					if( ($num, $epTitle) = ($_ =~ /^\d+\s+$season-(\d+)\s+.*<a[^>]*>(.*?)<\/a>/) )
 					{
@@ -1729,6 +1732,11 @@ sub check_and_push #{{{
 {
 # Checks array destination is not defined before assigning value
 	my ($data, $array_ref, $index) = @_;
+
+	# Debugging to see which regex brought us here
+	#my ($package, $filename, $line) = caller;
+	#print $line, $data, "\n";
+
 	if($array_ref->[$index]){
 		print $ANSIred."  Duplicate input: Ep ",$array_ref == \@sname ? 'S' : '' ,$index,
 			  " already defined! Discarding redefinition.\n".$ANSInormal;
