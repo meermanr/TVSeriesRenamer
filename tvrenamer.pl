@@ -1737,16 +1737,17 @@ sub check_and_push #{{{
 	#my ($package, $filename, $line) = caller;
 	#print $line, $data, "\n";
 
+	$data =~  s/^\s+//;				# Trim leading whitespace
+	$data =~  s/\s+$//;				# Trim trailing whitespace
 	if($array_ref->[$index]){
+		if($array_ref->[$index] == $data){return}
 		print $ANSIred."  Duplicate input: Ep ",$array_ref == \@sname ? 'S' : '' ,$index,
 			  " already defined! Discarding redefinition.\n".$ANSInormal;
-		  print $ANSIyellow."	 Current:	",$array_ref->[$index],"\n",
+		print $ANSIyellow."	 Current  : ",$array_ref->[$index],"\n",
 				"	 Discarded: $data\n".$ANSInormal;
 		$warnings++;
 	}
 	else{
-		$data =~  s/^\s+//;				# Trim leading whitespace
-		$data =~  s/\s+$//;				# Trim trailing whitespace
 		$array_ref->[$index] = $data;	# Feed ep number to array
 	}
 } # }}} End sub
