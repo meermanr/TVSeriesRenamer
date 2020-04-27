@@ -78,7 +78,7 @@ def run_test(test_dir):
     if err:
         # Test failed
         to_stderr("%s failed\n%s\n%s" % (test_dir, err, "-" * 80))
-        return
+        return False
 
     with open(os.path.join(test_dir, "EXPECTED_RESULT"), "rU") as f:
         checks = 0
@@ -92,17 +92,26 @@ def run_test(test_dir):
 
     if checks == passes:
         to_stderr("OK", 1)
+        return True
     else:
         to_stderr("%s" % ("#" * 70), 1)
         for line in StringIO(out).readlines():
             to_stderr("%s" % line.strip(), 1)
+        return False
 
 
 if __name__ == "__main__":
+    yAllPass = True
     try:
         siDirs = sys.argv[1:] or find_test_dirs()
         for test_dir in siDirs:
             to_stderr(test_dir[len(BASE_DIR):])
-            run_test(test_dir)
+            yPass = run_test(test_dir)
+            yAllPass = yAllPass and yPass
     except KeyboardInterrupt:
+        sys.exit(1)
+
+    if yAllPass:
+        sys.exit(0)
+    else:
         sys.exit(1)
