@@ -70,7 +70,7 @@ else:
     dst = "tvrenamer.pl"
 
 print "Uploading %s..." % dst
-retval = os.system("rsync -P tvrenamer.pl robmeerman.co.uk:public_html/downloads/%s" % dst)
+retval = os.system("rsync -P tvrenamer.pl robmeerman.co.uk:/var/www/www.robmeerman.co.uk/html/downloads/%s" % dst)
 print "Done"
 
 if retval == 0:
