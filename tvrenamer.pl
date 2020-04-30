@@ -1733,7 +1733,7 @@ sub check_and_push #{{{
 
 	# EpGuides seems to have double-encoded some of their title, e.g.
 	# http://epguides.com/Simpsons/
-	# 22.	2-9 	20 Dec 90	Itchy &amp; Scratchy &amp; Marge
+	# 22.	2-9 	20 Dec 90	Itchy &amp;amp; Scratchy &amp;amp; Marge
 	decode_entities($data);
 	decode_entities($data);
 
