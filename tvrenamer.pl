@@ -4,7 +4,7 @@
 # series).
 #------------------------------------------------------------------------------
 # Written by: Robert Meerman (robert.meerman@gmail.com, ICQ# 37099562)
-# Website: http://www.robmeerman.co.uk/coding/file_renamer
+# Website: https://www.robmeerman.co.uk/coding/file_renamer
 # Project: https://github.com/meermanr/TVSeriesRenamer
 #
 # Please send comments, feature requests, bugs, etc to the address above.
@@ -12,6 +12,11 @@
 #------------------------------------------------------------------------------
 # Recent changes (see bottom of file for complete version history):
 #------------------------------------------------------------------------------
+#
+# Unreleased
+#   Use HTTPS instead of HTTP
+#   (I needed to install Mozilla::CA by running `sudo cpan install Mozilla:CA`)
+#
 #
 # v2.56 MAINTENANCE:
 #   (Maintenance) Updated the TV.com matching which seemed to be a little out of date
@@ -71,6 +76,7 @@ use URI::Escape;			# Convenient translation of " " <-> %20 etc in URIs
 use Compress::Zlib;			# AniDB sends us gzip'd data, and I can't persuade it not to!
 use File::Glob ':glob';		# Avoids using "perlglob(.exe)" which makes for neater Win32 stand-alone versions
 use Encode;					# Allow importing of UTF-8 data and generation of UTF-16LE names for Win32API::File
+use Mozilla::CA;			# Required by LWP::Simple, else it will error when trying to get() an HTTP URL with "500 Can't verify SSL without knowing which Certificate Authorities to trust""
 
 if($^O eq "MSWin32" || $^O eq "cygwin"){
 	require Win32API::File;	# Low-level calls to circumvent windows Unicode hell
@@ -168,11 +174,11 @@ the sites listed below:
 Input options:
  --AutoFetch		Search sites automatically (no need to provide input)
  --AutoDetect		Systematically try each format below (input required)
- --TVtorrents		Assume input is in http://www.TVtorrents.com format
- --TVtome			Assume input is in http://www.TVtome.com format
- --TV				Assume input is in http://www.TV.com format
- --TV2				Assume input is in http://www.TV.com \"All Seasons\" format
- --EpGuides			Assume input is in http://www.EpGuides.com format
+ --TVtorrents		Assume input is in https://www.TVtorrents.com format
+ --TVtome			Assume input is in https://www.TVtome.com format
+ --TV				Assume input is in https://www.TV.com format
+ --TV2				Assume input is in https://www.TV.com \"All Seasons\" format
+ --EpGuides			Assume input is in https://www.EpGuides.com format
 
  Note: If you don't specify an input source, text files with names derived from
  the above will be tried in turn (TVtorrents.txt, ...). Failing this
@@ -652,7 +658,7 @@ else
 			$shortSeries =~ s/\s+//g;
 			$shortSeries =~ tr/,//d;
 			$shortSeries =~ tr/!//d;
-			$inputFile = "http://epguides.com/$shortSeries/";
+			$inputFile = "https://epguides.com/$shortSeries/";
 			# 2015-Jan: EpGuides now delimit the series name from the date by
 			# an underscore. E.g. DoctorWho_2005, not DoctorWho2005 or
 			# DoctorWho(2005)
@@ -665,7 +671,7 @@ else
 		elsif($site eq Site_TV)
 		{
 			my $page;
-			my $url = "http://www.tv.com/index.php?type=Search&stype=ajax_search&qs=".uri_escape($search_term)."&search_type=program&pg_results=0&sort=";
+			my $url = "https://www.tv.com/index.php?type=Search&stype=ajax_search&qs=".uri_escape($search_term)."&search_type=program&pg_results=0&sort=";
 			my $link;
 			my $len = 0;
 			my $retries = 3;
@@ -688,7 +694,7 @@ else
 			die ($ANSIred."Unable to perform search on TV.com! (Fetched $len bytes of data) Please try the following in a browser:\n  $url\n".$ANSInormal) unless length($page) > 0;
 
 			# E.g.  <a href="http://www.tv.com/shows/the-big-bang-theory/?q=Big%252520Bang%252520Theory"><img style="background: url(http://image.com.com/tv/images/processed/thumb/8f/15/281201.jpg) no-repeat center top;" src="http://images.tvtome.com/tv/images/b.gif" alt="Image of The Big Bang Theory" width="120" height="80" /></a>
-			($inputFile) = ($page =~ m@<h2><a href="(http://www.tv.com/shows/[^"]+?)(\?q=.*)?">[^<]*</a></h2>@i);
+			($inputFile) = ($page =~ m@<h2><a href="(https://www.tv.com/shows/[^"]+?)(\?q=.*)?">[^<]*</a></h2>@i);
 			die("I did the search but I couldn't find \"$series\" in the response!") unless defined $inputFile;
 			$inputFile .= "season-$season/";
 			print "Match = ".$inputFile;
@@ -720,11 +726,11 @@ else
 			if($debug){print "New input source is $inputFile\n";}
 		}	# }}}
 
-		if($inputFile =~ /^http:\/\//)	# {{{
+		if($inputFile =~ /^https:\/\//)	# {{{
 		{
 			my $doFetch = 1;
 
-			if($inputFile =~ /^http:\/\/(www.)?tv.com\/.*?&season=0$/){
+			if($inputFile =~ /^https:\/\/(www.)?tv.com\/.*?&season=0$/){
 
 				# Check for use of deprecated "TV.com All Seasons mode", and convert to normal mode
 				print $ANSIyellow."TV.com \"All Seasons\" mode is deprecated\n$ANSInormal  (They removed some data this script relied on)\n".$ANSInormal;
@@ -1804,7 +1810,7 @@ sub readURLfile #{{{
 	local(*FH, $/);
 	open(FH, $file) || die "Can't open URL shortcut: $!";
 	$_ = <FH>;
-	($_) = ($_ =~ /(http:\/\/.*)$/m);
+	($_) = ($_ =~ /(https:\/\/.*)$/m);
 	$/ = "\r";
 	chomp;
 	if( (($url_season) = ($_ =~ /&season=(\d+)/)) && !/&season=0/ && !/&season=$season/){
