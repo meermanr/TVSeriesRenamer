@@ -230,7 +230,7 @@ cpanm Carton
 carton install
 carton install --cpanfile cpanfile.Win32
 carton install pp
-local/bin/pp -o tvrenamer.exe tvrenamer.pl
+python compile_win32.py
 ```
 
 .. [1] I know the internet speaks US English, but this is *my* README :-)
