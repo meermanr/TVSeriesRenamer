@@ -1,6 +1,10 @@
 # cpanfile
-
-requires 'HTML::Entities', '';
-requires 'LWP::Protocol::https', '';
-requires 'LWP::Simple', '';
-requires 'Mozilla::CA', '';
+requires 'Compress::Zlib';
+requires 'Cwd';
+requires 'HTML::Entities';
+requires 'LWP::Protocol::https';
+requires 'LWP::Simple';
+requires 'Mozilla::CA';
+requires 'Switch';
+requires 'Term::ReadKey';
+requires 'URI::Escape';

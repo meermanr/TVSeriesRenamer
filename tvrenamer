@@ -4,5 +4,5 @@ docker run \
     -it \
     -v "$PWD:$PWD" \
     -w "$PWD" \
-    tvrenamer \
+    meermanr/tvrenamer:latest \
     "${@}"
