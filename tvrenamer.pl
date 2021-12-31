@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 # This script is designed to rename anime/TV series which are arranged {{{1
 # in folders (so all files in current directory can be assumed to belong to one
 # series).
