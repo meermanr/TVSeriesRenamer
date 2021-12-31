@@ -1,0 +1,8 @@
+#!/bin/bash
+docker run \
+    --rm \
+    -it \
+    -v "$PWD:$PWD" \
+    -w "$PWD" \
+    meermanr/tvrenamer:latest \
+    "${@}"

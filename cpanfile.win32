@@ -1,0 +1,6 @@
+# cpanfile for Windows
+# ... to be used in ADDITION to regular cpanfile
+requires 'Encode';
+requires 'Win32::Console::ANSI';
+requires 'Win32API::File';
+requires 'pp';
