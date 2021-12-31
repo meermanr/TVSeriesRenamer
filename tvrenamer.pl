@@ -14,30 +14,10 @@
 #------------------------------------------------------------------------------
 #
 # Unreleased
-#   Use HTTPS instead of HTTP
-#   (I needed to install Mozilla::CA by running `sudo cpan install Mozilla:CA`)
 #
-#
-# v2.56 MAINTENANCE:
-#   (Maintenance) Updated the TV.com matching which seemed to be a little out of date
-#   (Feature) Added support for season numbering with underscores for unixey people.
-#   (Issue #7) Fix TV.com episode list parser
-#   (Issue #7) Fix TV.com search parser
-#   (Maintenance) Retabbing indentation
-#   (Maintenance) Adding project page and system requirements to script header
-#   (Maintenance) Update docs in test-suite's run.py
-#   (Maintenance) EpGuides: Another format (seen on Chip'n'Dale Rescue Rangers)
-#   (Issue #9) Removing the offending line (didn't affect my test-cases)
-#
-# v2.57 FEATURE:
-#   Added *.nfo and *.tbn to files considered for renaming
-#   (Maintenance) Cleaned-up test-suite (thanks fwenzel!)
-#
-# v2.58:
-#   (Maintenance) Remove AniDB.net support, since they now insta-ban screen
-#       scrapers like this script. TheTVDB.com provides episode titles for most
-#       Anime, so this shouldn't be a big problem. If someone wants to add
-#       support for AniDB API to the script, I welcome pull requests.
+# v2.59 - 2021-12-31
+#  - (Fix) Use HTTPS instead of HTTP, as many sites no longer serve plain HTTP (I needed
+#    to install Mozilla::CA by running `sudo cpan install Mozilla:CA`).
 #
 #------------------------------------------------------------------------------
 # SYSTEM REQUIREMENTS
@@ -2201,5 +2181,26 @@ sub readURLfile #{{{
 #   Fixing IO text encoding (UTF8).
 #   Strip commas from series titles when querying EpGuides.com
 #   Updating change history comments
+#
+# v2.56 MAINTENANCE:
+#   (Maintenance) Updated the TV.com matching which seemed to be a little out of date
+#   (Feature) Added support for season numbering with underscores for unixey people.
+#   (Issue #7) Fix TV.com episode list parser
+#   (Issue #7) Fix TV.com search parser
+#   (Maintenance) Retabbing indentation
+#   (Maintenance) Adding project page and system requirements to script header
+#   (Maintenance) Update docs in test-suite's run.py
+#   (Maintenance) EpGuides: Another format (seen on Chip'n'Dale Rescue Rangers)
+#   (Issue #9) Removing the offending line (didn't affect my test-cases)
+#
+# v2.57 FEATURE:
+#   Added *.nfo and *.tbn to files considered for renaming
+#   (Maintenance) Cleaned-up test-suite (thanks fwenzel!)
+#
+# v2.58:
+#   (Maintenance) Remove AniDB.net support, since they now insta-ban screen
+#       scrapers like this script. TheTVDB.com provides episode titles for most
+#       Anime, so this shouldn't be a big problem. If someone wants to add
+#       support for AniDB API to the script, I welcome pull requests.
 #
 # vim: set ft=perl ff=unix ts=4 sw=4 sts=4 fdm=marker fdc=4 noet:
