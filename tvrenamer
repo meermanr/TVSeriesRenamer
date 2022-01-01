@@ -1,7 +1,10 @@
 #!/bin/bash
+TTY=''
+[[ -t 0 ]] && TTY='-t'
 docker run \
     --rm \
-    -it \
+    -i \
+    $TTY \
     -v "$PWD:$PWD" \
     -w "$PWD" \
     -u $(id -u):$(id -g) \
