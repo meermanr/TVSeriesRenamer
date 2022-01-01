@@ -195,42 +195,42 @@ Using the docker image
 Add the directory containing `tvrenamer` (a shell script without an extension)
 to your system's $PATH environment variable, so you can call it from anywhere.
 
-```bash
-export "PATH=$PATH:$PWD"
-cd 'test_suite/EpGuides_commas/First Love, Second Chance'
-tvrenamer
-```
+.. code-block:: bash
+
+  export "PATH=$PATH:$PWD"
+  cd 'test_suite/EpGuides_commas/First Love, Second Chance'
+  tvrenamer
 
 Building docker image
 =====================
 
-```
-./build_docker_image.sh
-```
+.. code-block:: bash
+
+   ./build_docker_image.sh
 
 Installation
 ============
 
-```
-cpanm Carton                # Install dependency manager
-carton install              # Use dependency manager to install libraries into ./local/
-carton exec tvrenamer.pl    # Use dependency manager to load libraries from ./local/
+.. code-block:: bash
 
-# alternative to carton exec
-perl -I./local/lib/perl5 tvrenamer.pl
-```
+   cpanm Carton                # Install dependency manager
+   carton install              # Use dependency manager to install libraries into ./local/
+   carton exec tvrenamer.pl    # Use dependency manager to load libraries from ./local/
+
+   # alternative to carton exec
+   perl -I./local/lib/perl5 tvrenamer.pl
 
 Building Windows executables
 ============================
 
 Install https://strawberryperl.com/ and run
 
-```powershell
-cpanm Carton
-carton install
-carton install --cpanfile cpanfile.Win32
-carton install pp
-python compile_win32.py
-```
+.. code-block:: bash
+
+   cpanm Carton
+   carton install
+   carton install --cpanfile cpanfile.Win32
+   carton install pp
+   python compile_win32.py
 
 .. [1] I know the internet speaks US English, but this is *my* README :-)
