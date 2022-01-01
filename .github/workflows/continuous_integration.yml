@@ -22,6 +22,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    - name: install cpanm and multiple modules
+      uses: perl-actions/install-with-cpanm@v1
+      with:
+        cpanfile: 'cpanfile'
+
     # Runs a single command using the runners shell
     - name: Run regression tests
       run: test_suite/run.py

@@ -1,10 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 """Run all tests for `tvrenamer.pl`."""
 __docformat__ = "restructuredtext en"
 
 import os
 import sys
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 from subprocess import PIPE, Popen
 
 
