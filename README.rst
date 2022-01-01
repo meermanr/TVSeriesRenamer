@@ -4,20 +4,24 @@ TV Series Renamer v2.x
 This is an ugly Perl script for tidying up the file-names in large collections 
 of video files that belong to television and anime series. Key features:
 
-    * Automatically finds episode titles on the web
-    * Understands a massive variety of untidy filenames
-    * Very customisable
-    * Completely automatic!
+* Automatically finds episode titles on the web
+* Understands a massive variety of untidy filenames
+* Very customisable
+* Completely automatic!
 
 The default behaviour [1]_ renames all files in the current directory based on 
-the name of that directory. For instance::
+the name of that directory. For instance:
+
+.. code-block::
 
     Battlestar Galactica
     `-- Season 4
         |-- Battlestar.Galactica.S04E02.720p.HDTV.x264-2HD.mkv
         `-- Battlestar.Galactica.S04E03.720p.hdtv.x264-ctu.mkv
 
-Running ``tvrenamer.pl`` in this directory will do the following::
+Running ``tvrenamer.pl`` in this directory will do the following:
+
+.. code-block::
 
     TV Series Renamer v2.51
     Released 07 June 2010
@@ -51,19 +55,25 @@ Running ``tvrenamer.pl`` in this directory will do the following::
     Would you like to proceed with renaming? [y/N/?]: n
 
 If you prefer ``S04E02`` over ``4x02``, add the ``--scheme=SXXEYY`` option to 
-your command line to get results as follows::
+your command line to get results as follows:
+
+.. code-block::
 
     S04E02 - Six of One (2).mkv
     S04E03 - The Ties That Bind.mkv
 
 And if you hate spaces in filenames because you're a Unix/Solaris veteran, you 
-can use ``--unixy`` and ``--separator=_`` to get the following::
+can use ``--unixy`` and ``--separator=_`` to get the following:
+
+.. code-block::
 
     S04E02_Six_of_One_(2).mkv
     S04E03_The_Ties_That_Bind.mkv
 
 There are a great many other options. To give you a taste, here is the full 
-list at the time this README was written::
+list at the time this README was written:
+
+.. code-block::
 
     TV Series Renamer v2.51
     Released 07 June 2010
@@ -192,7 +202,7 @@ list at the time this README was written::
 Using the docker image
 ======================
 
-Add the directory containing `tvrenamer` (a shell script without an extension)
+Add the directory containing ``tvrenamer`` (a shell script without an extension)
 to your system's $PATH environment variable, so you can call it from anywhere.
 
 .. code-block:: bash
