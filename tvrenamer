@@ -4,5 +4,6 @@ docker run \
     -it \
     -v "$PWD:$PWD" \
     -w "$PWD" \
+    -u $(id -u):$(id -g) \
     meermanr/tvrenamer:latest \
     "${@}"
